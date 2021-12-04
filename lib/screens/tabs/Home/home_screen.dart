@@ -15,6 +15,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
         backgroundColor: AppColors.scaffColor,
         floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.red,
           onPressed: () {},
           child: const Icon(
             Icons.add,
@@ -29,13 +30,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 elevation: 0,
                 floating: true,
                 backgroundColor: AppColors.scaffColor,
-                title: const Text(
+                title: Text(
                   'papswap',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black,
-                  ),
+                  style: Theme.of(context).textTheme.headline1,
                 ),
                 actions: [
                   IconButton(
@@ -49,22 +46,18 @@ class _HomeScreenState extends State<HomeScreen> {
               SliverToBoxAdapter(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    SizedBox(
+                  children: [
+                    const SizedBox(
                       height: 10,
                     ),
                     Padding(
-                      padding: EdgeInsets.only(left: 20.0, bottom: 4),
+                      padding: const EdgeInsets.only(left: 15.0, bottom: 4),
                       child: Text(
                         'trending',
-                        style: TextStyle(
-                          fontSize: 22,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w600,
-                        ),
+                        style: Theme.of(context).textTheme.headline1,
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                   ],

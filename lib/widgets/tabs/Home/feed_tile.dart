@@ -13,8 +13,8 @@ class _FeedTileState extends State<FeedTile> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(
-        right: 20.0,
-        left: 20,
+        right: 15.0,
+        left: 15,
         bottom: 15,
       ),
       child: Container(
@@ -70,7 +70,9 @@ class _FeedTileState extends State<FeedTile> {
               ),
               child: Text(
                 '#cars #carsofinstagram #CarsWithOutLimits #carspotting',
-                style: TextStyle(color: Colors.indigo),
+                style: TextStyle(
+                  color: Colors.indigo,
+                ),
               ),
             ),
             const Padding(

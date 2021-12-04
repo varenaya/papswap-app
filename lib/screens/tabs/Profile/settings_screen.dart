@@ -119,7 +119,7 @@ class _SettingScreenState extends State<SettingScreen> {
                             textAlign: TextAlign.start,
                           ),
                           content: const Text(
-                            'You won\'t recieve messages and notifications until you login in again. Are you sure you want to log out?',
+                            'Are you sure you want to log out?',
                             textAlign: TextAlign.start,
                           ),
                           actions: <Widget>[

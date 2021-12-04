@@ -2,7 +2,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:papswap/Screens/auth/login_screen.dart';
-import 'package:papswap/screens/tabs/Profile/profile_screen.dart';
 import 'package:papswap/screens/tabs/Wallet/wallet_screen.dart';
 import 'package:papswap/screens/tabs/tabs_screen.dart';
 import 'package:papswap/services/authservice/authservice.dart';
@@ -36,6 +35,15 @@ class App extends StatelessWidget {
         title: 'PapSwap',
         theme: ThemeData(
           primaryColorLight: const Color(0xffF7F7F7),
+          fontFamily: 'Poppins',
+          textTheme: TextTheme(
+            headline1: TextStyle(
+              color: Colors.indigo.shade900,
+              fontSize: 20,
+              fontFamily: 'Poppins',
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ),
         home: StreamBuilder(
           stream: AuthService().userStream(),
@@ -44,7 +52,7 @@ class App extends StatelessWidget {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const CustomProgressIndicator();
               }
-              return const WalletScreen();
+              return const TabsScreen();
             }
             return const LoginScreen();
           },

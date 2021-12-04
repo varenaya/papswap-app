@@ -22,10 +22,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: AppColors.scaffColor,
-        title: const Text(
-          'profile',
-          style: TextStyle(
-              fontWeight: FontWeight.bold, fontSize: 20, color: Colors.black),
+        title: Text(
+          'your profile',
+          style: Theme.of(context).textTheme.headline1,
         ),
         actions: [
           IconButton(
