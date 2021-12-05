@@ -24,26 +24,19 @@ class _SettingScreenState extends State<SettingScreen> {
             preferredSize: const Size.fromHeight(4.0)),
         leading: Padding(
           padding: const EdgeInsets.only(left: 10),
-          child: GestureDetector(
-            onTap: () {
+          child: IconButton(
+            onPressed: () {
               Navigator.of(context).pop();
             },
-            child: CircleAvatar(
-              backgroundColor: Colors.white.withOpacity(0.9),
-              child: const Icon(
-                Icons.arrow_back_ios_new,
-                color: Colors.black,
-              ),
+            icon: const Icon(
+              Icons.close,
+              color: Colors.black,
             ),
           ),
         ),
         title: Text(
           'Settings',
-          style: TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.w600,
-            color: Colors.black,
-          ),
+          style: Theme.of(context).textTheme.headline1,
         ),
       ),
       body: Column(

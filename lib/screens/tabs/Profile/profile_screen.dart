@@ -63,10 +63,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     unselectedLabelColor: Colors.grey,
                     indicatorWeight: 1,
                     indicatorColor: Colors.blue,
-                    labelStyle: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    labelStyle: TextStyle(fontSize: 14, fontFamily: 'Poppins'),
                     tabs: [
                       Tab(
                         text: 'Sawp',

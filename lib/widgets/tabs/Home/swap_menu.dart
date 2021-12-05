@@ -21,6 +21,17 @@ class SwapMenu extends StatelessWidget {
           ),
         ),
         ListTile(
+            onTap: () {},
+            contentPadding: const EdgeInsets.symmetric(horizontal: 24.0),
+            minLeadingWidth: 30,
+            title: const Text(
+              'Swap',
+              style: TextStyle(
+                fontSize: 17,
+              ),
+            ),
+            leading: const Icon(Icons.arrow_right_alt_rounded)),
+        ListTile(
           onTap: () {},
           contentPadding: const EdgeInsets.symmetric(horizontal: 24.0),
           minLeadingWidth: 30,
@@ -32,17 +43,6 @@ class SwapMenu extends StatelessWidget {
             ),
           ),
         ),
-        ListTile(
-            onTap: () {},
-            contentPadding: const EdgeInsets.symmetric(horizontal: 24.0),
-            minLeadingWidth: 30,
-            title: const Text(
-              'Swap',
-              style: TextStyle(
-                fontSize: 17,
-              ),
-            ),
-            leading: const Icon(Icons.arrow_right_alt_rounded)),
       ],
     );
   }

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:papswap/services/authservice/googlesigninprovider.dart';
@@ -53,6 +54,7 @@ class AuthService {
         'user_id': authresult.user!.uid,
         'dateJoined': DateTime.now(),
         'coinVal': 5,
+        'userWebsite': '',
       });
       Navigator.of(context).pop();
     } on FirebaseAuthException catch (err) {
@@ -90,6 +92,7 @@ class AuthService {
             'user_id': user.uid,
             'dateJoined': DateTime.now(),
             'coinVal': 5,
+            'userWebsite': '',
           });
         }
       });
@@ -111,11 +114,11 @@ class AuthService {
   }
 
   void passwordreset(String userEmail, BuildContext context) {
-    if (userEmail == '') {
+    if (userEmail == '' || !EmailValidator.validate(userEmail)) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: const Text(
-            'Please enter the email first.',
+            'Please enter a valid email first.',
             textAlign: TextAlign.center,
           ),
           backgroundColor: Theme.of(context).errorColor,
@@ -138,13 +141,32 @@ class AuthService {
                 TextButton(
                   child: const Text('OK'),
                   onPressed: () {
+                    try {
+                      FirebaseAuth.instance
+                          .sendPasswordResetEmail(email: userEmail);
+                    } on FirebaseAuthException catch (e) {
+                      var message =
+                          'An error occured, please check your credentials!';
+                      if (e.message != null) {
+                        message = e.message!;
+                      }
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            message.toString(),
+                            textAlign: TextAlign.center,
+                          ),
+                          backgroundColor: Theme.of(context).errorColor,
+                        ),
+                      );
+                    }
+
                     Navigator.of(ctx).pop();
                   },
                 ),
               ],
             );
           });
-      FirebaseAuth.instance.sendPasswordResetEmail(email: userEmail);
     }
   }
 

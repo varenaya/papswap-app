@@ -124,9 +124,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       onTap: () {
                         _auth.passwordreset(_userEmail, context);
                       },
-                      child: Text(
+                      child: const Text(
                         "Forgot Password?",
-                        style: Theme.of(context).textTheme.bodyText1,
+                        style: TextStyle(color: Colors.blue),
                       ),
                     ),
                     SizedBox(
@@ -142,9 +142,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       : ElevatedButton(
                           onPressed: _trySubmit,
                           style: ElevatedButton.styleFrom(
-                            primary: Colors.black,
+                            primary: Colors.red,
                             elevation: 0,
-                            padding: const EdgeInsets.all(18),
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 12,
+                            ),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20)),
                           ),
@@ -152,7 +154,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             child: Text(
                               "Login",
                               style: TextStyle(
-                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
                               ),
                             ),
                           ),
@@ -175,7 +177,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           width: 10,
                         ),
                         Text(
-                          'SignIn',
+                          'Sign in',
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 15),
                         )
@@ -191,10 +193,11 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: const SignUpScreen(),
                           type: PageTransitionType.rightToLeftWithFade));
                     },
-                    child: const Text(
+                    child: Text(
                       "Create account",
                       style: TextStyle(
                         fontSize: 16,
+                        color: Colors.indigo.shade900,
                         fontWeight: FontWeight.bold,
                       ),
                     ),

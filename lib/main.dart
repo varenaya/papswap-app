@@ -2,12 +2,15 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:papswap/Screens/auth/login_screen.dart';
-import 'package:papswap/screens/tabs/Wallet/wallet_screen.dart';
 import 'package:papswap/screens/tabs/tabs_screen.dart';
 import 'package:papswap/services/authservice/authservice.dart';
 import 'package:papswap/services/authservice/googlesigninprovider.dart';
+import 'package:papswap/services/datarepo/userData.dart';
+import 'package:papswap/services/datastream/userdatastream.dart';
 import 'package:papswap/widgets/global/custom_progress_indicator.dart';
 import 'package:provider/provider.dart';
+
+import 'models/userdata.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,6 +31,9 @@ class App extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<GoogleSignInProvider>(
           create: (context) => GoogleSignInProvider(),
+        ),
+        ChangeNotifierProvider<UserDataProvider>(
+          create: (context) => UserDataProvider(),
         ),
       ],
       child: MaterialApp(
@@ -52,7 +58,11 @@ class App extends StatelessWidget {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const CustomProgressIndicator();
               }
-              return const TabsScreen();
+              return StreamProvider<UserData>.value(
+                value: Userdatastream().userdata(),
+                initialData: Userdatastream().initialuserdata,
+                child: const TabsScreen(),
+              );
             }
             return const LoginScreen();
           },

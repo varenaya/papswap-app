@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:papswap/models/app/color_const.dart';
+import 'package:papswap/models/userdata.dart';
+import 'package:papswap/screens/tabs/Home/posting_screen.dart';
+import 'package:papswap/services/datarepo/userData.dart';
 import 'package:papswap/widgets/tabs/Home/feed_tile.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -12,11 +17,17 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
+    final userData = Provider.of<UserData>(context);
+    Provider.of<UserDataProvider>(context, listen: false).userData(userData);
     return Scaffold(
         backgroundColor: AppColors.scaffColor,
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.red,
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).push(PageTransition(
+                child: const PostingScreen(),
+                type: PageTransitionType.bottomToTop));
+          },
           child: const Icon(
             Icons.add,
             size: 26,
@@ -38,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   IconButton(
                       onPressed: () {},
                       icon: const Icon(
-                        Icons.notifications_outlined,
+                        Icons.filter_list_outlined,
                         color: Colors.black,
                       )),
                 ],

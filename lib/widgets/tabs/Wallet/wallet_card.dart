@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:papswap/models/userdata.dart';
+import 'package:provider/provider.dart';
 
 class WalletCard extends StatelessWidget {
   const WalletCard({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final userData = Provider.of<UserData>(context);
     return Padding(
       padding: const EdgeInsets.only(top: 20, bottom: 20),
       child: Container(
@@ -21,13 +25,14 @@ class WalletCard extends StatelessWidget {
           child: ListTile(
             contentPadding: const EdgeInsets.symmetric(horizontal: 25.0),
             title: RichText(
-                text: const TextSpan(
-                    text: '1,200',
-                    style: TextStyle(
+                text: TextSpan(
+                    text:
+                        NumberFormat.decimalPattern().format(userData.coinVal),
+                    style: const TextStyle(
                         fontSize: 25,
                         color: Colors.black,
                         fontFamily: 'Poppins'),
-                    children: [
+                    children: const [
                   TextSpan(
                       text: '   paptokens',
                       style: TextStyle(

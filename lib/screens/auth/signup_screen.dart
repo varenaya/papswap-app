@@ -159,9 +159,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       : ElevatedButton(
                           onPressed: _trySubmit,
                           style: ElevatedButton.styleFrom(
-                            primary: Colors.black,
+                            primary: Colors.red,
                             elevation: 0,
-                            padding: const EdgeInsets.all(18),
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 12,
+                            ),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20)),
                           ),
@@ -169,7 +171,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             child: Text(
                               "SignUp",
                               style: TextStyle(
-                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
                               ),
                             ),
                           ),
