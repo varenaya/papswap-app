@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:papswap/models/app/color_const.dart';
+import 'package:papswap/services/datarepo/userData.dart';
 import 'package:papswap/widgets/tabs/Wallet/wallet_card.dart';
+import 'package:provider/provider.dart';
 
 class TransactionsScreen extends StatelessWidget {
   const TransactionsScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final userdata =
+        Provider.of<UserDataProvider>(context, listen: false).userdata;
     return Scaffold(
       backgroundColor: AppColors.scaffColor,
       body: SafeArea(
@@ -33,7 +37,9 @@ class TransactionsScreen extends StatelessWidget {
                 toolbarHeight: 100,
                 elevation: 0,
                 backgroundColor: Colors.transparent,
-                title: const WalletCard(),
+                title: WalletCard(
+                  userData: userdata,
+                ),
               ),
             )
           ],

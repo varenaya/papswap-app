@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:papswap/models/userdata.dart';
-import 'package:provider/provider.dart';
 
 class WalletCard extends StatelessWidget {
-  const WalletCard({Key? key}) : super(key: key);
+  final UserData userData;
+  const WalletCard({Key? key, required this.userData}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final userData = Provider.of<UserData>(context);
     return Padding(
       padding: const EdgeInsets.only(top: 20, bottom: 20),
       child: Container(

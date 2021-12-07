@@ -12,6 +12,7 @@ class UserData {
   late String userWebsite;
   late int coinVal;
   late Timestamp dateJoined;
+  late String userType;
 
   UserData({
     required this.userEmail,
@@ -23,5 +24,6 @@ class UserData {
     required this.dateJoined,
     required this.userWebsite,
     required this.coinVal,
+    required this.userType,
   });
 }

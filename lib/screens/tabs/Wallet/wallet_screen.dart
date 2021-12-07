@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:papswap/models/app/color_const.dart';
+import 'package:papswap/models/userdata.dart';
 import 'package:papswap/screens/tabs/Wallet/transactions_screen.dart';
 import 'package:papswap/widgets/tabs/Wallet/movie_tile.dart';
 import 'package:papswap/widgets/tabs/Wallet/reward_tile.dart';
 import 'package:papswap/widgets/tabs/Wallet/voucher_tile.dart';
 import 'package:papswap/widgets/tabs/Wallet/wallet_actions_tile.dart';
 import 'package:papswap/widgets/tabs/Wallet/wallet_card.dart';
+import 'package:provider/provider.dart';
 
 class WalletScreen extends StatefulWidget {
   const WalletScreen({Key? key}) : super(key: key);
@@ -19,6 +21,7 @@ class _WalletScreenState extends State<WalletScreen> {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
+    final userData = Provider.of<UserData>(context);
     return Scaffold(
         backgroundColor: AppColors.scaffColor,
         body: SafeArea(
@@ -50,7 +53,9 @@ class _WalletScreenState extends State<WalletScreen> {
                   toolbarHeight: 100,
                   elevation: 0,
                   backgroundColor: Colors.transparent,
-                  title: const WalletCard(),
+                  title: WalletCard(
+                    userData: userData,
+                  ),
                 ),
               ),
               SliverToBoxAdapter(

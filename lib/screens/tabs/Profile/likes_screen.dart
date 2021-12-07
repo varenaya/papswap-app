@@ -21,14 +21,17 @@ class _LikesScreenState extends State<LikesScreen> {
                   child: SizedBox(
                 height: 15,
               )),
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    return const FeedTile();
-                  },
-                  childCount: 10,
-                ),
-              )
+              // SliverList(
+              //   delegate: SliverChildBuilderDelegate(
+              //     (context, index) {
+              //       return const FeedTile(
+              //         postdata: {},
+              //         createrdata: ,
+              //       );
+              //     },
+              //     childCount: 10,
+              //   ),
+              // )
             ],
           ),
         ));

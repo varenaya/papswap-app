@@ -1,16 +1,32 @@
+// ignore_for_file: prefer_typing_uninitialized_variables
+
 import 'dart:io';
 
+import 'package:detectable_text_field/detector/sample_regular_expressions.dart';
+import 'package:detectable_text_field/widgets/detectable_text_field.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:mime/mime.dart';
 import 'package:papswap/models/app/color_const.dart';
+import 'package:papswap/services/datarepo/uplaod_data.dart';
 import 'package:papswap/services/datarepo/userData.dart';
+import 'package:papswap/widgets/tabs/Home/feed_tile.dart';
 import 'package:papswap/widgets/tabs/Home/video_player.dart';
 import 'package:provider/provider.dart';
 
 class PostingScreen extends StatefulWidget {
-  const PostingScreen({Key? key}) : super(key: key);
+  final String type;
+  final reswappostdata;
+
+  final reswapcreaterdata;
+  const PostingScreen(
+      {Key? key,
+      required this.type,
+      this.reswappostdata,
+      this.reswapcreaterdata})
+      : super(key: key);
 
   @override
   _PostingScreenState createState() => _PostingScreenState();
@@ -19,7 +35,9 @@ class PostingScreen extends StatefulWidget {
 class _PostingScreenState extends State<PostingScreen> {
   File? media;
   final TextEditingController _textcontroller = TextEditingController();
-  late String _feedtext;
+  final UploadData uploadData = UploadData();
+  String feedtext = '';
+  UploadTask? task;
 
   Future pickMedia() async {
     try {
@@ -49,7 +67,6 @@ class _PostingScreenState extends State<PostingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
     final userdata =
         Provider.of<UserDataProvider>(context, listen: false).userdata;
     return Scaffold(
@@ -79,7 +96,9 @@ class _PostingScreenState extends State<PostingScreen> {
                       ),
                       RichText(
                         text: TextSpan(
-                          text: 'posting as  ',
+                          text: widget.type == 'Post'
+                              ? 'posting as  '
+                              : 'Reswaping as  ',
                           style: const TextStyle(
                               fontSize: 13,
                               fontFamily: 'Poppins',
@@ -122,28 +141,70 @@ class _PostingScreenState extends State<PostingScreen> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () async {
+                  if (widget.type == 'Post') {
+                    final docId =
+                        await uploadData.postData(feedtext, userdata, context);
+                    if (media == null) {
+                      return Navigator.of(context).pop();
+                    }
+                    task = await uploadData.postMedia(media, docId!, context);
+
+                    setState(() {});
+                    if (task == null) return;
+                    final snapshot = await task!.whenComplete(() {
+                      Navigator.of(context).pop();
+                    });
+                    final url = await snapshot.ref.getDownloadURL();
+
+                    uploadData.updatepostmedialink(docId, url);
+                  } else {
+                    final docId = await uploadData.reswappostData(feedtext,
+                        userdata, context, widget.reswappostdata['post_id']);
+                    if (media == null) {
+                      return Navigator.of(context).pop();
+                    }
+                    task = await uploadData.reswappostMedia(media, docId!,
+                        context, widget.reswappostdata['post_id']);
+
+                    setState(() {});
+                    if (task == null) return;
+                    final snapshot = await task!.whenComplete(() {
+                      Navigator.of(context).pop();
+                    });
+                    final url = await snapshot.ref.getDownloadURL();
+
+                    uploadData.updatereswappostmedialink(
+                        docId, url, widget.reswappostdata['post_id']);
+                  }
+                },
                 style: ElevatedButton.styleFrom(
                   primary: Colors.red,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20)),
                 ),
                 child: Row(
-                  children: const [
+                  children: [
                     Text(
-                      'Post',
-                      style: TextStyle(
+                      widget.type == 'Post' ? 'Post' : 'Reswap',
+                      style: const TextStyle(
                         color: Colors.white,
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 5,
                     ),
-                    Icon(
-                      Icons.send_outlined,
-                      color: Colors.white,
-                      size: 20,
-                    ),
+                    widget.type == 'Post'
+                        ? const Icon(
+                            Icons.send_outlined,
+                            color: Colors.white,
+                            size: 20,
+                          )
+                        : const Icon(
+                            Icons.swap_horiz_rounded,
+                            color: Colors.white,
+                            size: 20,
+                          ),
                   ],
                 )),
           ),
@@ -155,9 +216,15 @@ class _PostingScreenState extends State<PostingScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              TextField(
+              DetectableTextField(
                 decoration: const InputDecoration.collapsed(
-                  hintText: "What's new?",
+                    hintText: "What's new?",
+                    hintStyle: TextStyle(
+                      fontSize: 18,
+                    )),
+                decoratedStyle: const TextStyle(
+                  color: Colors.blue,
+                  fontFamily: 'Poppins',
                 ),
                 controller: _textcontroller,
                 scrollPadding: const EdgeInsets.all(20.0),
@@ -165,8 +232,9 @@ class _PostingScreenState extends State<PostingScreen> {
                 maxLines: null,
                 autofocus: true,
                 onChanged: (value) {
-                  _feedtext = value;
+                  feedtext = value;
                 },
+                detectionRegExp: detectionRegExp(atSign: false)!,
               ),
               const SizedBox(
                 height: 10,
@@ -233,6 +301,30 @@ class _PostingScreenState extends State<PostingScreen> {
                       )
               else
                 const SizedBox(),
+              task != null
+                  ? StreamBuilder<TaskSnapshot>(
+                      stream: task!.snapshotEvents,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          final snap = snapshot.data;
+                          final progress =
+                              snap!.bytesTransferred / snap.totalBytes;
+                          return Text(
+                            progress.toString(),
+                          );
+                        } else {
+                          return Container();
+                        }
+                      },
+                    )
+                  : const SizedBox(),
+              const SizedBox(
+                height: 8,
+              ),
+              if (widget.reswappostdata != null)
+                FeedTile(
+                    postdata: widget.reswappostdata,
+                    createrdata: widget.reswapcreaterdata),
               const SizedBox(
                 height: 20,
               ),

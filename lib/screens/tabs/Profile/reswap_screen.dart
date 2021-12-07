@@ -21,14 +21,16 @@ class _ReswapScreenState extends State<ReswapScreen> {
                   child: SizedBox(
                 height: 15,
               )),
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    return const FeedTile();
-                  },
-                  childCount: 10,
-                ),
-              )
+              // SliverList(
+              //   delegate: SliverChildBuilderDelegate(
+              //     (context, index) {
+              //       return const FeedTile(
+              //         postdata: {},
+              //       );
+              //     },
+              //     childCount: 10,
+              //   ),
+              // )
             ],
           ),
         ));

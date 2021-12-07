@@ -1,13 +1,16 @@
+// ignore_for_file: prefer_typing_uninitialized_variables
+
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoWidget extends StatefulWidget {
-  final File file;
+  final file;
 
-  const VideoWidget({Key? key, required this.file}) : super(key: key);
+  final link;
+
+  const VideoWidget({Key? key, this.file, this.link}) : super(key: key);
 
   @override
   VideoWidgetState createState() => VideoWidgetState();
@@ -24,9 +27,11 @@ class VideoWidgetState extends State<VideoWidget> {
   void initState() {
     super.initState();
 
-    videoStatusAnimation = Container();
+    videoStatusAnimation = const SizedBox();
 
-    _controller = VideoPlayerController.file(widget.file)
+    _controller = widget.link == null
+        ? VideoPlayerController.file(widget.file)
+        : VideoPlayerController.network(widget.link)
       ..addListener(() {
         final bool isPlaying = _controller.value.isPlaying;
         if (isPlaying != _isPlaying) {
@@ -54,7 +59,8 @@ class VideoWidgetState extends State<VideoWidget> {
   @override
   Widget build(BuildContext context) => AspectRatio(
         aspectRatio: _controller.value.aspectRatio,
-        child: _controller.value.isInitialized ? videoPlayer() : Container(),
+        child:
+            _controller.value.isInitialized ? videoPlayer() : const SizedBox(),
       );
 
   Widget videoPlayer() => Stack(

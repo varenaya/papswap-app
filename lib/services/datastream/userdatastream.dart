@@ -20,6 +20,7 @@ class Userdatastream {
               userBio: event.data()!['userBio'],
               userGender: event.data()!['userGender'],
               userWebsite: event.data()!['userWebsite'],
+              userType: event.data()!['userType'],
             ));
   }
 
@@ -34,6 +35,7 @@ class Userdatastream {
       userImage: '',
       user_id: '',
       userWebsite: '',
+      userType: '',
     );
   }
 }
