@@ -1,6 +1,8 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:papswap/models/app/color_const.dart';
+import 'package:papswap/screens/tabs/Wallet/token_earning_screen.dart';
 
 class WalletActionsTile extends StatelessWidget {
   final Size size;
@@ -21,6 +23,18 @@ class WalletActionsTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    void earnNowfn() {
+      showModalBottomSheet(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(15), topRight: Radius.circular(15)),
+        ),
+        backgroundColor: AppColors.scaffColor,
+        context: context,
+        builder: (context) => const TokenEarningScreen(),
+      );
+    }
+
     return Padding(
       padding: const EdgeInsets.only(
         bottom: 20,
@@ -40,6 +54,11 @@ class WalletActionsTile extends StatelessWidget {
               child: GestureDetector(
                 onTap: () {
                   showModalBottomSheet(
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(15),
+                          topRight: Radius.circular(15)),
+                    ),
                     context: context,
                     builder: (context) => Container(),
                   );
@@ -87,7 +106,7 @@ class WalletActionsTile extends StatelessWidget {
             Align(
               alignment: Alignment.center,
               child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: buttonText == 'Earn Now' ? earnNowfn : () {},
                   style: ElevatedButton.styleFrom(
                     primary: Colors.red,
                     elevation: 0,

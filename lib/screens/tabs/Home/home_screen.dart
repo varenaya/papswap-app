@@ -3,11 +3,10 @@ import 'package:page_transition/page_transition.dart';
 import 'package:papswap/models/app/color_const.dart';
 import 'package:papswap/models/userdata.dart';
 import 'package:papswap/screens/tabs/Home/posting_screen.dart';
-import 'package:papswap/services/datarepo/data_fetcher.dart';
-import 'package:papswap/services/datarepo/userData.dart';
-import 'package:papswap/widgets/global/custom_progress_indicator.dart';
+import 'package:papswap/services/datarepo/postData.dart';
 import 'package:papswap/widgets/tabs/Home/feed_tile.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -19,19 +18,10 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    Map? _postdata;
     final userData = Provider.of<UserData>(context);
-    Provider.of<UserDataProvider>(context, listen: false).userData(userData);
-    Future<void> _initPostdata() async {
-      final postdata = await DataFetcher().postdata();
-      _postdata = postdata;
-    }
 
     Future<void> _refreshPostdata() async {
-      final postdata = await DataFetcher().postdata();
-      setState(() {
-        _postdata = postdata;
-      });
+      Provider.of<PostDataListProvider>(context, listen: false).postData();
     }
 
     return Scaffold(
@@ -54,73 +44,79 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
         body: SafeArea(
-          child: FutureBuilder(
-              future: _initPostdata(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CustomProgressIndicator());
-                }
-
-                final postdata = _postdata!['postdata'].docs;
-                final createrdata = _postdata!['createrdata'];
-
-                return RefreshIndicator(
-                  onRefresh: _refreshPostdata,
-                  child: CustomScrollView(
-                    slivers: [
-                      SliverAppBar(
-                        elevation: 0,
-                        floating: true,
-                        backgroundColor: AppColors.scaffColor,
-                        title: Text(
-                          'papswap',
-                          style: Theme.of(context).textTheme.headline1,
-                        ),
-                        actions: [
-                          IconButton(
-                              onPressed: () {},
-                              icon: const Icon(
-                                Icons.filter_list_outlined,
-                                color: Colors.black,
-                              )),
-                        ],
-                      ),
-                      SliverToBoxAdapter(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 15.0, bottom: 4),
-                              child: Text(
-                                'trending',
-                                style: Theme.of(context).textTheme.headline1,
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                          ],
-                        ),
-                      ),
-                      SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                          (context, index) {
-                            return FeedTile(
-                              postdata: postdata[index].data(),
-                              createrdata: createrdata[index],
-                            );
+          child: RefreshIndicator(
+            onRefresh: _refreshPostdata,
+            child: Consumer<PostDataListProvider>(
+              builder: (ctx, postdata, _) => CustomScrollView(
+                slivers: [
+                  SliverAppBar(
+                    elevation: 0,
+                    floating: true,
+                    backgroundColor: AppColors.scaffColor,
+                    title: Text(
+                      'papswap',
+                      style: Theme.of(context).textTheme.headline1,
+                    ),
+                    actions: [
+                      IconButton(
+                          onPressed: () async {
+                            const _url = 'https://papswap.in/';
+                            if (!await launch(_url)) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: const Text(
+                                    'Could not launch $_url',
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  backgroundColor: Theme.of(context).errorColor,
+                                ),
+                              );
+                            }
                           },
-                          childCount: postdata.length,
-                        ),
-                      ),
+                          icon: const Icon(
+                            Icons.info_outline,
+                            color: Colors.black,
+                          )),
                     ],
                   ),
-                );
-              }),
+                  SliverToBoxAdapter(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 15.0, bottom: 4),
+                          child: Text(
+                            'trending',
+                            style: Theme.of(context).textTheme.headline1,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                      ],
+                    ),
+                  ),
+                  SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        return FeedTile(
+                          type: 'feed',
+                          ispostliked: postdata.postdata?.ispostliked[index],
+                          postdata: postdata.postdata?.postdata[index]?.data(),
+                          createrdata:
+                              postdata.postdata!.createrdatalist[index],
+                        );
+                      },
+                      childCount: postdata.postdata?.postdata.length,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ));
   }
 }

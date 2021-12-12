@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_typing_uninitialized_variables
+
 import 'package:detectable_text_field/detectable_text_field.dart';
 import 'package:detectable_text_field/detector/sample_regular_expressions.dart';
 import 'package:duration/duration.dart';
@@ -9,12 +11,19 @@ import 'package:papswap/services/datarepo/userData.dart';
 import 'package:papswap/widgets/tabs/Home/swap_menu.dart';
 import 'package:papswap/widgets/tabs/Home/video_player.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class FeedTile extends StatefulWidget {
   final Map postdata;
-
+  final String type;
   final UserData createrdata;
-  const FeedTile({Key? key, required this.postdata, required this.createrdata})
+  final ispostliked;
+  const FeedTile(
+      {Key? key,
+      required this.postdata,
+      required this.createrdata,
+      required this.type,
+      this.ispostliked})
       : super(key: key);
 
   @override
@@ -24,6 +33,16 @@ class FeedTile extends StatefulWidget {
 class _FeedTileState extends State<FeedTile> {
   late bool isliked = false;
   int likes = 0;
+  @override
+  void initState() {
+    super.initState();
+    likes = widget.postdata['likes'];
+    if (widget.type == 'like') {
+      isliked = true;
+    } else {
+      widget.ispostliked == true ? isliked = true : isliked = false;
+    }
+  }
 
   String timeDuration() {
     final timedif =
@@ -38,7 +57,7 @@ class _FeedTileState extends State<FeedTile> {
   Widget build(BuildContext context) {
     final currentuserdata =
         Provider.of<UserDataProvider>(context, listen: false).userdata;
-    likes = widget.postdata['likes'];
+
     return Padding(
       padding: const EdgeInsets.only(
         right: 15.0,
@@ -47,7 +66,11 @@ class _FeedTileState extends State<FeedTile> {
       ),
       child: Container(
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15), color: Colors.white),
+            border: widget.type == 'reswap'
+                ? Border.all(color: Colors.black, width: 1)
+                : null,
+            borderRadius: BorderRadius.circular(15),
+            color: Colors.white),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -64,17 +87,19 @@ class _FeedTileState extends State<FeedTile> {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  GestureDetector(
-                      onTap: () {
-                        showModalBottomSheet(
-                          context: context,
-                          builder: (context) => Container(),
-                        );
-                      },
-                      child: const Icon(
-                        Icons.more_horiz,
-                        color: Colors.grey,
-                      ))
+                  widget.type == 'reswapost' || widget.type == 'reswap'
+                      ? const SizedBox()
+                      : InkWell(
+                          onTap: () {
+                            // showModalBottomSheet(
+                            //   context: context,
+                            //   builder: (context) => Container(),
+                            // );
+                          },
+                          child: const Icon(
+                            Icons.more_horiz,
+                            color: Colors.grey,
+                          ))
                 ],
               ),
               subtitle: Text(
@@ -93,151 +118,174 @@ class _FeedTileState extends State<FeedTile> {
               padding: const EdgeInsets.only(
                   right: 15.0, left: 15.0, bottom: 10.0, top: 5.0),
               child: DetectableText(
-                detectedStyle: const TextStyle(
-                    fontSize: 15, color: Colors.blue, fontFamily: 'Poppins'),
+                detectedStyle:
+                    const TextStyle(color: Colors.blue, fontFamily: 'Poppins'),
                 basicStyle: const TextStyle(
                   fontSize: 15,
                 ),
-                text: widget.postdata['feedtext'],
+                moreStyle: const TextStyle(color: Colors.blue),
+                lessStyle: const TextStyle(
+                  color: Colors.indigo,
+                  fontFamily: 'Poppins',
+                ),
+                onTap: (text) async {
+                  if (Uri.parse(text).isAbsolute) {
+                    if (!await launch(text)) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            'Could not launch $text',
+                            textAlign: TextAlign.center,
+                          ),
+                          backgroundColor: Theme.of(context).errorColor,
+                        ),
+                      );
+                    }
+                  }
+                },
+                text: ('${widget.postdata['feedtext']}   '),
                 detectionRegExp: detectionRegExp(atSign: false)!,
               ),
             ),
-            widget.postdata['medialink'] == ''
+            // widget.postdata['medialink'] == ''
+            //     ? const SizedBox()
+            // : widget.postdata['medialink'].contains('.jpg?') ||
+            //         widget.postdata['medialink'].contains('.png?')||
+            //         widget.postdata['medialink'].contains('.jpeg?')
+            //         ? Padding(
+            //             padding: const EdgeInsets.only(
+            //               right: 15.0,
+            //               left: 15.0,
+            //               bottom: 15.0,
+            //             ),
+            //             child: ClipRRect(
+            //               borderRadius: BorderRadius.circular(15),
+            //               child: Image(
+            //                   image:
+            //                       NetworkImage(widget.postdata['medialink'])),
+            //             ),
+            //           )
+            //         : Padding(
+            //             padding: const EdgeInsets.only(
+            //               right: 15.0,
+            //               left: 15.0,
+            //               bottom: 15.0,
+            //             ),
+            //             child: ClipRRect(
+            //               borderRadius: BorderRadius.circular(15),
+            //               child: VideoWidget(
+            //                 link: widget.postdata['medialink'],
+            //               ),
+            //             ),
+            //           ),
+            widget.type == 'reswapost' || widget.type == 'reswap'
                 ? const SizedBox()
-                : widget.postdata['medialink'].contains('.jpg?')
-                    ? Padding(
-                        padding: const EdgeInsets.only(
-                          right: 15.0,
-                          left: 15.0,
-                          bottom: 15.0,
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(15),
-                          child: Image(
-                              image:
-                                  NetworkImage(widget.postdata['medialink'])),
-                        ),
-                      )
-                    : Padding(
-                        padding: const EdgeInsets.only(
-                          right: 15.0,
-                          left: 15.0,
-                          bottom: 15.0,
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(15),
-                          child: VideoWidget(
-                            link: widget.postdata['medialink'],
-                          ),
-                        ),
-                      ),
-            Padding(
-              padding: const EdgeInsets.only(
-                right: 15.0,
-                left: 15.0,
-                bottom: 8.0,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Row(
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              setState(() {
-                                isliked = !isliked;
-
-                                UploadData().postlike(
-                                    widget.postdata['post_id'],
-                                    currentuserdata.user_id,
-                                    isliked);
-                              });
-                            },
-                            child: isliked
-                                ? const Icon(
-                                    Icons.favorite,
-                                    size: 20,
-                                    color: Colors.red,
-                                  )
-                                : const Icon(
-                                    Icons.favorite_border,
-                                    size: 20,
-                                    color: Colors.blueGrey,
-                                  ),
-                          ),
-                          const SizedBox(
-                            width: 2,
-                          ),
-                          isliked
-                              ? Text(
-                                  (likes + 1).toString(),
-                                  style: const TextStyle(
-                                      color: Colors.grey, fontSize: 12.5),
-                                )
-                              : Text(
-                                  likes.toString(),
-                                  style: const TextStyle(
-                                      color: Colors.grey, fontSize: 12.5),
-                                ),
-                        ],
-                      ),
-                      const SizedBox(
-                        width: 30,
-                      ),
-                      Row(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              showModalBottomSheet(
-                                shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(15),
-                                      topRight: Radius.circular(15)),
-                                ),
-                                context: context,
-                                builder: (context) => SwapMenu(
-                                  createrdata: widget.createrdata,
-                                  postdata: widget.postdata,
-                                  currentuserid: currentuserdata.user_id,
-                                ),
-                              );
-                            },
-                            child: const Icon(
-                              Icons.swap_horiz_rounded,
-                              size: 20,
-                              color: Colors.blueGrey,
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 2,
-                          ),
-                          Text(
-                            widget.postdata['swaps'].toString(),
-                            style: const TextStyle(
-                                color: Colors.grey, fontSize: 12.5),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      showModalBottomSheet(
-                        context: context,
-                        builder: (context) => Container(),
-                      );
-                    },
-                    child: const Icon(
-                      Icons.share_outlined,
-                      size: 20,
-                      color: Colors.blueGrey,
+                : Padding(
+                    padding: const EdgeInsets.only(
+                      right: 15.0,
+                      left: 15.0,
+                      bottom: 8.0,
                     ),
-                  ),
-                ],
-              ),
-            )
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Row(
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      isliked = !isliked;
+                                      UploadData().postlike(
+                                          widget.postdata['post_id'],
+                                          currentuserdata.user_id,
+                                          isliked);
+                                      if (isliked) {}
+                                    });
+                                  },
+                                  child: isliked
+                                      ? const Icon(
+                                          Icons.favorite,
+                                          size: 20,
+                                          color: Colors.red,
+                                        )
+                                      : const Icon(
+                                          Icons.favorite_border,
+                                          size: 20,
+                                          color: Colors.blueGrey,
+                                        ),
+                                ),
+                                const SizedBox(
+                                  width: 2,
+                                ),
+                                isliked
+                                    ? Text(
+                                        likes == 0
+                                            ? (likes + 1).toString()
+                                            : likes.toString(),
+                                        style: const TextStyle(
+                                            color: Colors.grey, fontSize: 12.5),
+                                      )
+                                    : Text(
+                                        likes == 0
+                                            ? likes.toString()
+                                            : (likes - 1).toString(),
+                                        style: const TextStyle(
+                                            color: Colors.grey, fontSize: 12.5),
+                                      ),
+                              ],
+                            ),
+                            const SizedBox(
+                              width: 30,
+                            ),
+                            Row(
+                              children: [
+                                widget.type == 'swap' || widget.type == 'like'
+                                    ? const Icon(
+                                        Icons.swap_horiz_rounded,
+                                        size: 20,
+                                        color: Colors.blueGrey,
+                                      )
+                                    : InkWell(
+                                        onTap: () {
+                                          showModalBottomSheet(
+                                            shape: const RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.only(
+                                                  topLeft: Radius.circular(15),
+                                                  topRight:
+                                                      Radius.circular(15)),
+                                            ),
+                                            context: context,
+                                            builder: (context) => SwapMenu(
+                                              createrdata: widget.createrdata,
+                                              postdata: widget.postdata,
+                                              currentuserid:
+                                                  currentuserdata.user_id,
+                                            ),
+                                          );
+                                        },
+                                        child: const Icon(
+                                          Icons.swap_horiz_rounded,
+                                          size: 20,
+                                          color: Colors.blueGrey,
+                                        ),
+                                      ),
+                                const SizedBox(
+                                  width: 2,
+                                ),
+                                Text(
+                                  widget.postdata['swaps'].toString(),
+                                  style: const TextStyle(
+                                      color: Colors.grey, fontSize: 12.5),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  )
           ],
         ),
       ),

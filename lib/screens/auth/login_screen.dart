@@ -29,9 +29,11 @@ class _LoginScreenState extends State<LoginScreen> {
         _isLoading = true;
       });
       await _auth.trylogin(context, _userEmail, _userpassword);
-      setState(() {
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
 

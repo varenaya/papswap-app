@@ -79,7 +79,7 @@ class _WalletScreenState extends State<WalletScreen> {
                             subtitle:
                                 'SuperTokens can only be earned after the content verification.',
                             footerText:
-                                'values upto 500 INR for every SuperCoin',
+                                'values upto 500 INR for every SuperTokens',
                             buttonText: 'Check Now',
                             imagepath: 'assets/images/supertoken.png',
                           ),
@@ -88,7 +88,7 @@ class _WalletScreenState extends State<WalletScreen> {
                             title: 'Earn PapTokens',
                             subtitle:
                                 'Earn PapTokens daily with bonus and through swaps.',
-                            footerText: 'upto 25 PapTokens every week',
+                            footerText: 'upto 30 PapTokens every week',
                             buttonText: 'Earn Now',
                             imagepath: 'assets/images/paptoken.png',
                           ),

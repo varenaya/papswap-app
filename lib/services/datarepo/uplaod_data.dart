@@ -86,27 +86,41 @@ class UploadData {
   Future<void> postlike(
       String postId, String currentuserdataid, bool isincrement) async {
     if (isincrement) {
-      _firestore.collection('Posts').doc(postId).update({
+      await _firestore.collection('Posts').doc(postId).update({
         'likes': FieldValue.increment(1),
       });
+      await _firestore
+          .collection('users')
+          .doc(currentuserdataid)
+          .collection('likes')
+          .add({
+        'postId': postId,
+        'likedAt': DateTime.now(),
+      });
     } else {
-      _firestore.collection('Posts').doc(postId).update({
+      await _firestore.collection('Posts').doc(postId).update({
         'likes': FieldValue.increment(-1),
       });
+      await _firestore
+          .collection('users')
+          .doc(currentuserdataid)
+          .collection('likes')
+          .where('postId', isEqualTo: postId)
+          .get()
+          .then((value) async {
+        await _firestore
+            .collection('users')
+            .doc(currentuserdataid)
+            .collection('likes')
+            .doc(value.docs.first.id)
+            .delete();
+      });
     }
-
-    _firestore
-        .collection('users')
-        .doc(currentuserdataid)
-        .collection('likes')
-        .add({
-      'postId': postId,
-      'likedAt': DateTime.now(),
-    });
   }
 
-  Future<void> postswap(String postId, String currentuserdataid) async {
-    _firestore
+  Future<String> postswap(String postId, String currentuserdataid) async {
+    String msg = '';
+    await _firestore
         .collection('users')
         .doc(currentuserdataid)
         .collection('swaps')
@@ -125,8 +139,13 @@ class UploadData {
           'postId': postId,
           'swapedAt': DateTime.now(),
         });
+        msg = 'This post has been swapped to your profile!';
+      } else {
+        msg = 'You have already swapped this post!';
       }
     });
+
+    return msg;
   }
 
   Future<String?> reswappostData(String feedtext, UserData userData,
@@ -137,6 +156,13 @@ class UploadData {
           .doc(postId)
           .collection('comments')
           .doc();
+
+      final transdocRef = _firestore
+          .collection('users')
+          .doc(userData.user_id)
+          .collection('transactions')
+          .doc();
+
       await docRef.set({
         'feedtext': feedtext,
         'post_id': postId,
@@ -145,6 +171,21 @@ class UploadData {
         'commenterid': userData.user_id,
         'medialink': '',
       });
+
+      _firestore.collection('Posts').doc(postId).update({
+        'swaps': FieldValue.increment(1),
+      });
+      _firestore.collection('users').doc(userData.user_id).update({
+        'coinVal': FieldValue.increment(10),
+      });
+      transdocRef.set({
+        'transactionId': transdocRef.id,
+        'transtext': 'Credited 2 PapTokens for reswapping.',
+        'amount': 2,
+        'trans_time': DateTime.now(),
+        'details': '2 PapTokens for reswapping post with postId: $postId'
+      });
+
       _firestore
           .collection('users')
           .doc(userData.user_id)
@@ -154,6 +195,7 @@ class UploadData {
         'comment_id': docRef.id,
         'reswapedAt': DateTime.now(),
       });
+
       return docRef.id;
     } on FirebaseException catch (e) {
       var message = 'An error occured in uploading the post! Try again';

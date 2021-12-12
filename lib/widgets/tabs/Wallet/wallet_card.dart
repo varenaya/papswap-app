@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:papswap/models/app/color_const.dart';
 import 'package:papswap/models/userdata.dart';
+import 'package:papswap/screens/tabs/Wallet/token_earning_screen.dart';
 
 class WalletCard extends StatelessWidget {
   final UserData userData;
@@ -8,6 +10,18 @@ class WalletCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    void earnNowfn() {
+      showModalBottomSheet(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(15), topRight: Radius.circular(15)),
+        ),
+        backgroundColor: AppColors.scaffColor,
+        context: context,
+        builder: (context) => const TokenEarningScreen(),
+      );
+    }
+
     return Padding(
       padding: const EdgeInsets.only(top: 20, bottom: 20),
       child: Container(
@@ -48,7 +62,7 @@ class WalletCard extends StatelessWidget {
                 )),
             trailing: FloatingActionButton(
               backgroundColor: Colors.red,
-              onPressed: () {},
+              onPressed: earnNowfn,
               child: const Icon(Icons.add),
             ),
           ),

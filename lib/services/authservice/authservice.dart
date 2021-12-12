@@ -55,7 +55,7 @@ class AuthService {
         'dateJoined': DateTime.now(),
         'coinVal': 5,
         'userWebsite': '',
-        'userType': '',
+        'userType': 'viewer',
       });
       Navigator.of(context).pop();
     } on FirebaseAuthException catch (err) {
@@ -94,7 +94,7 @@ class AuthService {
             'dateJoined': DateTime.now(),
             'coinVal': 5,
             'userWebsite': '',
-            'userType': '',
+            'userType': 'viewer',
           });
         }
       });

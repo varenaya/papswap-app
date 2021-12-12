@@ -18,7 +18,7 @@ class VideoWidget extends StatefulWidget {
 
 class VideoWidgetState extends State<VideoWidget> {
   late VideoPlayerController _controller;
-  bool _isPlaying = false;
+  bool _isPlaying = true;
   bool _muted = false;
 
   late Widget videoStatusAnimation;
@@ -45,7 +45,7 @@ class VideoWidgetState extends State<VideoWidget> {
           if (!mounted) return;
 
           setState(() {});
-          _controller.play();
+          _controller.pause();
         });
       });
   }
@@ -57,11 +57,10 @@ class VideoWidgetState extends State<VideoWidget> {
   }
 
   @override
-  Widget build(BuildContext context) => AspectRatio(
-        aspectRatio: _controller.value.aspectRatio,
-        child:
-            _controller.value.isInitialized ? videoPlayer() : const SizedBox(),
-      );
+  Widget build(BuildContext context) => _controller.value.isInitialized
+      ? AspectRatio(
+          aspectRatio: _controller.value.aspectRatio, child: videoPlayer())
+      : const SizedBox();
 
   Widget videoPlayer() => Stack(
         children: <Widget>[

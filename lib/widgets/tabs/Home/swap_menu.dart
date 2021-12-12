@@ -36,10 +36,34 @@ class SwapMenu extends StatelessWidget {
           ),
         ),
         ListTile(
-            onTap: () {
-              UploadData().postswap(postId, currentuserid).then((value) {
-                Navigator.of(context).pop();
-              });
+            onTap: () async {
+              final msg = await UploadData().postswap(postId, currentuserid);
+
+              Navigator.of(context).pop();
+
+              if (msg == 'You have already swapped this post!') {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      msg,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(fontFamily: 'Poppins'),
+                    ),
+                    backgroundColor: Theme.of(context).errorColor,
+                  ),
+                );
+              } else if (msg == 'This post has been swapped to your profile!') {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      msg,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(fontFamily: 'Poppins'),
+                    ),
+                    backgroundColor: Colors.blue,
+                  ),
+                );
+              }
             },
             contentPadding: const EdgeInsets.symmetric(horizontal: 24.0),
             minLeadingWidth: 30,

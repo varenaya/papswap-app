@@ -66,7 +66,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     labelStyle: TextStyle(fontSize: 14, fontFamily: 'Poppins'),
                     tabs: [
                       Tab(
-                        text: 'Sawp',
+                        text: 'Swap',
                       ),
                       Tab(
                         text: 'Reswap',

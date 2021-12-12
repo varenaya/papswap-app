@@ -5,6 +5,7 @@ import 'package:papswap/Screens/auth/login_screen.dart';
 import 'package:papswap/screens/tabs/tabs_screen.dart';
 import 'package:papswap/services/authservice/authservice.dart';
 import 'package:papswap/services/authservice/googlesigninprovider.dart';
+import 'package:papswap/services/datarepo/postData.dart';
 import 'package:papswap/services/datarepo/userData.dart';
 import 'package:papswap/services/datastream/userdatastream.dart';
 import 'package:papswap/widgets/global/custom_progress_indicator.dart';
@@ -34,6 +35,9 @@ class App extends StatelessWidget {
         ),
         ChangeNotifierProvider<UserDataProvider>(
           create: (context) => UserDataProvider(),
+        ),
+        ChangeNotifierProvider<PostDataListProvider>(
+          create: (context) => PostDataListProvider(),
         ),
       ],
       child: MaterialApp(

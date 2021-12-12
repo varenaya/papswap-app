@@ -146,7 +146,18 @@ class _PostingScreenState extends State<PostingScreen> {
                     final docId =
                         await uploadData.postData(feedtext, userdata, context);
                     if (media == null) {
-                      return Navigator.of(context).pop();
+                      Navigator.of(context).pop();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                            'Your post has been posted successfully!',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontFamily: 'Poppins'),
+                          ),
+                          backgroundColor: Colors.blue,
+                        ),
+                      );
+                      return;
                     }
                     task = await uploadData.postMedia(media, docId!, context);
 
@@ -154,6 +165,16 @@ class _PostingScreenState extends State<PostingScreen> {
                     if (task == null) return;
                     final snapshot = await task!.whenComplete(() {
                       Navigator.of(context).pop();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                            'Your post has been posted successfully!',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontFamily: 'Poppins'),
+                          ),
+                          backgroundColor: Colors.blue,
+                        ),
+                      );
                     });
                     final url = await snapshot.ref.getDownloadURL();
 
@@ -162,7 +183,18 @@ class _PostingScreenState extends State<PostingScreen> {
                     final docId = await uploadData.reswappostData(feedtext,
                         userdata, context, widget.reswappostdata['post_id']);
                     if (media == null) {
-                      return Navigator.of(context).pop();
+                      Navigator.of(context).pop();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                            'You have earned 2 papTokens for successfully reswapping!',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontFamily: 'Poppins'),
+                          ),
+                          backgroundColor: Colors.blue,
+                        ),
+                      );
+                      return;
                     }
                     task = await uploadData.reswappostMedia(media, docId!,
                         context, widget.reswappostdata['post_id']);
@@ -171,6 +203,16 @@ class _PostingScreenState extends State<PostingScreen> {
                     if (task == null) return;
                     final snapshot = await task!.whenComplete(() {
                       Navigator.of(context).pop();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                            'You have earned 2 papTokens for successfully reswapping!',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontFamily: 'Poppins'),
+                          ),
+                          backgroundColor: Colors.blue,
+                        ),
+                      );
                     });
                     final url = await snapshot.ref.getDownloadURL();
 
@@ -302,20 +344,37 @@ class _PostingScreenState extends State<PostingScreen> {
               else
                 const SizedBox(),
               task != null
-                  ? StreamBuilder<TaskSnapshot>(
-                      stream: task!.snapshotEvents,
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          final snap = snapshot.data;
-                          final progress =
-                              snap!.bytesTransferred / snap.totalBytes;
-                          return Text(
-                            progress.toString(),
-                          );
-                        } else {
-                          return Container();
-                        }
-                      },
+                  ? Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: StreamBuilder<TaskSnapshot>(
+                        stream: task!.snapshotEvents,
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            final snap = snapshot.data;
+                            final progress =
+                                snap!.bytesTransferred / snap.totalBytes;
+                            return Column(
+                              children: [
+                                LinearProgressIndicator(
+                                  value: progress,
+                                ),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                const Text(
+                                  'please wait ....',
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                    fontSize: 15,
+                                  ),
+                                )
+                              ],
+                            );
+                          } else {
+                            return const SizedBox();
+                          }
+                        },
+                      ),
                     )
                   : const SizedBox(),
               const SizedBox(
@@ -323,6 +382,7 @@ class _PostingScreenState extends State<PostingScreen> {
               ),
               if (widget.reswappostdata != null)
                 FeedTile(
+                    type: 'reswapost',
                     postdata: widget.reswappostdata,
                     createrdata: widget.reswapcreaterdata),
               const SizedBox(
