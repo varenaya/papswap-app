@@ -4,7 +4,8 @@ import 'package:papswap/screens/tabs/Home/home_screen.dart';
 import 'package:papswap/screens/tabs/Profile/profile_screen.dart';
 import 'package:papswap/screens/tabs/Search/search_screen.dart';
 import 'package:papswap/screens/tabs/Wallet/wallet_screen.dart';
-import 'package:papswap/services/datarepo/postData.dart';
+import 'package:papswap/services/datarepo/postprovider.dart';
+
 import 'package:papswap/services/datarepo/userData.dart';
 import 'package:papswap/widgets/global/custom_progress_indicator.dart';
 import 'package:provider/provider.dart';
@@ -18,35 +19,36 @@ class TabsScreen extends StatefulWidget {
 
 class _TabsScreenState extends State<TabsScreen> {
   int _selectedIndex = 0;
-  var _isInit = true;
-  var _isLoading = false;
+  late PageController pageController;
+
+  @override
+  void initState() {
+    pageController = PageController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    pageController.dispose();
+    super.dispose();
+  }
 
   void _onItemTapped(int index) {
+    pageController.animateToPage(index,
+        duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+  }
+
+  // final List<Widget> _screens = const [
+  //   HomeScreen(),
+  //   // SearchScreen(),
+  //   WalletScreen(),
+  //   ProfileScreen(),
+  // ];
+
+  onPageChanged(int index) {
     setState(() {
       _selectedIndex = index;
     });
-  }
-
-  final List<Widget> _screens = const [
-    HomeScreen(),
-    // SearchScreen(),
-    WalletScreen(),
-    ProfileScreen(),
-  ];
-  @override
-  void didChangeDependencies() {
-    if (_isInit) {
-      setState(() {
-        _isLoading = true;
-      });
-      Provider.of<PostDataListProvider>(context).postData().then((value) {
-        setState(() {
-          _isLoading = false;
-        });
-      });
-    }
-    _isInit = false;
-    super.didChangeDependencies();
   }
 
   @override
@@ -105,9 +107,21 @@ class _TabsScreenState extends State<TabsScreen> {
           ),
         ],
       ),
-      body: _isLoading
-          ? const Center(child: CustomProgressIndicator())
-          : _screens[_selectedIndex],
+      body: Consumer<PostData>(
+        builder: (context, postdata, _) => PageView(
+          children: [
+            HomeScreen(
+              postData: postdata,
+            ),
+            // SearchScreen(),
+            const WalletScreen(),
+            const ProfileScreen(),
+          ],
+          controller: pageController,
+          onPageChanged: onPageChanged,
+          physics: const NeverScrollableScrollPhysics(),
+        ),
+      ),
     );
   }
 }

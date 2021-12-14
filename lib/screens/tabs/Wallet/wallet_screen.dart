@@ -26,6 +26,7 @@ class _WalletScreenState extends State<WalletScreen> {
         backgroundColor: AppColors.scaffColor,
         body: SafeArea(
           child: CustomScrollView(
+            key: const PageStorageKey('wallet'),
             slivers: [
               SliverAppBar(
                 floating: true,

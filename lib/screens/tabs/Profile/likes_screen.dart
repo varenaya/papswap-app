@@ -42,7 +42,6 @@ class _LikesScreenState extends State<LikesScreen> {
                           return FeedTile(
                             type: 'like',
                             postdata: swappostlist![index]['postdata'].data(),
-                            createrdata: swappostlist[index]['createrdata'],
                           );
                         },
                         childCount: swappostlist!.length,

@@ -9,7 +9,7 @@ class CustomProgressIndicator extends StatelessWidget {
       height: 25.0,
       width: 25.0,
       child: CircularProgressIndicator(
-        strokeWidth: 3.5,
+        strokeWidth: 2,
         color: Colors.blue,
       ),
     );

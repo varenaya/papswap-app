@@ -1,25 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:papswap/models/post.dart';
 import 'package:papswap/models/userdata.dart';
 import 'package:papswap/screens/tabs/Home/posting_screen.dart';
 import 'package:papswap/services/datarepo/uplaod_data.dart';
 
 class SwapMenu extends StatelessWidget {
-  final Map postdata;
-
-  final UserData createrdata;
+  final Post postdata;
 
   final String currentuserid;
-  const SwapMenu(
-      {Key? key,
-      required this.currentuserid,
-      required this.postdata,
-      required this.createrdata})
-      : super(key: key);
+  const SwapMenu({
+    Key? key,
+    required this.currentuserid,
+    required this.postdata,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final postId = postdata['post_id'];
+    final postId = postdata.postId;
     return Wrap(
       children: [
         Container(
@@ -80,7 +78,7 @@ class SwapMenu extends StatelessWidget {
             Navigator.of(context).push(PageTransition(
                 child: PostingScreen(
                   type: 'Reswap',
-                  reswapcreaterdata: createrdata,
+                  reswapcreaterdata: postId,
                   reswappostdata: postdata,
                 ),
                 type: PageTransitionType.bottomToTop));

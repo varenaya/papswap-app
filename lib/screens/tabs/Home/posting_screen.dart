@@ -382,9 +382,9 @@ class _PostingScreenState extends State<PostingScreen> {
               ),
               if (widget.reswappostdata != null)
                 FeedTile(
-                    type: 'reswapost',
-                    postdata: widget.reswappostdata,
-                    createrdata: widget.reswapcreaterdata),
+                  type: 'reswapost',
+                  postdata: widget.reswappostdata,
+                ),
               const SizedBox(
                 height: 20,
               ),

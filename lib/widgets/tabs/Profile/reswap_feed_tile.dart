@@ -143,10 +143,7 @@ class ReswapFeedTile extends StatelessWidget {
                           ),
                         ),
                       ),
-            FeedTile(
-                postdata: postdata['postdata'].data(),
-                createrdata: postdata['createrdata'],
-                type: 'reswap'),
+            FeedTile(postdata: postdata['postdata'].data(), type: 'reswap'),
           ],
         ),
       ),

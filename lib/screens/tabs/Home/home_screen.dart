@@ -1,27 +1,78 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:papswap/models/app/color_const.dart';
+
 import 'package:papswap/models/userdata.dart';
 import 'package:papswap/screens/tabs/Home/posting_screen.dart';
-import 'package:papswap/services/datarepo/postData.dart';
+import 'package:papswap/services/datarepo/data_fetcher.dart';
+import 'package:papswap/services/datarepo/postprovider.dart';
+import 'package:papswap/widgets/global/custom_progress_indicator.dart';
+
 import 'package:papswap/widgets/tabs/Home/feed_tile.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  final PostData postData;
+  const HomeScreen({Key? key, required this.postData}) : super(key: key);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final DataFetcher dataFetcher = DataFetcher();
+
+  late DocumentSnapshot startAfter;
+
+  final scrollController = ScrollController();
+
+  @override
+  initState() {
+    scrollController.addListener(scrollListener);
+
+    widget.postData.fetchNextposts();
+
+    // dataFetcher.myPostStream().listen((data) {
+    //   for (var doc in data.docs) {
+    //     final post = Post.fromDoc(doc);
+    //     if (mounted) {
+    //       setState(() {
+    //         if (!posts.any((element) {
+    //           return element.postId == post.postId;
+    //         })) {
+    //           posts = [post] + posts;
+    //         }
+    //       });
+    //     }
+    //   }
+    // });
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
+
+  void scrollListener() {
+    if (scrollController.offset >= scrollController.position.maxScrollExtent &&
+        !scrollController.position.outOfRange) {
+      if (widget.postData.hasNext) {
+        widget.postData.fetchNextposts();
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final userData = Provider.of<UserData>(context);
 
     Future<void> _refreshPostdata() async {
-      Provider.of<PostDataListProvider>(context, listen: false).postData();
+      widget.postData.fetchNextposts();
     }
 
     return Scaffold(
@@ -44,79 +95,88 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
         body: SafeArea(
-          child: RefreshIndicator(
-            onRefresh: _refreshPostdata,
-            child: Consumer<PostDataListProvider>(
-              builder: (ctx, postdata, _) => CustomScrollView(
-                slivers: [
-                  SliverAppBar(
-                    elevation: 0,
-                    floating: true,
-                    backgroundColor: AppColors.scaffColor,
-                    title: Text(
-                      'papswap',
-                      style: Theme.of(context).textTheme.headline1,
-                    ),
-                    actions: [
-                      IconButton(
-                          onPressed: () async {
-                            const _url = 'https://papswap.in/';
-                            if (!await launch(_url)) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: const Text(
-                                    'Could not launch $_url',
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  backgroundColor: Theme.of(context).errorColor,
-                                ),
-                              );
-                            }
-                          },
-                          icon: const Icon(
-                            Icons.info_outline,
-                            color: Colors.black,
-                          )),
-                    ],
-                  ),
-                  SliverToBoxAdapter(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 15.0, bottom: 4),
-                          child: Text(
-                            'trending',
-                            style: Theme.of(context).textTheme.headline1,
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                      ],
-                    ),
-                  ),
-                  SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                        return FeedTile(
-                          type: 'feed',
-                          ispostliked: postdata.postdata?.ispostliked[index],
-                          postdata: postdata.postdata?.postdata[index]?.data(),
-                          createrdata:
-                              postdata.postdata!.createrdatalist[index],
-                        );
+            child: RefreshIndicator(
+          onRefresh: _refreshPostdata,
+          child: CustomScrollView(
+            key: const PageStorageKey('home'),
+            controller: scrollController,
+            slivers: [
+              SliverAppBar(
+                elevation: 0,
+                stretch: true,
+                floating: true,
+                backgroundColor: AppColors.scaffColor,
+                title: Text(
+                  'papswap',
+                  style: Theme.of(context).textTheme.headline1,
+                ),
+                actions: [
+                  IconButton(
+                      onPressed: () async {
+                        const _url = 'https://papswap.in/';
+                        if (!await launch(_url)) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: const Text(
+                                'Could not launch $_url',
+                                textAlign: TextAlign.center,
+                              ),
+                              backgroundColor: Theme.of(context).errorColor,
+                            ),
+                          );
+                        }
                       },
-                      childCount: postdata.postdata?.postdata.length,
-                    ),
-                  ),
+                      icon: const Icon(
+                        Icons.info_outline,
+                        color: Colors.black,
+                      )),
                 ],
               ),
-            ),
+              SliverToBoxAdapter(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 15.0, bottom: 4),
+                      child: Text(
+                        'trending',
+                        style: Theme.of(context).textTheme.headline1,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                  ],
+                ),
+              ),
+              SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  return FeedTile(
+                      type: 'feed', postdata: widget.postData.posts[index]);
+                },
+                childCount: widget.postData.posts.length,
+              )),
+              SliverToBoxAdapter(
+                  child: (widget.postData.hasNext)
+                      ? Column(
+                          children: [
+                            const SizedBox(height: 15),
+                            Center(
+                              child: GestureDetector(
+                                onTap: widget.postData.fetchNextposts,
+                                child: const CustomProgressIndicator(),
+                              ),
+                            ),
+                            const SizedBox(height: 15),
+                          ],
+                        )
+                      : null),
+            ],
           ),
-        ));
+        )));
   }
 }

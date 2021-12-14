@@ -18,6 +18,8 @@ class UploadData {
         'post_id': docRef.id,
         'createdAt': DateTime.now(),
         'createrid': userData.user_id,
+        'creater_name': userData.userName,
+        'creater_img': userData.userImage,
         'likes': 0,
         'swaps': 0,
         'reports': 0,

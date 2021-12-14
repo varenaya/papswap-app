@@ -41,9 +41,7 @@ class _SwapScreenState extends State<SwapScreen> {
                         (context, index) {
                           return FeedTile(
                             type: 'swap',
-                            ispostliked: swappostlist![index]['ispostliked'],
-                            postdata: swappostlist[index]['postdata'].data(),
-                            createrdata: swappostlist[index]['createrdata'],
+                            postdata: swappostlist![index]['postdata'].data(),
                           );
                         },
                         childCount: swappostlist!.length,

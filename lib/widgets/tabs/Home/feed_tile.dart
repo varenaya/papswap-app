@@ -4,6 +4,7 @@ import 'package:detectable_text_field/detectable_text_field.dart';
 import 'package:detectable_text_field/detector/sample_regular_expressions.dart';
 import 'package:duration/duration.dart';
 import 'package:flutter/material.dart';
+import 'package:papswap/models/post.dart';
 import 'package:papswap/models/userdata.dart';
 import 'package:papswap/services/datarepo/uplaod_data.dart';
 import 'package:papswap/services/datarepo/userData.dart';
@@ -14,17 +15,14 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class FeedTile extends StatefulWidget {
-  final Map postdata;
+  final Post postdata;
   final String type;
-  final UserData createrdata;
-  final ispostliked;
-  const FeedTile(
-      {Key? key,
-      required this.postdata,
-      required this.createrdata,
-      required this.type,
-      this.ispostliked})
-      : super(key: key);
+
+  const FeedTile({
+    Key? key,
+    required this.postdata,
+    required this.type,
+  }) : super(key: key);
 
   @override
   _FeedTileState createState() => _FeedTileState();
@@ -36,17 +34,15 @@ class _FeedTileState extends State<FeedTile> {
   @override
   void initState() {
     super.initState();
-    likes = widget.postdata['likes'];
+    likes = widget.postdata.likes;
     if (widget.type == 'like') {
       isliked = true;
-    } else {
-      widget.ispostliked == true ? isliked = true : isliked = false;
     }
   }
 
   String timeDuration() {
     final timedif =
-        (DateTime.now()).difference(widget.postdata['createdAt'].toDate());
+        (DateTime.now()).difference(widget.postdata.createdAt.toDate());
 
     final printedduration = printDuration(timedif, abbreviated: true);
     final time = printedduration.split(',').first;
@@ -81,7 +77,7 @@ class _FeedTileState extends State<FeedTile> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    widget.createrdata.userName,
+                    widget.postdata.creatername,
                     style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
@@ -108,10 +104,10 @@ class _FeedTileState extends State<FeedTile> {
               ),
               leading: CircleAvatar(
                 radius: 22,
-                backgroundImage: widget.createrdata.userImage == ''
+                backgroundImage: widget.postdata.createrimg == ''
                     ? const AssetImage('assets/images/Person.png')
                         as ImageProvider
-                    : NetworkImage(widget.createrdata.userImage),
+                    : NetworkImage(widget.postdata.createrimg),
               ),
             ),
             Padding(
@@ -143,7 +139,7 @@ class _FeedTileState extends State<FeedTile> {
                     }
                   }
                 },
-                text: ('${widget.postdata['feedtext']}   '),
+                text: ('${widget.postdata.feedtext}   '),
                 detectionRegExp: detectionRegExp(atSign: false)!,
               ),
             ),
@@ -198,7 +194,7 @@ class _FeedTileState extends State<FeedTile> {
                                     setState(() {
                                       isliked = !isliked;
                                       UploadData().postlike(
-                                          widget.postdata['post_id'],
+                                          widget.postdata.postId,
                                           currentuserdata.user_id,
                                           isliked);
                                       if (isliked) {}
@@ -258,7 +254,6 @@ class _FeedTileState extends State<FeedTile> {
                                             ),
                                             context: context,
                                             builder: (context) => SwapMenu(
-                                              createrdata: widget.createrdata,
                                               postdata: widget.postdata,
                                               currentuserid:
                                                   currentuserdata.user_id,
@@ -275,7 +270,7 @@ class _FeedTileState extends State<FeedTile> {
                                   width: 2,
                                 ),
                                 Text(
-                                  widget.postdata['swaps'].toString(),
+                                  widget.postdata.swaps.toString(),
                                   style: const TextStyle(
                                       color: Colors.grey, fontSize: 12.5),
                                 ),

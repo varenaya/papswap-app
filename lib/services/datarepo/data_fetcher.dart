@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:papswap/models/userdata.dart';
 
 class DataFetcher {
@@ -22,72 +23,42 @@ class DataFetcher {
     );
   }
 
-  Future<Map> postdata() async {
-    final List<UserData> createrdatalist = [];
-    final List<bool> ispostliked = [];
-    final postdatalist = await _firestore
+  Future<QuerySnapshot> getFeed(
+    int limit, {
+    DocumentSnapshot? startAfter,
+  }) async {
+    final refposts = _firestore
         .collection('Posts')
-        .orderBy(
-          'createdAt',
-          descending: true,
-        )
-        .limit(10)
-        .get();
-    for (var element in postdatalist.docs) {
-      final createrid = element.data()['createrid'];
-      await _firestore
-          .collection('users')
-          .doc(currentusedId)
-          .collection('likes')
-          .where('postId', isEqualTo: element.data()['post_id'])
-          .get()
-          .then((value) {
-        if (value.docs.isNotEmpty) {
-          ispostliked.add(true);
-        } else {
-          ispostliked.add(false);
-        }
-      });
+        .orderBy('createdAt', descending: true)
+        .limit(limit);
 
-      final createrdata = await getcraterdata(createrid);
-
-      createrdatalist.add(createrdata);
+    if (startAfter == null) {
+      return refposts.get();
+    } else {
+      return refposts.startAfterDocument(startAfter).get();
     }
-    return {
-      'postdata': postdatalist,
-      'createrdata': createrdatalist,
-      'ispostliked': ispostliked
-    };
+  }
+
+  Future<QuerySnapshot> selfpostedpost() {
+    final ref = _firestore
+        .collection('Posts')
+        .orderBy('createdAt', descending: true)
+        .limit(1);
+    return ref.get();
   }
 
   Future<Map> individualpostdata(String postId, String type) async {
     UserData? createrdata;
-    bool? ispostliked;
+
     final postdata = await _firestore.collection('Posts').doc(postId).get();
 
     final createrid = postdata.data()!['createrid'];
-    if (type == 'swaps') {
-      await _firestore
-          .collection('users')
-          .doc(currentusedId)
-          .collection('likes')
-          .where('postId', isEqualTo: postId)
-          .get()
-          .then((value) {
-        if (value.docs.isNotEmpty) {
-          ispostliked = true;
-        } else {
-          ispostliked = false;
-        }
-      });
-    }
 
     createrdata = await getcraterdata(createrid);
 
     return {
       'postdata': postdata,
       'createrdata': createrdata,
-      'ispostliked': ispostliked
     };
   }
 
