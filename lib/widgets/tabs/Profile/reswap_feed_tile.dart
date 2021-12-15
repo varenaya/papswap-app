@@ -2,7 +2,7 @@ import 'package:detectable_text_field/detector/sample_regular_expressions.dart';
 import 'package:detectable_text_field/widgets/detectable_text.dart';
 import 'package:duration/duration.dart';
 import 'package:flutter/material.dart';
-import 'package:papswap/services/datarepo/userData.dart';
+import 'package:papswap/services/datarepo/providers/userData.dart';
 import 'package:papswap/widgets/tabs/Home/feed_tile.dart';
 import 'package:papswap/widgets/tabs/Home/video_player.dart';
 import 'package:provider/provider.dart';

@@ -4,7 +4,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:papswap/models/userdata.dart';
+import 'package:papswap/services/datarepo/providers/likespostprovider.dart';
+import 'package:papswap/services/datarepo/providers/postprovider.dart';
 import 'package:path/path.dart';
+import 'package:provider/provider.dart';
 
 class UploadData {
   final _firestore = FirebaseFirestore.instance;
@@ -33,6 +36,7 @@ class UploadData {
         'postId': docRef.id,
         'swapedAt': DateTime.now(),
       });
+      Provider.of<PostData>(context, listen: false).fetchpostedpost(docRef.id);
       return docRef.id;
     } on FirebaseException catch (e) {
       var message = 'An error occured in uploading the post! Try again';
@@ -85,8 +89,8 @@ class UploadData {
     });
   }
 
-  Future<void> postlike(
-      String postId, String currentuserdataid, bool isincrement) async {
+  Future<void> postlike(String postId, String currentuserdataid,
+      bool isincrement, BuildContext context) async {
     if (isincrement) {
       await _firestore.collection('Posts').doc(postId).update({
         'likes': FieldValue.increment(1),
@@ -95,7 +99,8 @@ class UploadData {
           .collection('users')
           .doc(currentuserdataid)
           .collection('likes')
-          .add({
+          .doc(postId)
+          .set({
         'postId': postId,
         'likedAt': DateTime.now(),
       });
@@ -107,16 +112,9 @@ class UploadData {
           .collection('users')
           .doc(currentuserdataid)
           .collection('likes')
-          .where('postId', isEqualTo: postId)
-          .get()
-          .then((value) async {
-        await _firestore
-            .collection('users')
-            .doc(currentuserdataid)
-            .collection('likes')
-            .doc(value.docs.first.id)
-            .delete();
-      });
+          .doc(postId)
+          .delete();
+      Provider.of<LikesPostData>(context, listen: false).removelike(postId);
     }
   }
 
@@ -172,13 +170,15 @@ class UploadData {
         'createdAt': DateTime.now(),
         'commenterid': userData.user_id,
         'medialink': '',
+        'is_verified': false,
+        'supertoken': '',
       });
 
       _firestore.collection('Posts').doc(postId).update({
         'swaps': FieldValue.increment(1),
       });
       _firestore.collection('users').doc(userData.user_id).update({
-        'coinVal': FieldValue.increment(10),
+        'coinVal': FieldValue.increment(2),
       });
       transdocRef.set({
         'transactionId': transdocRef.id,

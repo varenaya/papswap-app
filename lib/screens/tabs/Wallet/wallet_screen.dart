@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:papswap/models/app/color_const.dart';
 import 'package:papswap/models/userdata.dart';
 import 'package:papswap/screens/tabs/Wallet/transactions_screen.dart';
+import 'package:papswap/services/adservice/ad_helper.dart';
 import 'package:papswap/widgets/tabs/Wallet/movie_tile.dart';
 import 'package:papswap/widgets/tabs/Wallet/reward_tile.dart';
 import 'package:papswap/widgets/tabs/Wallet/voucher_tile.dart';
@@ -18,6 +20,90 @@ class WalletScreen extends StatefulWidget {
 }
 
 class _WalletScreenState extends State<WalletScreen> {
+  // static final AdRequest request = AdRequest(
+  //   keywords: <String>['foo', 'bar'],
+  //   contentUrl: 'http://foo.com/bar.html',
+  //   nonPersonalizedAds: true,
+  // );
+
+  // RewardedAd? _rewardedAd;
+  // int _numRewardedLoadAttempts = 0;
+
+  // @override
+  // void initState() {
+  //   super.initState();
+
+  //   _createRewardedAd();
+  // }
+
+  // void _createRewardedAd() {
+  //   RewardedAd.load(
+  //       adUnitId: RewardedAd.testAdUnitId,
+  //       request: request,
+  //       rewardedAdLoadCallback: RewardedAdLoadCallback(
+  //         onAdLoaded: (RewardedAd ad) {
+  //           print('$ad loaded.');
+  //           _rewardedAd = ad;
+  //           _numRewardedLoadAttempts = 0;
+  //         },
+  //         onAdFailedToLoad: (LoadAdError error) {
+  //           print('RewardedAd failed to load: $error');
+  //           _rewardedAd = null;
+  //           _numRewardedLoadAttempts += 1;
+  //           if (_numRewardedLoadAttempts <= maxFailedLoadAttempts) {
+  //             _createRewardedAd();
+  //           }
+  //         },
+  //       ));
+  // }
+
+  // void _showRewardedAd() {
+  //   if (_rewardedAd == null) {
+  //     print('Warning: attempt to show rewarded before loaded.');
+  //     return;
+  //   }
+  //   _rewardedAd!.fullScreenContentCallback = FullScreenContentCallback(
+  //     onAdShowedFullScreenContent: (RewardedAd ad) =>
+  //         print('ad onAdShowedFullScreenContent.'),
+  //     onAdDismissedFullScreenContent: (RewardedAd ad) {
+  //       print('$ad onAdDismissedFullScreenContent.');
+  //       ad.dispose();
+  //       _createRewardedAd();
+  //     },
+  //     onAdFailedToShowFullScreenContent: (RewardedAd ad, AdError error) {
+  //       print('$ad onAdFailedToShowFullScreenContent: $error');
+  //       ad.dispose();
+  //       _createRewardedAd();
+  //     },
+  //   );
+
+  //   _rewardedAd!.setImmersiveMode(true);
+  //   _rewardedAd!.show(onUserEarnedReward: (RewardedAd ad, RewardItem reward) {
+  //     print('$ad with reward $RewardItem(${reward.amount}, ${reward.type}');
+  //   });
+  //   _rewardedAd = null;
+  // }
+
+  // @override
+  // void dispose() {
+  //   super.dispose();
+
+  //   _rewardedAd?.dispose();
+  // }
+  final AdHelper adHelper = AdHelper();
+
+  @override
+  void initState() {
+    adHelper.loadAd();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    adHelper.disposeAd();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -26,7 +112,6 @@ class _WalletScreenState extends State<WalletScreen> {
         backgroundColor: AppColors.scaffColor,
         body: SafeArea(
           child: CustomScrollView(
-            key: const PageStorageKey('wallet'),
             slivers: [
               SliverAppBar(
                 floating: true,

@@ -5,9 +5,8 @@ import 'package:detectable_text_field/detector/sample_regular_expressions.dart';
 import 'package:duration/duration.dart';
 import 'package:flutter/material.dart';
 import 'package:papswap/models/post.dart';
-import 'package:papswap/models/userdata.dart';
-import 'package:papswap/services/datarepo/uplaod_data.dart';
-import 'package:papswap/services/datarepo/userData.dart';
+import 'package:papswap/services/datarepo/Api/uplaod_data.dart';
+import 'package:papswap/services/datarepo/providers/userData.dart';
 
 import 'package:papswap/widgets/tabs/Home/swap_menu.dart';
 import 'package:papswap/widgets/tabs/Home/video_player.dart';
@@ -196,7 +195,8 @@ class _FeedTileState extends State<FeedTile> {
                                       UploadData().postlike(
                                           widget.postdata.postId,
                                           currentuserdata.user_id,
-                                          isliked);
+                                          isliked,
+                                          context);
                                       if (isliked) {}
                                     });
                                   },
@@ -218,15 +218,15 @@ class _FeedTileState extends State<FeedTile> {
                                 isliked
                                     ? Text(
                                         likes == 0
-                                            ? (likes + 1).toString()
-                                            : likes.toString(),
+                                            ? (likes + 1).abs().toString()
+                                            : likes.abs().toString(),
                                         style: const TextStyle(
                                             color: Colors.grey, fontSize: 12.5),
                                       )
                                     : Text(
                                         likes == 0
-                                            ? likes.toString()
-                                            : (likes - 1).toString(),
+                                            ? likes.abs().toString()
+                                            : (likes - 1).abs().toString(),
                                         style: const TextStyle(
                                             color: Colors.grey, fontSize: 12.5),
                                       ),

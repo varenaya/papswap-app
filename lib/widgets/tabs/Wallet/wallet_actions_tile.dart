@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:papswap/models/app/color_const.dart';
 import 'package:papswap/screens/tabs/Wallet/token_earning_screen.dart';

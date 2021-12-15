@@ -1,14 +1,18 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:papswap/Screens/auth/login_screen.dart';
 import 'package:papswap/screens/tabs/tabs_screen.dart';
 import 'package:papswap/services/authservice/authservice.dart';
 import 'package:papswap/services/authservice/googlesigninprovider.dart';
-import 'package:papswap/services/datarepo/postprovider.dart';
+import 'package:papswap/services/datarepo/Api/datastream/userdatastream.dart';
+import 'package:papswap/services/datarepo/providers/likespostprovider.dart';
+import 'package:papswap/services/datarepo/providers/postprovider.dart';
+import 'package:papswap/services/datarepo/providers/swappostprovider.dart';
 
-import 'package:papswap/services/datarepo/userData.dart';
-import 'package:papswap/services/datastream/userdatastream.dart';
+import 'package:papswap/services/datarepo/providers/userData.dart';
+
 import 'package:papswap/widgets/global/custom_progress_indicator.dart';
 import 'package:provider/provider.dart';
 
@@ -17,6 +21,7 @@ import 'models/userdata.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  MobileAds.instance.initialize();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
@@ -39,6 +44,12 @@ class App extends StatelessWidget {
         ),
         ChangeNotifierProvider<PostData>(
           create: (context) => PostData(),
+        ),
+        ChangeNotifierProvider<SwapPostData>(
+          create: (context) => SwapPostData(),
+        ),
+        ChangeNotifierProvider<LikesPostData>(
+          create: (context) => LikesPostData(),
         ),
       ],
       child: MaterialApp(

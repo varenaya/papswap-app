@@ -1,55 +1,94 @@
 import 'package:flutter/material.dart';
 import 'package:papswap/models/app/color_const.dart';
-import 'package:papswap/models/userdata.dart';
-import 'package:papswap/services/datarepo/data_fetcher.dart';
+import 'package:papswap/services/datarepo/Api/data_fetcher.dart';
+import 'package:papswap/services/datarepo/providers/likespostprovider.dart';
 import 'package:papswap/widgets/global/custom_progress_indicator.dart';
 import 'package:papswap/widgets/tabs/Home/feed_tile.dart';
-import 'package:provider/provider.dart';
 
 class LikesScreen extends StatefulWidget {
-  const LikesScreen({Key? key}) : super(key: key);
+  final LikesPostData likesPostData;
+  const LikesScreen({Key? key, required this.likesPostData}) : super(key: key);
 
   @override
   _LikesScreenState createState() => _LikesScreenState();
 }
 
 class _LikesScreenState extends State<LikesScreen> {
+  final DataFetcher dataFetcher = DataFetcher();
+  final scrollController = ScrollController();
+
+  @override
+  initState() {
+    scrollController.addListener(scrollListener);
+    widget.likesPostData.fetchlikesposts(false);
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
+
+  void scrollListener() {
+    if (scrollController.offset >= scrollController.position.maxScrollExtent &&
+        !scrollController.position.outOfRange) {
+      if (widget.likesPostData.hasNext) {
+        widget.likesPostData.fetchlikesposts(false);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final userData = Provider.of<UserData>(context);
+    Future<void> _refreshdata() async {
+      widget.likesPostData.fetchlikesposts(true);
+    }
+
     return Scaffold(
         backgroundColor: AppColors.scaffColor,
         body: SafeArea(
-          child: FutureBuilder<List>(
-              future:
-                  DataFetcher().getprofilepostdata(userData.user_id, 'likes'),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CustomProgressIndicator());
-                }
-
-                final List? swappostlist = snapshot.data;
-
-                return CustomScrollView(
-                  slivers: [
-                    const SliverToBoxAdapter(
-                        child: SizedBox(
-                      height: 15,
-                    )),
-                    SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                          return FeedTile(
-                            type: 'like',
-                            postdata: swappostlist![index]['postdata'].data(),
-                          );
-                        },
-                        childCount: swappostlist!.length,
-                      ),
-                    )
-                  ],
-                );
-              }),
+          child: RefreshIndicator(
+            onRefresh: _refreshdata,
+            child: CustomScrollView(
+              controller: scrollController,
+              slivers: [
+                const SliverToBoxAdapter(
+                    child: SizedBox(
+                  height: 15,
+                )),
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      return FeedTile(
+                        type: 'like',
+                        postdata: widget.likesPostData.likesposts[index],
+                      );
+                    },
+                    childCount: widget.likesPostData.likesposts.length,
+                  ),
+                ),
+                SliverToBoxAdapter(
+                    child: (widget.likesPostData.hasNext)
+                        ? Column(
+                            children: [
+                              const SizedBox(height: 15),
+                              Center(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    widget.likesPostData.fetchlikesposts(false);
+                                  },
+                                  child: const CustomProgressIndicator(),
+                                ),
+                              ),
+                              const SizedBox(height: 15),
+                            ],
+                          )
+                        : null),
+              ],
+            ),
+          ),
         ));
   }
 }

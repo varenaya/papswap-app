@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:papswap/models/post.dart';
-import 'package:papswap/models/userdata.dart';
 import 'package:papswap/screens/tabs/Home/posting_screen.dart';
-import 'package:papswap/services/datarepo/uplaod_data.dart';
+import 'package:papswap/services/datarepo/Api/uplaod_data.dart';
 
 class SwapMenu extends StatelessWidget {
   final Post postdata;

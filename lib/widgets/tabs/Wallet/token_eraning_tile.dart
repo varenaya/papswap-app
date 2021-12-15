@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:papswap/services/adservice/ad_helper.dart';
 
 class TokenEarningTile extends StatelessWidget {
   final String title;
@@ -7,6 +8,7 @@ class TokenEarningTile extends StatelessWidget {
   final String buttontext;
   final Size size;
   final String imagepath;
+
   const TokenEarningTile({
     Key? key,
     required this.title,
@@ -19,6 +21,7 @@ class TokenEarningTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AdHelper adHelper = AdHelper();
     return Padding(
       padding: const EdgeInsets.fromLTRB(15, 15, 15, 0),
       child: Container(
@@ -53,7 +56,7 @@ class TokenEarningTile extends StatelessWidget {
             ),
           ),
           trailing: ElevatedButton(
-              onPressed: () {},
+              onPressed: buttontext == 'Watch Now' ? adHelper.showAd : () {},
               style: ElevatedButton.styleFrom(
                 primary: Colors.red,
                 elevation: 0,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:papswap/models/app/color_const.dart';
-import 'package:papswap/services/datarepo/data_fetcher.dart';
+import 'package:papswap/services/datarepo/Api/data_fetcher.dart';
 import 'package:papswap/widgets/global/custom_progress_indicator.dart';
 import 'package:papswap/widgets/tabs/Profile/reswap_feed_tile.dart';
 

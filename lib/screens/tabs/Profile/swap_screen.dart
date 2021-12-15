@@ -1,55 +1,95 @@
 import 'package:flutter/material.dart';
 import 'package:papswap/models/app/color_const.dart';
-import 'package:papswap/models/userdata.dart';
-import 'package:papswap/services/datarepo/data_fetcher.dart';
+import 'package:papswap/services/datarepo/Api/data_fetcher.dart';
+import 'package:papswap/services/datarepo/providers/swappostprovider.dart';
 import 'package:papswap/widgets/global/custom_progress_indicator.dart';
+
 import 'package:papswap/widgets/tabs/Home/feed_tile.dart';
-import 'package:provider/provider.dart';
 
 class SwapScreen extends StatefulWidget {
-  const SwapScreen({Key? key}) : super(key: key);
+  final SwapPostData swapPostData;
+  const SwapScreen({Key? key, required this.swapPostData}) : super(key: key);
 
   @override
   _SwapScreenState createState() => _SwapScreenState();
 }
 
 class _SwapScreenState extends State<SwapScreen> {
+  final DataFetcher dataFetcher = DataFetcher();
+  final scrollController = ScrollController();
+
+  @override
+  initState() {
+    scrollController.addListener(scrollListener);
+    widget.swapPostData.fetchswapposts(false);
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
+
+  void scrollListener() {
+    if (scrollController.offset >= scrollController.position.maxScrollExtent &&
+        !scrollController.position.outOfRange) {
+      if (widget.swapPostData.hasNext) {
+        widget.swapPostData.fetchswapposts(false);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final userData = Provider.of<UserData>(context);
+    Future<void> _refreshdata() async {
+      widget.swapPostData.fetchswapposts(true);
+    }
+
     return Scaffold(
         backgroundColor: AppColors.scaffColor,
         body: SafeArea(
-          child: FutureBuilder<List>(
-              future:
-                  DataFetcher().getprofilepostdata(userData.user_id, 'swaps'),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CustomProgressIndicator());
-                }
-
-                final List? swappostlist = snapshot.data;
-
-                return CustomScrollView(
-                  slivers: [
-                    const SliverToBoxAdapter(
-                        child: SizedBox(
-                      height: 15,
-                    )),
-                    SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                          return FeedTile(
-                            type: 'swap',
-                            postdata: swappostlist![index]['postdata'].data(),
-                          );
-                        },
-                        childCount: swappostlist!.length,
-                      ),
-                    )
-                  ],
-                );
-              }),
+          child: RefreshIndicator(
+            onRefresh: _refreshdata,
+            child: CustomScrollView(
+              controller: scrollController,
+              slivers: [
+                const SliverToBoxAdapter(
+                    child: SizedBox(
+                  height: 15,
+                )),
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      return FeedTile(
+                        type: 'swap',
+                        postdata: widget.swapPostData.swapposts[index],
+                      );
+                    },
+                    childCount: widget.swapPostData.swapposts.length,
+                  ),
+                ),
+                SliverToBoxAdapter(
+                    child: (widget.swapPostData.hasNext)
+                        ? Column(
+                            children: [
+                              const SizedBox(height: 15),
+                              Center(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    widget.swapPostData.fetchswapposts(false);
+                                  },
+                                  child: const CustomProgressIndicator(),
+                                ),
+                              ),
+                              const SizedBox(height: 15),
+                            ],
+                          )
+                        : null),
+              ],
+            ),
+          ),
         ));
   }
 }

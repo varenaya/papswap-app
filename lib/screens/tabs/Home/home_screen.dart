@@ -1,12 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:papswap/models/app/color_const.dart';
 
 import 'package:papswap/models/userdata.dart';
 import 'package:papswap/screens/tabs/Home/posting_screen.dart';
-import 'package:papswap/services/datarepo/data_fetcher.dart';
-import 'package:papswap/services/datarepo/postprovider.dart';
+import 'package:papswap/services/datarepo/Api/data_fetcher.dart';
+import 'package:papswap/services/datarepo/providers/postprovider.dart';
 import 'package:papswap/widgets/global/custom_progress_indicator.dart';
 
 import 'package:papswap/widgets/tabs/Home/feed_tile.dart';
@@ -23,32 +22,12 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final DataFetcher dataFetcher = DataFetcher();
-
-  late DocumentSnapshot startAfter;
-
   final scrollController = ScrollController();
 
   @override
   initState() {
     scrollController.addListener(scrollListener);
-
-    widget.postData.fetchNextposts();
-
-    // dataFetcher.myPostStream().listen((data) {
-    //   for (var doc in data.docs) {
-    //     final post = Post.fromDoc(doc);
-    //     if (mounted) {
-    //       setState(() {
-    //         if (!posts.any((element) {
-    //           return element.postId == post.postId;
-    //         })) {
-    //           posts = [post] + posts;
-    //         }
-    //       });
-    //     }
-    //   }
-    // });
-
+    widget.postData.fetchNextposts(false);
     super.initState();
   }
 
@@ -62,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (scrollController.offset >= scrollController.position.maxScrollExtent &&
         !scrollController.position.outOfRange) {
       if (widget.postData.hasNext) {
-        widget.postData.fetchNextposts();
+        widget.postData.fetchNextposts(false);
       }
     }
   }
@@ -72,7 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final userData = Provider.of<UserData>(context);
 
     Future<void> _refreshPostdata() async {
-      widget.postData.fetchNextposts();
+      widget.postData.fetchNextposts(true);
     }
 
     return Scaffold(
@@ -167,7 +146,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             const SizedBox(height: 15),
                             Center(
                               child: GestureDetector(
-                                onTap: widget.postData.fetchNextposts,
+                                onTap: () {
+                                  widget.postData.fetchNextposts(false);
+                                },
                                 child: const CustomProgressIndicator(),
                               ),
                             ),

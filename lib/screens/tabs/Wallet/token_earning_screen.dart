@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:papswap/models/app/color_const.dart';
+
 import 'package:papswap/widgets/tabs/Wallet/token_eraning_tile.dart';
 
 class TokenEarningScreen extends StatefulWidget {

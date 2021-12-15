@@ -5,7 +5,10 @@ import 'package:papswap/screens/tabs/Profile/likes_screen.dart';
 import 'package:papswap/screens/tabs/Profile/reswap_screen.dart';
 import 'package:papswap/screens/tabs/Profile/settings_screen.dart';
 import 'package:papswap/screens/tabs/Profile/swap_screen.dart';
+import 'package:papswap/services/datarepo/providers/likespostprovider.dart';
+import 'package:papswap/services/datarepo/providers/swappostprovider.dart';
 import 'package:papswap/widgets/tabs/Profile/profile_header.dart';
+import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -56,8 +59,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ];
             },
             body: Column(
-              children: const [
-                Material(
+              children: [
+                const Material(
                   color: AppColors.scaffColor,
                   child: TabBar(
                     labelColor: Colors.blue,
@@ -81,9 +84,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Expanded(
                   child: TabBarView(
                     children: [
-                      SwapScreen(),
+                      Consumer<SwapPostData>(
+                          builder: (context, swappostdata, _) => SwapScreen(
+                                swapPostData: swappostdata,
+                              )),
                       ReswapScreen(),
-                      LikesScreen(),
+                      Consumer<LikesPostData>(
+                          builder: (context, likespostdata, _) => LikesScreen(
+                                likesPostData: likespostdata,
+                              )),
                     ],
                   ),
                 ),

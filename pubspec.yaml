@@ -38,6 +38,7 @@ dependencies:
   firebase_storage: ^10.2.0
   flutter:
     sdk: flutter
+  google_mobile_ads: ^1.0.1
   google_sign_in: ^5.2.0
   intl: ^0.17.0
   mime: ^1.0.1

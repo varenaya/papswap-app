@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:papswap/models/app/color_const.dart';
-import 'package:papswap/services/datarepo/data_fetcher.dart';
-import 'package:papswap/services/datarepo/userData.dart';
+import 'package:papswap/services/datarepo/Api/data_fetcher.dart';
+import 'package:papswap/services/datarepo/providers/userData.dart';
 import 'package:papswap/widgets/global/custom_progress_indicator.dart';
 import 'package:papswap/widgets/tabs/Wallet/transaction_tile.dart';
 import 'package:papswap/widgets/tabs/Wallet/wallet_card.dart';

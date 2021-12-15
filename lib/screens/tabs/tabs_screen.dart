@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:papswap/models/userdata.dart';
 import 'package:papswap/screens/tabs/Home/home_screen.dart';
 import 'package:papswap/screens/tabs/Profile/profile_screen.dart';
-import 'package:papswap/screens/tabs/Search/search_screen.dart';
 import 'package:papswap/screens/tabs/Wallet/wallet_screen.dart';
-import 'package:papswap/services/datarepo/postprovider.dart';
+import 'package:papswap/services/datarepo/providers/postprovider.dart';
 
-import 'package:papswap/services/datarepo/userData.dart';
-import 'package:papswap/widgets/global/custom_progress_indicator.dart';
+import 'package:papswap/services/datarepo/providers/userData.dart';
 import 'package:provider/provider.dart';
 
 class TabsScreen extends StatefulWidget {
