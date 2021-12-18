@@ -5,8 +5,10 @@ import 'package:papswap/models/userdata.dart';
 import 'package:papswap/screens/tabs/Wallet/token_earning_screen.dart';
 
 class WalletCard extends StatelessWidget {
+  final Function() showadfn;
   final UserData userData;
-  const WalletCard({Key? key, required this.userData}) : super(key: key);
+  const WalletCard({Key? key, required this.userData, required this.showadfn})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +20,9 @@ class WalletCard extends StatelessWidget {
         ),
         backgroundColor: AppColors.scaffColor,
         context: context,
-        builder: (context) => const TokenEarningScreen(),
+        builder: (context) => TokenEarningScreen(
+          showad: showadfn,
+        ),
       );
     }
 

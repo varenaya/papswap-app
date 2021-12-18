@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:papswap/models/app/color_const.dart';
-import 'package:papswap/services/datarepo/Api/data_fetcher.dart';
 import 'package:papswap/services/datarepo/providers/likespostprovider.dart';
 import 'package:papswap/widgets/global/custom_progress_indicator.dart';
 import 'package:papswap/widgets/tabs/Home/feed_tile.dart';
@@ -14,7 +13,6 @@ class LikesScreen extends StatefulWidget {
 }
 
 class _LikesScreenState extends State<LikesScreen> {
-  final DataFetcher dataFetcher = DataFetcher();
   final scrollController = ScrollController();
 
   @override

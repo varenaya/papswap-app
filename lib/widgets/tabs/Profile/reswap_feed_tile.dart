@@ -2,6 +2,7 @@ import 'package:detectable_text_field/detector/sample_regular_expressions.dart';
 import 'package:detectable_text_field/widgets/detectable_text.dart';
 import 'package:duration/duration.dart';
 import 'package:flutter/material.dart';
+import 'package:papswap/models/reswappost.dart';
 import 'package:papswap/services/datarepo/providers/userData.dart';
 import 'package:papswap/widgets/tabs/Home/feed_tile.dart';
 import 'package:papswap/widgets/tabs/Home/video_player.dart';
@@ -9,16 +10,15 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ReswapFeedTile extends StatelessWidget {
-  final Map commentdata;
-  final Map postdata;
+  final ReswapPost reswapPost;
 
-  const ReswapFeedTile(
-      {Key? key, required this.commentdata, required this.postdata})
-      : super(key: key);
+  const ReswapFeedTile({
+    Key? key,
+    required this.reswapPost,
+  }) : super(key: key);
 
   String timeDuration() {
-    final timedif =
-        (DateTime.now()).difference(commentdata['createdAt'].toDate());
+    final timedif = (DateTime.now()).difference(reswapPost.createdAt.toDate());
 
     final printedduration = printDuration(timedif, abbreviated: true);
     final time = printedduration.split(',').first;
@@ -102,6 +102,7 @@ class ReswapFeedTile extends StatelessWidget {
                           content: Text(
                             'Could not launch $text',
                             textAlign: TextAlign.center,
+                            style: const TextStyle(fontFamily: 'Poppins'),
                           ),
                           backgroundColor: Theme.of(context).errorColor,
                         ),
@@ -109,15 +110,15 @@ class ReswapFeedTile extends StatelessWidget {
                     }
                   }
                 },
-                text: commentdata['feedtext'],
+                text: reswapPost.comment,
                 detectionRegExp: detectionRegExp(atSign: false)!,
               ),
             ),
-            commentdata['medialink'] == ''
+            reswapPost.medialink == ''
                 ? const SizedBox()
-                : commentdata['medialink'].contains('.jpg?') ||
-                        commentdata['medialink'].contains('.png?') ||
-                        commentdata['medialink'].contains('.jpeg?')
+                : reswapPost.medialink.contains('.jpg?') ||
+                        reswapPost.medialink.contains('.png?') ||
+                        reswapPost.medialink.contains('.jpeg?')
                     ? Padding(
                         padding: const EdgeInsets.only(
                           right: 15.0,
@@ -126,8 +127,8 @@ class ReswapFeedTile extends StatelessWidget {
                         ),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(15),
-                          child: Image(
-                              image: NetworkImage(commentdata['medialink'])),
+                          child:
+                              Image(image: NetworkImage(reswapPost.medialink)),
                         ),
                       )
                     : Padding(
@@ -139,11 +140,11 @@ class ReswapFeedTile extends StatelessWidget {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(15),
                           child: VideoWidget(
-                            link: commentdata['medialink'],
+                            link: reswapPost.medialink,
                           ),
                         ),
                       ),
-            FeedTile(postdata: postdata['postdata'].data(), type: 'reswap'),
+            FeedTile(postdata: reswapPost.post, type: 'reswap'),
           ],
         ),
       ),

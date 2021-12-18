@@ -131,6 +131,7 @@ class _FeedTileState extends State<FeedTile> {
                           content: Text(
                             'Could not launch $text',
                             textAlign: TextAlign.center,
+                            style: const TextStyle(fontFamily: 'Poppins'),
                           ),
                           backgroundColor: Theme.of(context).errorColor,
                         ),

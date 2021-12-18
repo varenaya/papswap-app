@@ -29,6 +29,7 @@ class AuthService {
           content: Text(
             message.toString(),
             textAlign: TextAlign.center,
+            style: const TextStyle(fontFamily: 'Poppins'),
           ),
           backgroundColor: Theme.of(context).errorColor,
         ),
@@ -56,6 +57,21 @@ class AuthService {
         'coinVal': 5,
         'userWebsite': '',
         'userType': 'viewer',
+        'rewardTimestamp': DateTime.utc(2021, 10, 20, 20, 18, 04),
+      }).then((value) {
+        final transdocRef = _firestore
+            .collection('users')
+            .doc(authresult.user!.uid)
+            .collection('transactions')
+            .doc();
+        transdocRef.set({
+          'transactionId': transdocRef.id,
+          'transtext': 'You have earned 5 PapTokens as a Signin bonus.',
+          'amount': 5,
+          'trans_time': DateTime.now(),
+          'details':
+              '5 papTokens credited for creating your account with Papswap, Enjoy Swapping!'
+        });
       });
       Navigator.of(context).pop();
     } on FirebaseAuthException catch (err) {
@@ -68,6 +84,7 @@ class AuthService {
           content: Text(
             message.toString(),
             textAlign: TextAlign.center,
+            style: const TextStyle(fontFamily: 'Poppins'),
           ),
           backgroundColor: Theme.of(context).errorColor,
         ),
@@ -95,6 +112,21 @@ class AuthService {
             'coinVal': 5,
             'userWebsite': '',
             'userType': 'viewer',
+            'rewardTimestamp': DateTime.utc(2021, 10, 20, 20, 18, 04),
+          }).then((value) {
+            final transdocRef = _firestore
+                .collection('users')
+                .doc(user.uid)
+                .collection('transactions')
+                .doc();
+            transdocRef.set({
+              'transactionId': transdocRef.id,
+              'transtext': 'You have earned 5 PapTokens as a Signin bonus.',
+              'amount': 5,
+              'trans_time': DateTime.now(),
+              'details':
+                  '5 papTokens credited for creating your account with Papswap, Enjoy Swapping!'
+            });
           });
         }
       });
@@ -108,6 +140,7 @@ class AuthService {
           content: Text(
             message.toString(),
             textAlign: TextAlign.center,
+            style: const TextStyle(fontFamily: 'Poppins'),
           ),
           backgroundColor: Theme.of(context).errorColor,
         ),
@@ -157,6 +190,7 @@ class AuthService {
                           content: Text(
                             message.toString(),
                             textAlign: TextAlign.center,
+                            style: const TextStyle(fontFamily: 'Poppins'),
                           ),
                           backgroundColor: Theme.of(context).errorColor,
                         ),

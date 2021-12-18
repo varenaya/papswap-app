@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:papswap/services/datarepo/Api/uplaod_data.dart';
+import 'package:papswap/services/datarepo/providers/userData.dart';
 
 import 'package:papswap/widgets/tabs/Wallet/token_eraning_tile.dart';
+import 'package:provider/provider.dart';
 
-class TokenEarningScreen extends StatefulWidget {
-  const TokenEarningScreen({Key? key}) : super(key: key);
+class TokenEarningScreen extends StatelessWidget {
+  final Function() showad;
+  const TokenEarningScreen({Key? key, required this.showad}) : super(key: key);
 
-  @override
-  _TokenEarningScreenState createState() => _TokenEarningScreenState();
-}
-
-class _TokenEarningScreenState extends State<TokenEarningScreen> {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
+    final userdata =
+        Provider.of<UserDataProvider>(context, listen: false).userdata;
     return Wrap(
       children: [
         Container(
@@ -29,6 +30,23 @@ class _TokenEarningScreenState extends State<TokenEarningScreen> {
           ),
         ),
         TokenEarningTile(
+          actionfn: () async {
+            final msg =
+                await UploadData().updatedailybonus(userdata.rewardTimestamp);
+            Navigator.of(context).pop();
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  msg,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontFamily: 'Poppins'),
+                ),
+                backgroundColor: msg == 'You claimed a daily bonus!'
+                    ? Colors.blue
+                    : Theme.of(context).errorColor,
+              ),
+            );
+          },
           title: 'Daily Bonus',
           size: size,
           subtitle1: 'Earn a PapToken daily! Just open the app everyday, ',
@@ -37,6 +55,23 @@ class _TokenEarningScreenState extends State<TokenEarningScreen> {
           imagepath: 'assets/images/daily bonus.png',
         ),
         TokenEarningTile(
+          actionfn: () async {
+            final msg =
+                await UploadData().updateweeklybonus(userdata.rewardTimestamp);
+            Navigator.of(context).pop();
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  msg,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontFamily: 'Poppins'),
+                ),
+                backgroundColor: msg == 'You claimed a weekly bonus!'
+                    ? Colors.blue
+                    : Theme.of(context).errorColor,
+              ),
+            );
+          },
           title: 'Weekly Bonus',
           size: size,
           subtitle1: 'Earn upto 25 PapTokens weekly,',
@@ -48,6 +83,7 @@ class _TokenEarningScreenState extends State<TokenEarningScreen> {
         Padding(
           padding: const EdgeInsets.only(bottom: 15),
           child: TokenEarningTile(
+            actionfn: () => showad(),
             title: 'Video Bonus',
             size: size,
             subtitle1: 'Watch video ads to earn, ',

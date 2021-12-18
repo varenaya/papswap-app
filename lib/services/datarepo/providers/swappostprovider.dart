@@ -22,12 +22,9 @@ class SwapPostData extends ChangeNotifier {
 
   Future fetchswapposts(bool isrefresh) async {
     if (isrefresh) {
-      final firstlikedata = await dataFetcher.getfirstswappost();
-
-      final postdata =
-          await dataFetcher.getpost(firstlikedata.docs.first.data()['postId']);
-      final likepost = Post.fromDoc(postdata);
-      if (likepost.postId != swapposts.first.postId) {
+      final firstswapdata =
+          await dataFetcher.getfirstprofilepost('swaps', 'swapedAt');
+      if (firstswapdata.docs.first.data()['postId'] != swapposts.first.postId) {
         _postsSnapshot.removeRange(0, _postsSnapshot.length);
         _swapSnapshot.clear();
         swapposts.clear();

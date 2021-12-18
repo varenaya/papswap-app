@@ -5,6 +5,7 @@ import 'package:papswap/models/app/color_const.dart';
 import 'package:papswap/models/userdata.dart';
 import 'package:papswap/screens/tabs/Wallet/transactions_screen.dart';
 import 'package:papswap/services/adservice/ad_helper.dart';
+import 'package:papswap/services/datarepo/Api/uplaod_data.dart';
 import 'package:papswap/widgets/tabs/Wallet/movie_tile.dart';
 import 'package:papswap/widgets/tabs/Wallet/reward_tile.dart';
 import 'package:papswap/widgets/tabs/Wallet/voucher_tile.dart';
@@ -20,88 +21,88 @@ class WalletScreen extends StatefulWidget {
 }
 
 class _WalletScreenState extends State<WalletScreen> {
-  // static final AdRequest request = AdRequest(
-  //   keywords: <String>['foo', 'bar'],
-  //   contentUrl: 'http://foo.com/bar.html',
-  //   nonPersonalizedAds: true,
-  // );
-
-  // RewardedAd? _rewardedAd;
-  // int _numRewardedLoadAttempts = 0;
-
-  // @override
-  // void initState() {
-  //   super.initState();
-
-  //   _createRewardedAd();
-  // }
-
-  // void _createRewardedAd() {
-  //   RewardedAd.load(
-  //       adUnitId: RewardedAd.testAdUnitId,
-  //       request: request,
-  //       rewardedAdLoadCallback: RewardedAdLoadCallback(
-  //         onAdLoaded: (RewardedAd ad) {
-  //           print('$ad loaded.');
-  //           _rewardedAd = ad;
-  //           _numRewardedLoadAttempts = 0;
-  //         },
-  //         onAdFailedToLoad: (LoadAdError error) {
-  //           print('RewardedAd failed to load: $error');
-  //           _rewardedAd = null;
-  //           _numRewardedLoadAttempts += 1;
-  //           if (_numRewardedLoadAttempts <= maxFailedLoadAttempts) {
-  //             _createRewardedAd();
-  //           }
-  //         },
-  //       ));
-  // }
-
-  // void _showRewardedAd() {
-  //   if (_rewardedAd == null) {
-  //     print('Warning: attempt to show rewarded before loaded.');
-  //     return;
-  //   }
-  //   _rewardedAd!.fullScreenContentCallback = FullScreenContentCallback(
-  //     onAdShowedFullScreenContent: (RewardedAd ad) =>
-  //         print('ad onAdShowedFullScreenContent.'),
-  //     onAdDismissedFullScreenContent: (RewardedAd ad) {
-  //       print('$ad onAdDismissedFullScreenContent.');
-  //       ad.dispose();
-  //       _createRewardedAd();
-  //     },
-  //     onAdFailedToShowFullScreenContent: (RewardedAd ad, AdError error) {
-  //       print('$ad onAdFailedToShowFullScreenContent: $error');
-  //       ad.dispose();
-  //       _createRewardedAd();
-  //     },
-  //   );
-
-  //   _rewardedAd!.setImmersiveMode(true);
-  //   _rewardedAd!.show(onUserEarnedReward: (RewardedAd ad, RewardItem reward) {
-  //     print('$ad with reward $RewardItem(${reward.amount}, ${reward.type}');
-  //   });
-  //   _rewardedAd = null;
-  // }
-
-  // @override
-  // void dispose() {
-  //   super.dispose();
-
-  //   _rewardedAd?.dispose();
-  // }
-  final AdHelper adHelper = AdHelper();
+  RewardedAd? _rewardedAd;
 
   @override
   void initState() {
-    adHelper.loadAd();
     super.initState();
+    _loadRewardedAd();
+  }
+
+  void _loadRewardedAd() {
+    RewardedAd.load(
+        adUnitId: RewardedAd.testAdUnitId,
+        request: AdHelper.adrequest,
+        rewardedAdLoadCallback: RewardedAdLoadCallback(
+          onAdLoaded: (RewardedAd ad) {
+            _rewardedAd = ad;
+          },
+          onAdFailedToLoad: (LoadAdError error) {
+            _rewardedAd = null;
+          },
+        ));
+  }
+
+  void _showRewardedAd() {
+    if (_rewardedAd == null) {
+      Navigator.of(context).pop();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text(
+            'Failed to load Ad, Try again later!',
+            style: TextStyle(fontFamily: 'Poppins'),
+            textAlign: TextAlign.center,
+          ),
+          backgroundColor: Theme.of(context).errorColor,
+        ),
+      );
+      return;
+    }
+    _rewardedAd!.fullScreenContentCallback = FullScreenContentCallback(
+      onAdShowedFullScreenContent: (RewardedAd ad) {},
+      onAdDismissedFullScreenContent: (RewardedAd ad) {
+        ad.dispose();
+        _loadRewardedAd();
+      },
+      onAdFailedToShowFullScreenContent: (RewardedAd ad, AdError error) {
+        Navigator.of(context).pop();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text(
+              'An error occured, Try again later!',
+              style: TextStyle(fontFamily: 'Poppins'),
+              textAlign: TextAlign.center,
+            ),
+            backgroundColor: Theme.of(context).errorColor,
+          ),
+        );
+        ad.dispose();
+        _loadRewardedAd();
+      },
+    );
+
+    _rewardedAd!.setImmersiveMode(true);
+    _rewardedAd!.show(onUserEarnedReward: (RewardedAd ad, RewardItem reward) {
+      Navigator.of(context).pop();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Congratulations, You earned a PapToken!',
+            style: TextStyle(fontFamily: 'Poppins'),
+            textAlign: TextAlign.center,
+          ),
+          backgroundColor: Colors.blue,
+        ),
+      );
+      UploadData().updatevideobonus();
+    });
+    _rewardedAd = null;
   }
 
   @override
   void dispose() {
-    adHelper.disposeAd();
     super.dispose();
+    _rewardedAd?.dispose();
   }
 
   @override
@@ -140,6 +141,7 @@ class _WalletScreenState extends State<WalletScreen> {
                   elevation: 0,
                   backgroundColor: Colors.transparent,
                   title: WalletCard(
+                    showadfn: _showRewardedAd,
                     userData: userData,
                   ),
                 ),
@@ -170,6 +172,7 @@ class _WalletScreenState extends State<WalletScreen> {
                             imagepath: 'assets/images/supertoken.png',
                           ),
                           WalletActionsTile(
+                            showad: () => _showRewardedAd(),
                             size: size,
                             title: 'Earn PapTokens',
                             subtitle:

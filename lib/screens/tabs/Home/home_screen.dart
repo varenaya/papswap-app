@@ -99,6 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               content: const Text(
                                 'Could not launch $_url',
                                 textAlign: TextAlign.center,
+                                style: TextStyle(fontFamily: 'Poppins'),
                               ),
                               backgroundColor: Theme.of(context).errorColor,
                             ),

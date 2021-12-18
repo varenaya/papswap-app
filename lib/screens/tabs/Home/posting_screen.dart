@@ -19,14 +19,11 @@ import 'package:provider/provider.dart';
 class PostingScreen extends StatefulWidget {
   final String type;
   final reswappostdata;
-
-  final reswapcreaterdata;
-  const PostingScreen(
-      {Key? key,
-      required this.type,
-      this.reswappostdata,
-      this.reswapcreaterdata})
-      : super(key: key);
+  const PostingScreen({
+    Key? key,
+    required this.type,
+    this.reswappostdata,
+  }) : super(key: key);
 
   @override
   _PostingScreenState createState() => _PostingScreenState();
@@ -58,6 +55,7 @@ class _PostingScreenState extends State<PostingScreen> {
           content: Text(
             message.toString(),
             textAlign: TextAlign.center,
+            style: const TextStyle(fontFamily: 'Poppins'),
           ),
           backgroundColor: Theme.of(context).errorColor,
         ),
@@ -181,7 +179,7 @@ class _PostingScreenState extends State<PostingScreen> {
                     uploadData.updatepostmedialink(docId, url);
                   } else {
                     final docId = await uploadData.reswappostData(feedtext,
-                        userdata, context, widget.reswappostdata['post_id']);
+                        userdata, context, widget.reswappostdata.postId);
                     if (media == null) {
                       Navigator.of(context).pop();
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -196,8 +194,8 @@ class _PostingScreenState extends State<PostingScreen> {
                       );
                       return;
                     }
-                    task = await uploadData.reswappostMedia(media, docId!,
-                        context, widget.reswappostdata['post_id']);
+                    task = await uploadData.reswappostMedia(
+                        media, docId!, context, widget.reswappostdata.postId);
 
                     setState(() {});
                     if (task == null) return;
@@ -217,7 +215,7 @@ class _PostingScreenState extends State<PostingScreen> {
                     final url = await snapshot.ref.getDownloadURL();
 
                     uploadData.updatereswappostmedialink(
-                        docId, url, widget.reswappostdata['post_id']);
+                        docId, url, widget.reswappostdata.postId);
                   }
                 },
                 style: ElevatedButton.styleFrom(

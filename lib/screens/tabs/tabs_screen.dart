@@ -3,7 +3,10 @@ import 'package:papswap/models/userdata.dart';
 import 'package:papswap/screens/tabs/Home/home_screen.dart';
 import 'package:papswap/screens/tabs/Profile/profile_screen.dart';
 import 'package:papswap/screens/tabs/Wallet/wallet_screen.dart';
+import 'package:papswap/services/datarepo/providers/likespostprovider.dart';
 import 'package:papswap/services/datarepo/providers/postprovider.dart';
+import 'package:papswap/services/datarepo/providers/reswappostprovider.dart';
+import 'package:papswap/services/datarepo/providers/swappostprovider.dart';
 
 import 'package:papswap/services/datarepo/providers/userData.dart';
 import 'package:provider/provider.dart';
@@ -32,16 +35,10 @@ class _TabsScreenState extends State<TabsScreen> {
   }
 
   void _onItemTapped(int index) {
-    pageController.animateToPage(index,
-        duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+    pageController.jumpToPage(index);
+    // animateToPage(index,
+    //     duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
   }
-
-  // final List<Widget> _screens = const [
-  //   HomeScreen(),
-  //   // SearchScreen(),
-  //   WalletScreen(),
-  //   ProfileScreen(),
-  // ];
 
   onPageChanged(int index) {
     setState(() {
@@ -105,12 +102,29 @@ class _TabsScreenState extends State<TabsScreen> {
           ),
         ],
       ),
-      body: Consumer<PostData>(
-        builder: (context, postdata, _) => PageView(
+      body: MultiProvider(
+        providers: [
+          ChangeNotifierProvider<PostData>(
+            create: (context) => PostData(),
+          ),
+          ChangeNotifierProvider<SwapPostData>(
+            create: (context) => SwapPostData(),
+          ),
+          ChangeNotifierProvider<LikesPostData>(
+            create: (context) => LikesPostData(),
+          ),
+          ChangeNotifierProvider<ReswapPostData>(
+            create: (context) => ReswapPostData(),
+          )
+        ],
+        child: PageView(
           children: [
-            HomeScreen(
-              postData: postdata,
+            Consumer<PostData>(
+              builder: (context, postdata, _) => HomeScreen(
+                postData: postdata,
+              ),
             ),
+
             // SearchScreen(),
             const WalletScreen(),
             const ProfileScreen(),

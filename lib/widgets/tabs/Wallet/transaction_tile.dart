@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class TransactionTile extends StatefulWidget {
-  final Map transadata;
+  final Map? transadata;
   const TransactionTile({Key? key, required this.transadata}) : super(key: key);
 
   @override
@@ -13,7 +13,7 @@ class TransactionTile extends StatefulWidget {
 class _TransactionTileState extends State<TransactionTile> {
   String timeDuration() {
     final timedif =
-        (DateTime.now()).difference(widget.transadata['trans_time'].toDate());
+        (DateTime.now()).difference(widget.transadata!['trans_time'].toDate());
 
     final printedduration = printDuration(timedif, abbreviated: true);
     final time = printedduration.split(',').first;
@@ -27,12 +27,12 @@ class _TransactionTileState extends State<TransactionTile> {
         ExpansionTile(
           expandedAlignment: Alignment.centerLeft,
           title: Text(
-            widget.transadata['transtext'],
+            widget.transadata!['transtext'],
             style: const TextStyle(fontSize: 15),
           ),
           subtitle: Text(
             timeDuration(),
-            style: const TextStyle(color: Colors.grey),
+            style: const TextStyle(color: Colors.grey, fontSize: 13),
           ),
           trailing: SizedBox(
             width: 85,
@@ -47,12 +47,12 @@ class _TransactionTileState extends State<TransactionTile> {
                   width: 10,
                 ),
                 Text(
-                  widget.transadata['amount'].toString().contains('-')
-                      ? widget.transadata['amount']
-                      : '+${widget.transadata['amount']}',
+                  widget.transadata!['amount'].toString().contains('-')
+                      ? widget.transadata!['amount']
+                      : '+${widget.transadata!['amount']}',
                   style: TextStyle(
                       color:
-                          widget.transadata['amount'].toString().contains('-')
+                          widget.transadata!['amount'].toString().contains('-')
                               ? Colors.red
                               : Colors.teal,
                       fontSize: 15,
@@ -66,6 +66,7 @@ class _TransactionTileState extends State<TransactionTile> {
               padding: const EdgeInsets.only(
                 left: 15,
                 bottom: 5,
+                right: 15,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -82,7 +83,7 @@ class _TransactionTileState extends State<TransactionTile> {
                               color: Colors.black54),
                           children: [
                         TextSpan(
-                            text: widget.transadata['details'],
+                            text: widget.transadata!['details'],
                             style: const TextStyle(
                               fontFamily: 'Poppins',
                               color: Colors.black,
@@ -101,7 +102,7 @@ class _TransactionTileState extends State<TransactionTile> {
                               color: Colors.black54),
                           children: [
                         TextSpan(
-                            text: widget.transadata['transactionId'],
+                            text: widget.transadata!['transactionId'],
                             style: const TextStyle(
                               fontFamily: 'Poppins',
                               color: Colors.black,
@@ -121,7 +122,7 @@ class _TransactionTileState extends State<TransactionTile> {
                           children: [
                         TextSpan(
                             text: DateFormat('MMM dd yyyy, ').add_jm().format(
-                                widget.transadata['trans_time'].toDate()),
+                                widget.transadata!['trans_time'].toDate()),
                             style: const TextStyle(
                               fontFamily: 'Poppins',
                               color: Colors.black,

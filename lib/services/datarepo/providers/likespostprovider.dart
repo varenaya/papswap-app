@@ -22,15 +22,15 @@ class LikesPostData extends ChangeNotifier {
 
   Future fetchlikesposts(bool isrefresh) async {
     if (isrefresh) {
-      final firstlikedata = await dataFetcher.getfirstlikepost();
-
-      final postdata =
-          await dataFetcher.getpost(firstlikedata.docs.first.data()['postId']);
-      final likepost = Post.fromDoc(postdata);
-      if (likepost.postId != likesposts.first.postId) {
-        _postsSnapshot.removeRange(0, _postsSnapshot.length);
-        _likeSnapshot.clear();
-        likesposts.clear();
+      final firstlikedata =
+          await dataFetcher.getfirstprofilepost('likes', 'likedAt');
+      if (firstlikedata.docs.isNotEmpty) {
+        if (firstlikedata.docs.first.data()['postId'] !=
+            likesposts.first.postId) {
+          _postsSnapshot.removeRange(0, _postsSnapshot.length);
+          _likeSnapshot.clear();
+          likesposts.clear();
+        }
       }
     }
 

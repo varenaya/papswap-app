@@ -77,7 +77,6 @@ class SwapMenu extends StatelessWidget {
             Navigator.of(context).push(PageTransition(
                 child: PostingScreen(
                   type: 'Reswap',
-                  reswapcreaterdata: postId,
                   reswappostdata: postdata,
                 ),
                 type: PageTransitionType.bottomToTop));

@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_typing_uninitialized_variables
+
 import 'package:flutter/material.dart';
 import 'package:papswap/models/app/color_const.dart';
 import 'package:papswap/screens/tabs/Wallet/token_earning_screen.dart';
@@ -9,6 +11,7 @@ class WalletActionsTile extends StatelessWidget {
   final String subtitle;
   final String footerText;
   final String buttonText;
+  final showad;
   const WalletActionsTile({
     Key? key,
     required this.size,
@@ -17,6 +20,7 @@ class WalletActionsTile extends StatelessWidget {
     required this.subtitle,
     required this.footerText,
     required this.buttonText,
+    this.showad,
   }) : super(key: key);
 
   @override
@@ -29,7 +33,9 @@ class WalletActionsTile extends StatelessWidget {
         ),
         backgroundColor: AppColors.scaffColor,
         context: context,
-        builder: (context) => const TokenEarningScreen(),
+        builder: (context) => TokenEarningScreen(
+          showad: showad,
+        ),
       );
     }
 

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:papswap/models/app/color_const.dart';
-import 'package:papswap/services/datarepo/Api/data_fetcher.dart';
 import 'package:papswap/services/datarepo/providers/swappostprovider.dart';
 import 'package:papswap/widgets/global/custom_progress_indicator.dart';
 
@@ -15,7 +14,6 @@ class SwapScreen extends StatefulWidget {
 }
 
 class _SwapScreenState extends State<SwapScreen> {
-  final DataFetcher dataFetcher = DataFetcher();
   final scrollController = ScrollController();
 
   @override

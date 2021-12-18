@@ -6,6 +6,7 @@ import 'package:papswap/screens/tabs/Profile/reswap_screen.dart';
 import 'package:papswap/screens/tabs/Profile/settings_screen.dart';
 import 'package:papswap/screens/tabs/Profile/swap_screen.dart';
 import 'package:papswap/services/datarepo/providers/likespostprovider.dart';
+import 'package:papswap/services/datarepo/providers/reswappostprovider.dart';
 import 'package:papswap/services/datarepo/providers/swappostprovider.dart';
 import 'package:papswap/widgets/tabs/Profile/profile_header.dart';
 import 'package:provider/provider.dart';
@@ -88,7 +89,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           builder: (context, swappostdata, _) => SwapScreen(
                                 swapPostData: swappostdata,
                               )),
-                      ReswapScreen(),
+                      Consumer<ReswapPostData>(
+                          builder: (context, reswappostdata, _) => ReswapScreen(
+                                reswapPostData: reswappostdata,
+                              )),
                       Consumer<LikesPostData>(
                           builder: (context, likespostdata, _) => LikesScreen(
                                 likesPostData: likespostdata,

@@ -139,6 +139,8 @@ class ProfileHeader extends StatelessWidget {
                                   content: Text(
                                     'Could not launch $_url',
                                     textAlign: TextAlign.center,
+                                    style:
+                                        const TextStyle(fontFamily: 'Poppins'),
                                   ),
                                   backgroundColor: Theme.of(context).errorColor,
                                 ),

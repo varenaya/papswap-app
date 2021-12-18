@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:papswap/models/userdata.dart';
@@ -11,6 +12,7 @@ import 'package:provider/provider.dart';
 
 class UploadData {
   final _firestore = FirebaseFirestore.instance;
+  final currentusedId = FirebaseAuth.instance.currentUser!.uid;
 
   Future<String?> postData(
       String feedtext, UserData userData, BuildContext context) async {
@@ -48,6 +50,7 @@ class UploadData {
           content: Text(
             message.toString(),
             textAlign: TextAlign.center,
+            style: const TextStyle(fontFamily: 'Poppins'),
           ),
           backgroundColor: Theme.of(context).errorColor,
         ),
@@ -75,6 +78,7 @@ class UploadData {
           content: Text(
             message.toString(),
             textAlign: TextAlign.center,
+            style: const TextStyle(fontFamily: 'Poppins'),
           ),
           backgroundColor: Theme.of(context).errorColor,
         ),
@@ -171,7 +175,7 @@ class UploadData {
         'commenterid': userData.user_id,
         'medialink': '',
         'is_verified': false,
-        'supertoken': '',
+        'supertoken': [],
       });
 
       _firestore.collection('Posts').doc(postId).update({
@@ -237,6 +241,7 @@ class UploadData {
           content: Text(
             message.toString(),
             textAlign: TextAlign.center,
+            style: const TextStyle(fontFamily: 'Poppins'),
           ),
           backgroundColor: Theme.of(context).errorColor,
         ),
@@ -255,5 +260,80 @@ class UploadData {
         .update({
       'medialink': url,
     });
+  }
+
+  Future<void> updatevideobonus() async {
+    final transdocRef = _firestore
+        .collection('users')
+        .doc(currentusedId)
+        .collection('transactions')
+        .doc();
+    _firestore.collection('users').doc(currentusedId).update({
+      'coinVal': FieldValue.increment(1),
+    });
+    transdocRef.set({
+      'transactionId': transdocRef.id,
+      'transtext': 'You earned a PapToken from video bonus.',
+      'amount': 1,
+      'trans_time': DateTime.now(),
+      'details': 'You earned 1 PapToken by watching a video Ad.'
+    });
+  }
+
+  Future<String> updatedailybonus(Timestamp rewardTimestamp) async {
+    if ((DateTime.now()).difference(rewardTimestamp.toDate()).inDays >= 1) {
+      final transdocRef = _firestore
+          .collection('users')
+          .doc(currentusedId)
+          .collection('transactions')
+          .doc();
+      _firestore.collection('users').doc(currentusedId).update({
+        'coinVal': FieldValue.increment(1),
+        'rewardTimestamp': DateTime.now(),
+      });
+      transdocRef.set({
+        'transactionId': transdocRef.id,
+        'transtext': 'You earned a PapToken by claiming daily bonus.',
+        'amount': 1,
+        'trans_time': DateTime.now(),
+        'details':
+            '1 PapToken credited to your wallet for claiming  daily bonus.'
+      });
+      return 'You claimed a daily bonus!';
+    } else {
+      return 'You have already claimed today\'s bonus!';
+    }
+  }
+
+  Future<String> updateweeklybonus(Timestamp rewardTimestamp) async {
+    final weekday = DateTime.now().weekday;
+    if ((DateTime.now()).difference(rewardTimestamp.toDate()).inDays >= 1 &&
+            weekday == 5 ||
+        weekday == 7) {
+      final transdocRef = _firestore
+          .collection('users')
+          .doc(currentusedId)
+          .collection('transactions')
+          .doc();
+      _firestore.collection('users').doc(currentusedId).update({
+        'coinVal':
+            weekday == 5 ? FieldValue.increment(10) : FieldValue.increment(15),
+        'rewardTimestamp': DateTime.now(),
+      });
+      transdocRef.set({
+        'transactionId': transdocRef.id,
+        'transtext': weekday == 5
+            ? 'You earned 10 PapTokens from weekly bonus.'
+            : 'You earned 15 PapTokens from weekly bonus.',
+        'amount': weekday == 5 ? 10 : 15,
+        'trans_time': DateTime.now(),
+        'details': weekday == 5
+            ? '10 PapTokens credited to your wallet for claiming  weekly bonus on Wednesday.'
+            : '15 PapTokens credited to your wallet for claiming  weekly bonus on Sunday.'
+      });
+      return 'You claimed a weekly bonus!';
+    } else {
+      return 'You can only claim once every sunday and wednesday';
+    }
   }
 }
