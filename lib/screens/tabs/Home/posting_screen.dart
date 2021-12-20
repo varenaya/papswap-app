@@ -11,6 +11,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:mime/mime.dart';
 import 'package:papswap/models/app/color_const.dart';
 import 'package:papswap/services/datarepo/Api/uplaod_data.dart';
+import 'package:papswap/services/datarepo/providers/postprovider.dart';
 import 'package:papswap/services/datarepo/providers/userData.dart';
 import 'package:papswap/widgets/tabs/Home/feed_tile.dart';
 import 'package:papswap/widgets/tabs/Home/video_player.dart';
@@ -157,6 +158,8 @@ class _PostingScreenState extends State<PostingScreen> {
                       final docId = await uploadData.postData(
                           feedtext, userdata, context);
                       if (media == null) {
+                        Provider.of<PostData>(context, listen: false)
+                            .fetchpostedpost(docId!);
                         Navigator.of(context).pop();
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
@@ -174,7 +177,14 @@ class _PostingScreenState extends State<PostingScreen> {
 
                       setState(() {});
                       if (task == null) return;
-                      final snapshot = await task!.whenComplete(() {
+                      final snapshot = await task;
+                      final url = await snapshot!.ref.getDownloadURL();
+
+                      uploadData
+                          .updatepostmedialink(docId, url, context)
+                          .whenComplete(() {
+                        Provider.of<PostData>(context, listen: false)
+                            .fetchpostedpost(docId);
                         Navigator.of(context).pop();
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
@@ -187,9 +197,6 @@ class _PostingScreenState extends State<PostingScreen> {
                           ),
                         );
                       });
-                      final url = await snapshot.ref.getDownloadURL();
-
-                      uploadData.updatepostmedialink(docId, url, context);
                     } else {
                       final docId = await uploadData.reswappostData(feedtext,
                           userdata, context, widget.reswappostdata.postId);

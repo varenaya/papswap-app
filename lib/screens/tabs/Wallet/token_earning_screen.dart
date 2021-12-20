@@ -31,8 +31,8 @@ class TokenEarningScreen extends StatelessWidget {
         ),
         TokenEarningTile(
           actionfn: () async {
-            final msg =
-                await UploadData().updatedailybonus(userdata.rewardTimestamp);
+            final msg = await UploadData()
+                .updatedailybonus(userdata.dailyrewardTimestamp);
             Navigator.of(context).pop();
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -56,8 +56,8 @@ class TokenEarningScreen extends StatelessWidget {
         ),
         TokenEarningTile(
           actionfn: () async {
-            final msg =
-                await UploadData().updateweeklybonus(userdata.rewardTimestamp);
+            final msg = await UploadData()
+                .updateweeklybonus(userdata.weeklyrewardTimestamp);
             Navigator.of(context).pop();
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(

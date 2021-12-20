@@ -43,9 +43,9 @@ class DataFetcher {
     final refposts = _firestore
         .collection('users')
         .doc(currentusedId)
-        .collection(type == 'swaps' ? 'swaps' : 'likes')
+        .collection(type == 'swaps' ? 'swaps' : 'flames')
         .orderBy(
-          type == 'swaps' ? 'swapedAt' : 'likedAt',
+          type == 'swaps' ? 'swapedAt' : 'flamedAt',
           descending: true,
         )
         .limit(limit);
@@ -118,11 +118,11 @@ class DataFetcher {
     }
   }
 
-  Stream<DocumentSnapshot> myPostLikeStream(String postId) {
+  Stream<DocumentSnapshot> myPostflameStream(String postId) {
     final ref = _firestore
         .collection('users')
         .doc(currentusedId)
-        .collection('likes')
+        .collection('flames')
         .doc(postId);
     return ref.snapshots();
   }

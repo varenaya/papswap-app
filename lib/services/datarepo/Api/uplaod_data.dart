@@ -6,7 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:papswap/models/userdata.dart';
 import 'package:papswap/services/datarepo/Api/data_fetcher.dart';
-import 'package:papswap/services/datarepo/providers/likespostprovider.dart';
+import 'package:papswap/services/datarepo/providers/flamespostprovider.dart';
 import 'package:papswap/services/datarepo/providers/postprovider.dart';
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
@@ -26,7 +26,7 @@ class UploadData {
         'createrid': userData.user_id,
         'creater_name': userData.userName,
         'creater_img': userData.userImage,
-        'likes': 0,
+        'flames': 0,
         'swaps': 0,
         'reports': 0,
         'medialink': '',
@@ -39,7 +39,6 @@ class UploadData {
         'postId': docRef.id,
         'swapedAt': DateTime.now(),
       });
-      Provider.of<PostData>(context, listen: false).fetchpostedpost(docRef.id);
       return docRef.id;
     } on FirebaseException catch (e) {
       var message = 'An error occured in uploading the post! Try again';
@@ -112,33 +111,33 @@ class UploadData {
     }
   }
 
-  Future<void> postlike(String postId, String currentuserdataid,
+  Future<void> postflame(String postId, String currentuserdataid,
       bool isincrement, BuildContext context) async {
     try {
       if (isincrement) {
         await _firestore.collection('Posts').doc(postId).update({
-          'likes': FieldValue.increment(1),
+          'flames': FieldValue.increment(1),
         });
         await _firestore
             .collection('users')
             .doc(currentuserdataid)
-            .collection('likes')
+            .collection('flames')
             .doc(postId)
             .set({
           'postId': postId,
-          'likedAt': DateTime.now(),
+          'flamedAt': DateTime.now(),
         });
       } else {
         await _firestore.collection('Posts').doc(postId).update({
-          'likes': FieldValue.increment(-1),
+          'flames': FieldValue.increment(-1),
         });
         await _firestore
             .collection('users')
             .doc(currentuserdataid)
-            .collection('likes')
+            .collection('flames')
             .doc(postId)
             .delete();
-        Provider.of<LikesPostData>(context, listen: false).removelike(postId);
+        Provider.of<FlamesPostData>(context, listen: false).removeflame(postId);
       }
     } on FirebaseException catch (e) {
       var message = 'An error occured in uploading the post! Try again';
@@ -386,9 +385,10 @@ class UploadData {
     }
   }
 
-  Future<String?> updatedailybonus(Timestamp rewardTimestamp) async {
+  Future<String?> updatedailybonus(Timestamp dailyrewardTimestamp) async {
     try {
-      if ((DateTime.now()).difference(rewardTimestamp.toDate()).inDays >= 1) {
+      if ((DateTime.now()).difference(dailyrewardTimestamp.toDate()).inDays >=
+          1) {
         final transdocRef = _firestore
             .collection('users')
             .doc(currentusedId)
@@ -396,7 +396,7 @@ class UploadData {
             .doc();
         _firestore.collection('users').doc(currentusedId).update({
           'coinVal': FieldValue.increment(1),
-          'rewardTimestamp': DateTime.now(),
+          'dailyrewardTimestamp': DateTime.now(),
         });
         transdocRef.set({
           'transactionId': transdocRef.id,
@@ -420,10 +420,11 @@ class UploadData {
     }
   }
 
-  Future<String?> updateweeklybonus(Timestamp rewardTimestamp) async {
+  Future<String?> updateweeklybonus(Timestamp weeklyrewardTimestamp) async {
     try {
       final weekday = DateTime.now().weekday;
-      if ((DateTime.now()).difference(rewardTimestamp.toDate()).inDays >= 1 &&
+      if ((DateTime.now()).difference(weeklyrewardTimestamp.toDate()).inDays >=
+              1 &&
           weekday == 7) {
         final transdocRef = _firestore
             .collection('users')
@@ -432,7 +433,7 @@ class UploadData {
             .doc();
         _firestore.collection('users').doc(currentusedId).update({
           'coinVal': FieldValue.increment(5),
-          'rewardTimestamp': DateTime.now(),
+          'weeklyrewardTimestamp': DateTime.now(),
         });
         transdocRef.set({
           'transactionId': transdocRef.id,
@@ -459,6 +460,9 @@ class UploadData {
   Future<void> uploadreport(String postId, String reporttext, UserData user,
       BuildContext context) async {
     try {
+      _firestore.collection('Posts').doc(postId).update({
+        'reports': FieldValue.increment(1),
+      });
       final reportRef = _firestore
           .collection('Posts')
           .doc(postId)

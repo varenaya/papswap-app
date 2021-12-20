@@ -1,8 +1,12 @@
 // ignore_for_file: prefer_typing_uninitialized_variables
 
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:papswap/models/app/color_const.dart';
+import 'package:papswap/screens/tabs/Wallet/super_token_screen.dart';
 import 'package:papswap/screens/tabs/Wallet/token_earning_screen.dart';
+import 'package:papswap/screens/tabs/Wallet/wallet_screen.dart';
+import 'package:papswap/screens/tabs/tabs_screen.dart';
 
 class WalletActionsTile extends StatelessWidget {
   final Size size;
@@ -110,7 +114,14 @@ class WalletActionsTile extends StatelessWidget {
             Align(
               alignment: Alignment.center,
               child: ElevatedButton(
-                  onPressed: buttonText == 'Earn Now' ? earnNowfn : () {},
+                  onPressed: buttonText == 'Earn Now'
+                      ? earnNowfn
+                      : () {
+                          Navigator.of(context).push(PageTransition(
+                            child: SuperTokenScreen(),
+                            type: PageTransitionType.leftToRightWithFade,
+                          ));
+                        },
                   style: ElevatedButton.styleFrom(
                     primary: Colors.red,
                     elevation: 0,

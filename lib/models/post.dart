@@ -8,7 +8,7 @@ class Post {
   final Timestamp createdAt;
   final String creatername;
   final String createrimg;
-  final int likes;
+  final int flames;
   final int swaps;
   final int reports;
 
@@ -19,7 +19,7 @@ class Post {
       required this.createdAt,
       required this.createrId,
       required this.reports,
-      required this.likes,
+      required this.flames,
       required this.createrimg,
       required this.creatername,
       required this.swaps});
@@ -34,7 +34,7 @@ class Post {
         createrimg: doc.data()!['creater_img'],
         creatername: doc.data()!['creater_name'],
         reports: doc.data()!['reports'],
-        likes: doc.data()!['likes'],
+        flames: doc.data()!['flames'],
         swaps: doc.data()!['swaps']);
   }
 }

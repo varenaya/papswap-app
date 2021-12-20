@@ -155,6 +155,7 @@ class _ReportScreenState extends State<ReportScreen> {
                     maxHeight: size.height * 0.53,
                   ),
                   child: TextField(
+                    style: const TextStyle(fontSize: 14),
                     controller: textEditingController,
                     decoration: InputDecoration(
                       errorText:

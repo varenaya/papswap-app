@@ -21,7 +21,8 @@ class Userdatastream {
               userGender: event.data()!['userGender'],
               userWebsite: event.data()!['userWebsite'],
               userType: event.data()!['userType'],
-              rewardTimestamp: event.data()!['rewardTimestamp'],
+              dailyrewardTimestamp: event.data()!['dailyrewardTimestamp'],
+              weeklyrewardTimestamp: event.data()!['weeklyrewardTimestamp'],
             ));
   }
 
@@ -37,7 +38,8 @@ class Userdatastream {
       user_id: '',
       userWebsite: '',
       userType: '',
-      rewardTimestamp: Timestamp.now(),
+      dailyrewardTimestamp: Timestamp.now(),
+      weeklyrewardTimestamp: Timestamp.now(),
     );
   }
 }

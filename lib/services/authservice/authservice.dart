@@ -97,7 +97,7 @@ class AuthService {
     final authprovider =
         Provider.of<GoogleSignInProvider>(context, listen: false);
     try {
-      authprovider.googlelogin().then((value) async {
+      authprovider.googlelogin(context).then((value) async {
         final user = FirebaseAuth.instance.currentUser;
         final usertime = user!.metadata.creationTime;
         if (DateTime.now().difference(usertime!).inSeconds < 10) {
@@ -112,7 +112,8 @@ class AuthService {
             'coinVal': 5,
             'userWebsite': '',
             'userType': 'viewer',
-            'rewardTimestamp': DateTime.utc(2021, 10, 20, 20, 18, 04),
+            'dailyrewardTimestamp': DateTime.utc(2021, 10, 20, 20, 18, 04),
+            'weeklyrewardTimestamp': DateTime.utc(2021, 10, 20, 20, 18, 04),
           }).then((value) {
             final transdocRef = _firestore
                 .collection('users')

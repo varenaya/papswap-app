@@ -1,24 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:papswap/models/app/color_const.dart';
-import 'package:papswap/services/datarepo/providers/likespostprovider.dart';
+import 'package:papswap/services/datarepo/providers/flamespostprovider.dart';
 import 'package:papswap/widgets/global/custom_progress_indicator.dart';
 import 'package:papswap/widgets/tabs/Home/feed_tile.dart';
 
-class LikesScreen extends StatefulWidget {
-  final LikesPostData likesPostData;
-  const LikesScreen({Key? key, required this.likesPostData}) : super(key: key);
+class FlamesScreen extends StatefulWidget {
+  final FlamesPostData flamesPostData;
+  const FlamesScreen({Key? key, required this.flamesPostData})
+      : super(key: key);
 
   @override
-  _LikesScreenState createState() => _LikesScreenState();
+  _FlamesScreenState createState() => _FlamesScreenState();
 }
 
-class _LikesScreenState extends State<LikesScreen> {
+class _FlamesScreenState extends State<FlamesScreen> {
   final scrollController = ScrollController();
 
   @override
   initState() {
     scrollController.addListener(scrollListener);
-    widget.likesPostData.fetchlikesposts(false);
+    widget.flamesPostData.fetchflamesposts(false);
 
     super.initState();
   }
@@ -32,8 +33,8 @@ class _LikesScreenState extends State<LikesScreen> {
   void scrollListener() {
     if (scrollController.offset >= scrollController.position.maxScrollExtent &&
         !scrollController.position.outOfRange) {
-      if (widget.likesPostData.hasNext) {
-        widget.likesPostData.fetchlikesposts(false);
+      if (widget.flamesPostData.hasNext) {
+        widget.flamesPostData.fetchflamesposts(false);
       }
     }
   }
@@ -41,7 +42,7 @@ class _LikesScreenState extends State<LikesScreen> {
   @override
   Widget build(BuildContext context) {
     Future<void> _refreshdata() async {
-      widget.likesPostData.fetchlikesposts(true);
+      widget.flamesPostData.fetchflamesposts(true);
     }
 
     return Scaffold(
@@ -60,22 +61,23 @@ class _LikesScreenState extends State<LikesScreen> {
                   delegate: SliverChildBuilderDelegate(
                     (context, index) {
                       return FeedTile(
-                        type: 'like',
-                        postdata: widget.likesPostData.likesposts[index],
+                        type: 'flame',
+                        postdata: widget.flamesPostData.flamesposts[index],
                       );
                     },
-                    childCount: widget.likesPostData.likesposts.length,
+                    childCount: widget.flamesPostData.flamesposts.length,
                   ),
                 ),
                 SliverToBoxAdapter(
-                    child: (widget.likesPostData.hasNext)
+                    child: (widget.flamesPostData.hasNext)
                         ? Column(
                             children: [
                               const SizedBox(height: 15),
                               Center(
                                 child: GestureDetector(
                                   onTap: () {
-                                    widget.likesPostData.fetchlikesposts(false);
+                                    widget.flamesPostData
+                                        .fetchflamesposts(false);
                                   },
                                   child: const CustomProgressIndicator(),
                                 ),

@@ -3,7 +3,7 @@ import 'package:papswap/models/userdata.dart';
 import 'package:papswap/screens/tabs/Home/home_screen.dart';
 import 'package:papswap/screens/tabs/Profile/profile_screen.dart';
 import 'package:papswap/screens/tabs/Wallet/wallet_screen.dart';
-import 'package:papswap/services/datarepo/providers/likespostprovider.dart';
+import 'package:papswap/services/datarepo/providers/flamespostprovider.dart';
 import 'package:papswap/services/datarepo/providers/postprovider.dart';
 import 'package:papswap/services/datarepo/providers/reswappostprovider.dart';
 import 'package:papswap/services/datarepo/providers/swappostprovider.dart';
@@ -107,8 +107,8 @@ class _TabsScreenState extends State<TabsScreen> {
           ChangeNotifierProvider<SwapPostData>(
             create: (context) => SwapPostData(),
           ),
-          ChangeNotifierProvider<LikesPostData>(
-            create: (context) => LikesPostData(),
+          ChangeNotifierProvider<FlamesPostData>(
+            create: (context) => FlamesPostData(),
           ),
           ChangeNotifierProvider<ReswapPostData>(
             create: (context) => ReswapPostData(),

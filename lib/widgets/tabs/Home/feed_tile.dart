@@ -32,7 +32,7 @@ class FeedTile extends StatefulWidget {
 }
 
 class _FeedTileState extends State<FeedTile> {
-  int likes = 0;
+  int flames = 0;
 
   String timeDuration() {
     final timedif =
@@ -47,7 +47,7 @@ class _FeedTileState extends State<FeedTile> {
   Widget build(BuildContext context) {
     final currentuserdata =
         Provider.of<UserDataProvider>(context, listen: false).userdata;
-    likes = widget.postdata.likes;
+    flames = widget.postdata.flames;
     return Padding(
       padding: const EdgeInsets.only(
         right: 15.0,
@@ -238,53 +238,54 @@ class _FeedTileState extends State<FeedTile> {
                           children: [
                             StreamBuilder<DocumentSnapshot>(
                                 stream: DataFetcher()
-                                    .myPostLikeStream(widget.postdata.postId),
+                                    .myPostflameStream(widget.postdata.postId),
                                 builder: (context, snapshot) {
                                   if (!snapshot.hasData) {
                                     return const SizedBox();
                                   }
-                                  final didLike = snapshot.data!.exists;
+                                  final didflame = snapshot.data!.exists;
                                   return Row(
                                     children: [
                                       InkWell(
                                         onTap: () {
                                           setState(() {
-                                            // isliked = !isliked;
-                                            UploadData().postlike(
+                                            UploadData().postflame(
                                                 widget.postdata.postId,
                                                 currentuserdata.user_id,
-                                                !didLike,
+                                                !didflame,
                                                 context);
                                           });
                                         },
-                                        child: didLike
+                                        child: didflame
                                             ? const Icon(
-                                                Icons.favorite,
-                                                size: 22,
-                                                color: Colors.red,
+                                                Icons.whatshot,
+                                                size: 24,
+                                                color: Colors.orange,
                                               )
                                             : const Icon(
-                                                Icons.favorite_border,
-                                                size: 22,
+                                                Icons.whatshot_outlined,
+                                                size: 24,
                                                 color: Colors.blueGrey,
                                               ),
                                       ),
                                       const SizedBox(
                                         width: 2,
                                       ),
-                                      didLike
+                                      didflame
                                           ? Text(
-                                              likes == 0
-                                                  ? (likes + 1).abs().toString()
-                                                  : likes.abs().toString(),
+                                              flames == 0
+                                                  ? (flames + 1)
+                                                      .abs()
+                                                      .toString()
+                                                  : flames.abs().toString(),
                                               style: const TextStyle(
                                                   color: Colors.grey,
                                                   fontSize: 12.5),
                                             )
                                           : Text(
-                                              likes == 0
-                                                  ? likes.abs().toString()
-                                                  : (likes - 1)
+                                              flames == 0
+                                                  ? flames.abs().toString()
+                                                  : (flames - 1)
                                                       .abs()
                                                       .toString(),
                                               style: const TextStyle(
@@ -299,7 +300,7 @@ class _FeedTileState extends State<FeedTile> {
                             ),
                             Row(
                               children: [
-                                widget.type == 'swap' || widget.type == 'like'
+                                widget.type == 'swap' || widget.type == 'flame'
                                     ? const Icon(
                                         Icons.swap_horiz_rounded,
                                         size: 22,
@@ -324,7 +325,7 @@ class _FeedTileState extends State<FeedTile> {
                                         },
                                         child: const Icon(
                                           Icons.swap_horiz_rounded,
-                                          size: 20,
+                                          size: 24,
                                           color: Colors.blueGrey,
                                         ),
                                       ),

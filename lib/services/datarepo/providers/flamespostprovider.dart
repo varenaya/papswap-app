@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:papswap/models/post.dart';
 import 'package:papswap/services/datarepo/Api/data_fetcher.dart';
 
-class LikesPostData extends ChangeNotifier {
+class FlamesPostData extends ChangeNotifier {
   final DataFetcher dataFetcher = DataFetcher();
   final _postsSnapshot = <DocumentSnapshot<Map>>[];
-  final _likeSnapshot = <DocumentSnapshot<Map>>[];
+  final _flameSnapshot = <DocumentSnapshot<Map>>[];
   String _errorMessage = '';
   int documentLimit = 5;
   bool _hasNext = true;
@@ -17,19 +17,19 @@ class LikesPostData extends ChangeNotifier {
 
   bool get hasNext => _hasNext;
 
-  List<Post> get likesposts =>
+  List<Post> get flamesposts =>
       _postsSnapshot.map((doc) => Post.fromDoc(doc)).toList();
 
-  Future fetchlikesposts(bool isrefresh) async {
+  Future fetchflamesposts(bool isrefresh) async {
     if (isrefresh) {
-      final firstlikedata =
-          await dataFetcher.getfirstprofilepost('likes', 'likedAt');
-      if (firstlikedata.docs.isNotEmpty) {
-        if (firstlikedata.docs.first.data()['postId'] !=
-            likesposts.first.postId) {
+      final firstflamedata =
+          await dataFetcher.getfirstprofilepost('flames', 'flamedAt');
+      if (firstflamedata.docs.isNotEmpty) {
+        if (firstflamedata.docs.first.data()['postId'] !=
+            flamesposts.first.postId) {
           _postsSnapshot.removeRange(0, _postsSnapshot.length);
-          _likeSnapshot.clear();
-          likesposts.clear();
+          _flameSnapshot.clear();
+          flamesposts.clear();
         }
       }
     }
@@ -41,11 +41,11 @@ class LikesPostData extends ChangeNotifier {
 
     try {
       final snap = await dataFetcher.getprofilepostdata(
-        'likes',
+        'flames',
         documentLimit,
-        startAfter: _likeSnapshot.isNotEmpty ? _likeSnapshot.last : null,
+        startAfter: _flameSnapshot.isNotEmpty ? _flameSnapshot.last : null,
       );
-      _likeSnapshot.addAll(snap.docs);
+      _flameSnapshot.addAll(snap.docs);
       for (var doc in snap.docs) {
         final postdata = await dataFetcher.getpost(doc.data()['postId']);
         _postsSnapshot.add(postdata);
@@ -61,9 +61,9 @@ class LikesPostData extends ChangeNotifier {
     _isFetchingposts = false;
   }
 
-  Future removelike(String postId) async {
-    if (likesposts.isNotEmpty) {
-      likesposts.removeWhere((element) {
+  Future removeflame(String postId) async {
+    if (flamesposts.isNotEmpty) {
+      flamesposts.removeWhere((element) {
         return element.postId == postId;
       });
     }
@@ -72,8 +72,8 @@ class LikesPostData extends ChangeNotifier {
         return element.data()!['post_id'] == postId;
       });
     }
-    if (_likeSnapshot.isNotEmpty) {
-      _likeSnapshot.removeWhere((element) {
+    if (_flameSnapshot.isNotEmpty) {
+      _flameSnapshot.removeWhere((element) {
         return element.data()!['postId'] == postId;
       });
     }

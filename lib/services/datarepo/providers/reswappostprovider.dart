@@ -24,9 +24,9 @@ class ReswapPostData extends ChangeNotifier {
 
   Future fetchreswapposts(bool isrefresh) async {
     if (isrefresh) {
-      final firstlikedata =
+      final firstflamedata =
           await dataFetcher.getfirstprofilepost('reswaps', 'reswapedAt');
-      if (firstlikedata.docs.first.data()['comment_id'] !=
+      if (firstflamedata.docs.first.data()['comment_id'] !=
           reswapposts.first.commentId) {
         _commentsSnapshot.clear();
         _reswapSnapshot.clear();
