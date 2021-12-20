@@ -35,16 +35,16 @@ class _TransactionTileState extends State<TransactionTile> {
             style: const TextStyle(color: Colors.grey, fontSize: 13),
           ),
           trailing: SizedBox(
-            width: 85,
+            width: 60,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 const Image(
                   image: AssetImage('assets/images/coin.png'),
-                  height: 20,
+                  height: 30,
                 ),
                 const SizedBox(
-                  width: 10,
+                  width: 5,
                 ),
                 Text(
                   widget.transadata!['amount'].toString().contains('-')

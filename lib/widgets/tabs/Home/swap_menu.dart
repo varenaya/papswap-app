@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:papswap/models/post.dart';
 import 'package:papswap/screens/tabs/Home/posting_screen.dart';
+import 'package:papswap/services/datarepo/Api/data_fetcher.dart';
 import 'package:papswap/services/datarepo/Api/uplaod_data.dart';
 
 class SwapMenu extends StatelessWidget {
@@ -34,11 +35,13 @@ class SwapMenu extends StatelessWidget {
         ),
         ListTile(
             onTap: () async {
-              final msg = await UploadData().postswap(postId, currentuserid);
+              final msg =
+                  await UploadData().postswap(postId, currentuserid, context);
 
               Navigator.of(context).pop();
 
-              if (msg == 'You have already swapped this post!') {
+              if (msg == 'You have already swapped this post!' ||
+                  msg == 'This post has been deleted.') {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(
@@ -72,14 +75,29 @@ class SwapMenu extends StatelessWidget {
             ),
             leading: const Icon(Icons.arrow_right_alt_rounded)),
         ListTile(
-          onTap: () {
-            Navigator.of(context).pop();
-            Navigator.of(context).push(PageTransition(
-                child: PostingScreen(
-                  type: 'Reswap',
-                  reswappostdata: postdata,
+          onTap: () async {
+            final post = await DataFetcher().getpost(postId);
+            if (post.exists) {
+              Navigator.of(context).pop();
+              Navigator.of(context).push(PageTransition(
+                  child: PostingScreen(
+                    type: 'Reswap',
+                    reswappostdata: postdata,
+                  ),
+                  type: PageTransitionType.bottomToTop));
+            } else {
+              Navigator.of(context).pop();
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: const Text(
+                    'This post has been deleted.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontFamily: 'Poppins'),
+                  ),
+                  backgroundColor: Theme.of(context).errorColor,
                 ),
-                type: PageTransitionType.bottomToTop));
+              );
+            }
           },
           contentPadding: const EdgeInsets.symmetric(horizontal: 24.0),
           minLeadingWidth: 30,

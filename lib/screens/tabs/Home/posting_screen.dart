@@ -35,6 +35,13 @@ class _PostingScreenState extends State<PostingScreen> {
   final UploadData uploadData = UploadData();
   String feedtext = '';
   UploadTask? task;
+  late bool _validate = false;
+
+  @override
+  void dispose() {
+    _textcontroller.dispose();
+    super.dispose();
+  }
 
   Future pickMedia() async {
     try {
@@ -140,82 +147,89 @@ class _PostingScreenState extends State<PostingScreen> {
             padding: const EdgeInsets.all(8.0),
             child: ElevatedButton(
                 onPressed: () async {
-                  if (widget.type == 'Post') {
-                    final docId =
-                        await uploadData.postData(feedtext, userdata, context);
-                    if (media == null) {
-                      Navigator.of(context).pop();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text(
-                            'Your post has been posted successfully!',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontFamily: 'Poppins'),
-                          ),
-                          backgroundColor: Colors.blue,
-                        ),
-                      );
-                      return;
-                    }
-                    task = await uploadData.postMedia(media, docId!, context);
-
-                    setState(() {});
-                    if (task == null) return;
-                    final snapshot = await task!.whenComplete(() {
-                      Navigator.of(context).pop();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text(
-                            'Your post has been posted successfully!',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontFamily: 'Poppins'),
-                          ),
-                          backgroundColor: Colors.blue,
-                        ),
-                      );
+                  if (_textcontroller.text.length < 10) {
+                    setState(() {
+                      _validate = true;
                     });
-                    final url = await snapshot.ref.getDownloadURL();
-
-                    uploadData.updatepostmedialink(docId, url);
                   } else {
-                    final docId = await uploadData.reswappostData(feedtext,
-                        userdata, context, widget.reswappostdata.postId);
-                    if (media == null) {
-                      Navigator.of(context).pop();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text(
-                            'You have earned 2 papTokens for successfully reswapping!',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontFamily: 'Poppins'),
+                    _validate = false;
+                    if (widget.type == 'Post') {
+                      final docId = await uploadData.postData(
+                          feedtext, userdata, context);
+                      if (media == null) {
+                        Navigator.of(context).pop();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                              'Your post has been posted successfully!',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontFamily: 'Poppins'),
+                            ),
+                            backgroundColor: Colors.blue,
                           ),
-                          backgroundColor: Colors.blue,
-                        ),
-                      );
-                      return;
+                        );
+                        return;
+                      }
+                      task = await uploadData.postMedia(media, docId!, context);
+
+                      setState(() {});
+                      if (task == null) return;
+                      final snapshot = await task!.whenComplete(() {
+                        Navigator.of(context).pop();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                              'Your post has been posted successfully!',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontFamily: 'Poppins'),
+                            ),
+                            backgroundColor: Colors.blue,
+                          ),
+                        );
+                      });
+                      final url = await snapshot.ref.getDownloadURL();
+
+                      uploadData.updatepostmedialink(docId, url, context);
+                    } else {
+                      final docId = await uploadData.reswappostData(feedtext,
+                          userdata, context, widget.reswappostdata.postId);
+                      if (media == null) {
+                        Navigator.of(context).pop();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                              'You have earned 2 papTokens for successfully reswapping!',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontFamily: 'Poppins'),
+                            ),
+                            backgroundColor: Colors.blue,
+                          ),
+                        );
+                        return;
+                      }
+                      task = await uploadData.reswappostMedia(
+                          media, docId!, context, widget.reswappostdata.postId);
+
+                      setState(() {});
+                      if (task == null) return;
+                      final snapshot = await task!.whenComplete(() {
+                        Navigator.of(context).pop();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                              'You have earned 2 papTokens for successfully reswapping!',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontFamily: 'Poppins'),
+                            ),
+                            backgroundColor: Colors.blue,
+                          ),
+                        );
+                      });
+                      final url = await snapshot.ref.getDownloadURL();
+
+                      uploadData.updatereswappostmedialink(
+                          docId, url, widget.reswappostdata.postId, context);
                     }
-                    task = await uploadData.reswappostMedia(
-                        media, docId!, context, widget.reswappostdata.postId);
-
-                    setState(() {});
-                    if (task == null) return;
-                    final snapshot = await task!.whenComplete(() {
-                      Navigator.of(context).pop();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text(
-                            'You have earned 2 papTokens for successfully reswapping!',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontFamily: 'Poppins'),
-                          ),
-                          backgroundColor: Colors.blue,
-                        ),
-                      );
-                    });
-                    final url = await snapshot.ref.getDownloadURL();
-
-                    uploadData.updatereswappostmedialink(
-                        docId, url, widget.reswappostdata.postId);
                   }
                 },
                 style: ElevatedButton.styleFrom(
@@ -257,9 +271,15 @@ class _PostingScreenState extends State<PostingScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               DetectableTextField(
-                decoration: const InputDecoration.collapsed(
+                decoration: InputDecoration(
                     hintText: "What's new?",
-                    hintStyle: TextStyle(
+                    errorText: _validate ? 'Enter atleast 10 characters' : null,
+                    border: InputBorder.none,
+                    errorStyle: const TextStyle(
+                      color: Colors.red,
+                      fontSize: 14,
+                    ),
+                    hintStyle: const TextStyle(
                       fontSize: 18,
                     )),
                 decoratedStyle: const TextStyle(
@@ -362,8 +382,8 @@ class _PostingScreenState extends State<PostingScreen> {
                                 const Text(
                                   'please wait ....',
                                   style: TextStyle(
-                                    color: Colors.red,
-                                    fontSize: 15,
+                                    color: Colors.blue,
+                                    fontSize: 14,
                                   ),
                                 )
                               ],

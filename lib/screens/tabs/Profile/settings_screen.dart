@@ -49,17 +49,6 @@ class _SettingScreenState extends State<SettingScreen> {
                   contentPadding: const EdgeInsets.symmetric(horizontal: 24.0),
                   minLeadingWidth: 30,
                   title: const Text(
-                    'Notifications',
-                    style: TextStyle(
-                      fontSize: 17,
-                    ),
-                  ),
-                  leading: const Icon(Icons.notifications)),
-              ListTile(
-                  onTap: () {},
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 24.0),
-                  minLeadingWidth: 30,
-                  title: const Text(
                     'Passwords',
                     style: TextStyle(
                       fontSize: 17,

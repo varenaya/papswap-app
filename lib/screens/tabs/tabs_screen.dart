@@ -104,9 +104,6 @@ class _TabsScreenState extends State<TabsScreen> {
       ),
       body: MultiProvider(
         providers: [
-          ChangeNotifierProvider<PostData>(
-            create: (context) => PostData(),
-          ),
           ChangeNotifierProvider<SwapPostData>(
             create: (context) => SwapPostData(),
           ),

@@ -92,7 +92,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
           backgroundColor: Colors.blue,
         ),
       );
-      UploadData().updatevideobonus();
+      UploadData().updatevideobonus(context);
     });
     _rewardedAd = null;
   }

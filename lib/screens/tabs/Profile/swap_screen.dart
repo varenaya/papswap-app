@@ -47,9 +47,9 @@ class _SwapScreenState extends State<SwapScreen> {
 
     return Scaffold(
         backgroundColor: AppColors.scaffColor,
-        body: SafeArea(
-          child: RefreshIndicator(
-            onRefresh: _refreshdata,
+        body: RefreshIndicator(
+          onRefresh: _refreshdata,
+          child: SafeArea(
             child: CustomScrollView(
               controller: scrollController,
               slivers: [

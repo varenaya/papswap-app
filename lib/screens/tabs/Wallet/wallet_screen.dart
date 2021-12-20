@@ -94,7 +94,7 @@ class _WalletScreenState extends State<WalletScreen> {
           backgroundColor: Colors.blue,
         ),
       );
-      UploadData().updatevideobonus();
+      UploadData().updatevideobonus(context);
     });
     _rewardedAd = null;
   }
@@ -177,7 +177,7 @@ class _WalletScreenState extends State<WalletScreen> {
                             title: 'Earn PapTokens',
                             subtitle:
                                 'Earn PapTokens daily with bonus and through swaps.',
-                            footerText: 'upto 30 PapTokens every week',
+                            footerText: 'upto 20 PapTokens every week',
                             buttonText: 'Earn Now',
                             imagepath: 'assets/images/paptoken.png',
                           ),

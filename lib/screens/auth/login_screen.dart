@@ -54,13 +54,13 @@ class _LoginScreenState extends State<LoginScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              // Hero(
-              //   tag: 'welcome-image',
-              //   child: Image(
-              //     width: size.width * 0.6,
-              //     image: const AssetImage('assets/images/hwt_filli.png'),
-              //   ),
-              // ),
+              Hero(
+                tag: 'welcome-image',
+                child: Image(
+                  width: size.width * 0.5,
+                  image: const AssetImage('assets/images/welcome_papswap.png'),
+                ),
+              ),
               Form(
                 key: _formKey,
                 child: Column(
@@ -193,7 +193,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     onTap: () {
                       Navigator.of(context).push(PageTransition(
                           child: const SignUpScreen(),
-                          type: PageTransitionType.rightToLeftWithFade));
+                          type: PageTransitionType.fade));
                     },
                     child: Text(
                       "Create account",

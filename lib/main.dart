@@ -7,6 +7,7 @@ import 'package:papswap/screens/tabs/tabs_screen.dart';
 import 'package:papswap/services/authservice/authservice.dart';
 import 'package:papswap/services/authservice/googlesigninprovider.dart';
 import 'package:papswap/services/datarepo/Api/datastream/userdatastream.dart';
+import 'package:papswap/services/datarepo/providers/postprovider.dart';
 
 import 'package:papswap/services/datarepo/providers/userData.dart';
 
@@ -38,6 +39,9 @@ class App extends StatelessWidget {
         ),
         ChangeNotifierProvider<UserDataProvider>(
           create: (context) => UserDataProvider(),
+        ),
+        ChangeNotifierProvider<PostData>(
+          create: (context) => PostData(),
         ),
       ],
       child: MaterialApp(

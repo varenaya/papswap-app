@@ -37,7 +37,7 @@ class TokenEarningScreen extends StatelessWidget {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(
-                  msg,
+                  msg!,
                   textAlign: TextAlign.center,
                   style: const TextStyle(fontFamily: 'Poppins'),
                 ),
@@ -50,7 +50,7 @@ class TokenEarningScreen extends StatelessWidget {
           title: 'Daily Bonus',
           size: size,
           subtitle1: 'Earn a PapToken daily! Just open the app everyday, ',
-          subtitle2: 'claim 1 PapToken daily',
+          subtitle2: 'claim 1 PapToken every 24 hrs',
           buttontext: 'Claim',
           imagepath: 'assets/images/daily bonus.png',
         ),
@@ -62,7 +62,7 @@ class TokenEarningScreen extends StatelessWidget {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(
-                  msg,
+                  msg!,
                   textAlign: TextAlign.center,
                   style: const TextStyle(fontFamily: 'Poppins'),
                 ),
@@ -74,9 +74,8 @@ class TokenEarningScreen extends StatelessWidget {
           },
           title: 'Weekly Bonus',
           size: size,
-          subtitle1: 'Earn upto 25 PapTokens weekly,',
-          subtitle2:
-              ' claim 15 PapTokens on sundays and 10 Paptokens on wednesdays',
+          subtitle1: 'Earn upto 5 PapTokens weekly,',
+          subtitle2: ' claim 5 PapTokens on sundays',
           buttontext: 'Claim',
           imagepath: 'assets/images/weekly bonus.png',
         ),

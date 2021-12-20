@@ -60,13 +60,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   Icons.arrow_back_ios_new,
                 ),
               ),
-              // Hero(
-              //   tag: 'welcome-image',
-              //   child: Image(
-              //     width: size.width * 0.6,
-              //     image: AssetImage('assets/images/hwt_filli.png'),
-              //   ),
-              // ),
+              Hero(
+                tag: 'welcome-image',
+                child: Image(
+                  width: size.width * 0.5,
+                  image: const AssetImage('assets/images/welcome_papswap.png'),
+                ),
+              ),
               Form(
                 key: _formKey,
                 child: Column(

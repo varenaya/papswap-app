@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:papswap/models/post.dart';
 
 class DataFetcher {
   final _firestore = FirebaseFirestore.instance;
@@ -84,19 +85,6 @@ class DataFetcher {
     } else {
       return refposts.startAfterDocument(startAfter).get();
     }
-    // for (var element in data.docs) {
-    //   final postId = element.data()['postId'];
-    //   final commentId = element.data()['comment_id'];
-    //   final commentdata = await _firestore
-    //       .collection('Posts')
-    //       .doc(postId)
-    //       .collection('comments')
-    //       .doc(commentId)
-    //       .get();
-    //   commentdatalist.add(commentdata.data());
-    //   final postdata = {};
-    //   postdatalist.add(postdata);
-    // }
   }
 
   Future<DocumentSnapshot<Map<String, dynamic>>> getcomment(
@@ -128,5 +116,14 @@ class DataFetcher {
     } else {
       return refposts.startAfterDocument(startAfter).get();
     }
+  }
+
+  Stream<DocumentSnapshot> myPostLikeStream(String postId) {
+    final ref = _firestore
+        .collection('users')
+        .doc(currentusedId)
+        .collection('likes')
+        .doc(postId);
+    return ref.snapshots();
   }
 }

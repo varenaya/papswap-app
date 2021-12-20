@@ -47,7 +47,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: DefaultTabController(
           length: 3,
           child: NestedScrollView(
-            key: const PageStorageKey('profile'),
             headerSliverBuilder: (context, _) {
               return [
                 SliverList(

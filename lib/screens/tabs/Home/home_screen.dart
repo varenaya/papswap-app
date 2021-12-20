@@ -11,6 +11,7 @@ import 'package:papswap/widgets/global/custom_progress_indicator.dart';
 import 'package:papswap/widgets/tabs/Home/feed_tile.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'dart:math' as math;
 
 class HomeScreen extends StatefulWidget {
   final PostData postData;
@@ -85,9 +86,45 @@ class _HomeScreenState extends State<HomeScreen> {
                 stretch: true,
                 floating: true,
                 backgroundColor: AppColors.scaffColor,
-                title: Text(
-                  'papswap',
-                  style: Theme.of(context).textTheme.headline1,
+                title: RichText(
+                  text: const TextSpan(
+                    text: 'PAP',
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontFamily: 'Poppins',
+                      fontSize: 22,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    children: [
+                      TextSpan(
+                        text: 'S',
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontFamily: 'Poppins',
+                          fontSize: 22,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      WidgetSpan(
+                        child: Padding(
+                          padding: EdgeInsets.only(bottom: 7),
+                          child: Image(
+                            image: AssetImage('assets/images/W_tilted.png'),
+                            height: 18,
+                          ),
+                        ),
+                      ),
+                      TextSpan(
+                        text: 'AP',
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontFamily: 'Poppins',
+                          fontSize: 22,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 actions: [
                   IconButton(

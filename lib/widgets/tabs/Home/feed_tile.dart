@@ -1,10 +1,14 @@
 // ignore_for_file: prefer_typing_uninitialized_variables
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:detectable_text_field/detectable_text_field.dart';
 import 'package:detectable_text_field/detector/sample_regular_expressions.dart';
 import 'package:duration/duration.dart';
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:papswap/models/post.dart';
+import 'package:papswap/screens/tabs/Home/report_screen.dart';
+import 'package:papswap/services/datarepo/Api/data_fetcher.dart';
 import 'package:papswap/services/datarepo/Api/uplaod_data.dart';
 import 'package:papswap/services/datarepo/providers/userData.dart';
 
@@ -28,16 +32,7 @@ class FeedTile extends StatefulWidget {
 }
 
 class _FeedTileState extends State<FeedTile> {
-  late bool isliked = false;
   int likes = 0;
-  @override
-  void initState() {
-    super.initState();
-    likes = widget.postdata.likes;
-    if (widget.type == 'like') {
-      isliked = true;
-    }
-  }
 
   String timeDuration() {
     final timedif =
@@ -52,7 +47,7 @@ class _FeedTileState extends State<FeedTile> {
   Widget build(BuildContext context) {
     final currentuserdata =
         Provider.of<UserDataProvider>(context, listen: false).userdata;
-
+    likes = widget.postdata.likes;
     return Padding(
       padding: const EdgeInsets.only(
         right: 15.0,
@@ -84,17 +79,72 @@ class _FeedTileState extends State<FeedTile> {
                   ),
                   widget.type == 'reswapost' || widget.type == 'reswap'
                       ? const SizedBox()
-                      : InkWell(
-                          onTap: () {
-                            // showModalBottomSheet(
-                            //   context: context,
-                            //   builder: (context) => Container(),
-                            // );
-                          },
-                          child: const Icon(
-                            Icons.more_horiz,
-                            color: Colors.grey,
-                          ))
+                      : widget.type == 'swap'
+                          ? InkWell(
+                              onTap: () {
+                                showModalBottomSheet(
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(15),
+                                        topRight: Radius.circular(15)),
+                                  ),
+                                  context: context,
+                                  builder: (context) => Container(),
+                                );
+                              },
+                              child: const Icon(
+                                Icons.more_horiz,
+                                color: Colors.grey,
+                              ))
+                          : DropdownButtonHideUnderline(
+                              child: ButtonTheme(
+                                alignedDropdown: true,
+                                child: DropdownButton(
+                                  icon: const Icon(
+                                    Icons.more_horiz,
+                                    color: Colors.black,
+                                  ),
+                                  elevation: 5,
+                                  menuMaxHeight: 38,
+                                  isExpanded: false,
+                                  items: [
+                                    DropdownMenuItem(
+                                      alignment: Alignment.centerRight,
+                                      child: SizedBox(
+                                        width: 110,
+                                        child: Row(
+                                          children: const [
+                                            Icon(
+                                              Icons.report_outlined,
+                                              color: Colors.red,
+                                            ),
+                                            SizedBox(
+                                              width: 2,
+                                            ),
+                                            Text(
+                                              'Report post',
+                                              style: TextStyle(fontSize: 14),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      value: 'report',
+                                    ),
+                                  ],
+                                  onChanged: (itemIdentifier) {
+                                    if (itemIdentifier == 'report') {
+                                      Navigator.of(context).push(
+                                        PageTransition(
+                                            child: ReportScreen(
+                                              post: widget.postdata,
+                                            ),
+                                            type: PageTransitionType.fade),
+                                      );
+                                    }
+                                  },
+                                ),
+                              ),
+                            ),
                 ],
               ),
               subtitle: Text(
@@ -143,37 +193,36 @@ class _FeedTileState extends State<FeedTile> {
                 detectionRegExp: detectionRegExp(atSign: false)!,
               ),
             ),
-            // widget.postdata['medialink'] == ''
-            //     ? const SizedBox()
-            // : widget.postdata['medialink'].contains('.jpg?') ||
-            //         widget.postdata['medialink'].contains('.png?')||
-            //         widget.postdata['medialink'].contains('.jpeg?')
-            //         ? Padding(
-            //             padding: const EdgeInsets.only(
-            //               right: 15.0,
-            //               left: 15.0,
-            //               bottom: 15.0,
-            //             ),
-            //             child: ClipRRect(
-            //               borderRadius: BorderRadius.circular(15),
-            //               child: Image(
-            //                   image:
-            //                       NetworkImage(widget.postdata['medialink'])),
-            //             ),
-            //           )
-            //         : Padding(
-            //             padding: const EdgeInsets.only(
-            //               right: 15.0,
-            //               left: 15.0,
-            //               bottom: 15.0,
-            //             ),
-            //             child: ClipRRect(
-            //               borderRadius: BorderRadius.circular(15),
-            //               child: VideoWidget(
-            //                 link: widget.postdata['medialink'],
-            //               ),
-            //             ),
-            //           ),
+            widget.postdata.medialink == ''
+                ? const SizedBox()
+                : widget.postdata.medialink.contains('.jpg?') ||
+                        widget.postdata.medialink.contains('.png?') ||
+                        widget.postdata.medialink.contains('.jpeg?')
+                    ? Padding(
+                        padding: const EdgeInsets.only(
+                          right: 15.0,
+                          left: 15.0,
+                          bottom: 15.0,
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(15),
+                          child: Image(
+                              image: NetworkImage(widget.postdata.medialink)),
+                        ),
+                      )
+                    : Padding(
+                        padding: const EdgeInsets.only(
+                          right: 15.0,
+                          left: 15.0,
+                          bottom: 15.0,
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(15),
+                          child: VideoWidget(
+                            link: widget.postdata.medialink,
+                          ),
+                        ),
+                      ),
             widget.type == 'reswapost' || widget.type == 'reswap'
                 ? const SizedBox()
                 : Padding(
@@ -187,52 +236,64 @@ class _FeedTileState extends State<FeedTile> {
                       children: [
                         Row(
                           children: [
-                            Row(
-                              children: [
-                                InkWell(
-                                  onTap: () {
-                                    setState(() {
-                                      isliked = !isliked;
-                                      UploadData().postlike(
-                                          widget.postdata.postId,
-                                          currentuserdata.user_id,
-                                          isliked,
-                                          context);
-                                      if (isliked) {}
-                                    });
-                                  },
-                                  child: isliked
-                                      ? const Icon(
-                                          Icons.favorite,
-                                          size: 20,
-                                          color: Colors.red,
-                                        )
-                                      : const Icon(
-                                          Icons.favorite_border,
-                                          size: 20,
-                                          color: Colors.blueGrey,
-                                        ),
-                                ),
-                                const SizedBox(
-                                  width: 2,
-                                ),
-                                isliked
-                                    ? Text(
-                                        likes == 0
-                                            ? (likes + 1).abs().toString()
-                                            : likes.abs().toString(),
-                                        style: const TextStyle(
-                                            color: Colors.grey, fontSize: 12.5),
-                                      )
-                                    : Text(
-                                        likes == 0
-                                            ? likes.abs().toString()
-                                            : (likes - 1).abs().toString(),
-                                        style: const TextStyle(
-                                            color: Colors.grey, fontSize: 12.5),
+                            StreamBuilder<DocumentSnapshot>(
+                                stream: DataFetcher()
+                                    .myPostLikeStream(widget.postdata.postId),
+                                builder: (context, snapshot) {
+                                  if (!snapshot.hasData) {
+                                    return const SizedBox();
+                                  }
+                                  final didLike = snapshot.data!.exists;
+                                  return Row(
+                                    children: [
+                                      InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            // isliked = !isliked;
+                                            UploadData().postlike(
+                                                widget.postdata.postId,
+                                                currentuserdata.user_id,
+                                                !didLike,
+                                                context);
+                                          });
+                                        },
+                                        child: didLike
+                                            ? const Icon(
+                                                Icons.favorite,
+                                                size: 22,
+                                                color: Colors.red,
+                                              )
+                                            : const Icon(
+                                                Icons.favorite_border,
+                                                size: 22,
+                                                color: Colors.blueGrey,
+                                              ),
                                       ),
-                              ],
-                            ),
+                                      const SizedBox(
+                                        width: 2,
+                                      ),
+                                      didLike
+                                          ? Text(
+                                              likes == 0
+                                                  ? (likes + 1).abs().toString()
+                                                  : likes.abs().toString(),
+                                              style: const TextStyle(
+                                                  color: Colors.grey,
+                                                  fontSize: 12.5),
+                                            )
+                                          : Text(
+                                              likes == 0
+                                                  ? likes.abs().toString()
+                                                  : (likes - 1)
+                                                      .abs()
+                                                      .toString(),
+                                              style: const TextStyle(
+                                                  color: Colors.grey,
+                                                  fontSize: 12.5),
+                                            ),
+                                    ],
+                                  );
+                                }),
                             const SizedBox(
                               width: 30,
                             ),
@@ -241,7 +302,7 @@ class _FeedTileState extends State<FeedTile> {
                                 widget.type == 'swap' || widget.type == 'like'
                                     ? const Icon(
                                         Icons.swap_horiz_rounded,
-                                        size: 20,
+                                        size: 22,
                                         color: Colors.blueGrey,
                                       )
                                     : InkWell(
