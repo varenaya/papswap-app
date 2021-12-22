@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:papswap/models/userdata.dart';
+import 'package:papswap/screens/tabs/Profile/profile_editing_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -69,7 +71,11 @@ class ProfileHeader extends StatelessWidget {
                 ],
               ),
               GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.of(context).push(PageTransition(
+                        child: const ProfileEditingScreen(),
+                        type: PageTransitionType.rightToLeftWithFade));
+                  },
                   child: const Icon(
                     Icons.edit_outlined,
                   )),

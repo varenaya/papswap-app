@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:papswap/models/app/color_const.dart';
-import 'package:papswap/screens/tabs/Wallet/all_supertokens_screen.dart';
-import 'package:papswap/screens/tabs/Wallet/my_supertoken_screen.dart';
+import 'package:papswap/screens/tabs/Wallet/superToken/all_supertokens_screen.dart';
+import 'package:papswap/screens/tabs/Wallet/superToken/my_supertoken_screen.dart';
 
 class SuperTokenScreen extends StatefulWidget {
   const SuperTokenScreen({Key? key}) : super(key: key);

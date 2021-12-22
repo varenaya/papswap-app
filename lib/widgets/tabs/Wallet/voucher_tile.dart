@@ -1,18 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:papswap/widgets/tabs/Wallet/voucher_menu.dart';
 
 class VoucherTile extends StatelessWidget {
-  final String title;
-  final String imageUrl;
+  final Map voucherdata;
   final Size size;
-  final String voucherText;
-  final String cost;
-  const VoucherTile(
-      {Key? key,
-      required this.imageUrl,
-      required this.title,
-      required this.voucherText,
-      required this.cost,
-      required this.size})
+
+  const VoucherTile({Key? key, required this.voucherdata, required this.size})
       : super(key: key);
 
   @override
@@ -22,8 +15,13 @@ class VoucherTile extends StatelessWidget {
       child: GestureDetector(
         onTap: () {
           showModalBottomSheet(
+            isScrollControlled: true,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(15), topRight: Radius.circular(15)),
+            ),
             context: context,
-            builder: (context) => Container(),
+            builder: (context) => VoucherMenu(voucherdata: voucherdata),
           );
         },
         child: Container(
@@ -38,7 +36,7 @@ class VoucherTile extends StatelessWidget {
             children: [
               Center(
                 child: Image(
-                  image: NetworkImage(imageUrl),
+                  image: NetworkImage(voucherdata['voucherImg']),
                   fit: BoxFit.contain,
                 ),
               ),
@@ -46,13 +44,13 @@ class VoucherTile extends StatelessWidget {
                 height: 10,
               ),
               Text(
-                title,
+                voucherdata['voucherName'],
                 style: const TextStyle(
                   fontSize: 15,
                 ),
               ),
               Text(
-                voucherText,
+                voucherdata['voucherText'],
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.indigo.shade900,
@@ -60,7 +58,7 @@ class VoucherTile extends StatelessWidget {
               ),
               RichText(
                   text: TextSpan(
-                      text: cost,
+                      text: voucherdata['cost'].toString(),
                       style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,

@@ -57,7 +57,8 @@ class AuthService {
         'coinVal': 5,
         'userWebsite': '',
         'userType': 'viewer',
-        'rewardTimestamp': DateTime.utc(2021, 10, 20, 20, 18, 04),
+        'dailyrewardTimestamp': DateTime.utc(2021, 10, 20, 20, 18, 04),
+        'weeklyrewardTimestamp': DateTime.utc(2021, 10, 20, 20, 18, 04),
       }).then((value) {
         final transdocRef = _firestore
             .collection('users')

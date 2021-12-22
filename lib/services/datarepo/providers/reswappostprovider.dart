@@ -8,7 +8,7 @@ import 'package:papswap/services/datarepo/Api/data_fetcher.dart';
 class ReswapPostData extends ChangeNotifier {
   final DataFetcher dataFetcher = DataFetcher();
   final _commentsSnapshot = <Map>[];
-  final _reswapSnapshot = <DocumentSnapshot>[];
+  final _reswapSnapshot = <DocumentSnapshot<Map>>[];
   String _errorMessage = '';
   int documentLimit = 5;
   bool _hasNext = true;
@@ -64,5 +64,24 @@ class ReswapPostData extends ChangeNotifier {
     }
 
     _isFetchingposts = false;
+  }
+
+  Future removereswap(String commentId) async {
+    if (reswapposts.isNotEmpty) {
+      reswapposts.removeWhere((element) {
+        return element.commentId == commentId;
+      });
+    }
+    if (_commentsSnapshot.isNotEmpty) {
+      _commentsSnapshot.removeWhere((element) {
+        return element['commentdata'].data()['comment_id'] == commentId;
+      });
+    }
+    if (_reswapSnapshot.isNotEmpty) {
+      _reswapSnapshot.removeWhere((element) {
+        return element.data()!['comment_id'] == commentId;
+      });
+    }
+    notifyListeners();
   }
 }

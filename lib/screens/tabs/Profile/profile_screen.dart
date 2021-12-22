@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:papswap/models/app/color_const.dart';
-import 'package:papswap/screens/tabs/Profile/flames_screen.dart';
-import 'package:papswap/screens/tabs/Profile/reswap_screen.dart';
+import 'package:papswap/screens/tabs/Profile/profiletabs/flames_screen.dart';
+import 'package:papswap/screens/tabs/Profile/profiletabs/reswap_screen.dart';
 import 'package:papswap/screens/tabs/Profile/settings_screen.dart';
-import 'package:papswap/screens/tabs/Profile/swap_screen.dart';
+import 'package:papswap/screens/tabs/Profile/profiletabs/swap_screen.dart';
 import 'package:papswap/services/datarepo/providers/flamespostprovider.dart';
 import 'package:papswap/services/datarepo/providers/reswappostprovider.dart';
 import 'package:papswap/services/datarepo/providers/swappostprovider.dart';

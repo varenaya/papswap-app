@@ -1,90 +1,79 @@
 import 'package:flutter/material.dart';
+import 'package:papswap/models/userdata.dart';
+import 'package:papswap/widgets/tabs/Wallet/rewards_menu.dart';
 
 class RewardTile extends StatelessWidget {
-  final String title;
-  final String imageUrl;
-  final String buttonText;
-  final String cost;
+  final Map rewarddata;
+
   const RewardTile({
     Key? key,
-    required this.title,
-    required this.imageUrl,
-    required this.buttonText,
-    required this.cost,
+    required this.rewarddata,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(15, 0, 15, 15),
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Container(
-            padding: const EdgeInsets.fromLTRB(10, 10, 10, 5),
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(15),
+      child: GestureDetector(
+        onTap: () {
+          showModalBottomSheet(
+            isScrollControlled: true,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(15), topRight: Radius.circular(15)),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 15,
-                  ),
+            context: context,
+            builder: (context) => RewardsMenu(
+              rewarddata: rewarddata,
+            ),
+          );
+        },
+        child: Container(
+          padding: const EdgeInsets.fromLTRB(10, 10, 10, 5),
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                rewarddata['rewardName'],
+                style: const TextStyle(
+                  fontSize: 15,
                 ),
-                RichText(
-                    text: TextSpan(
-                        text: cost,
-                        style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
+              ),
+              RichText(
+                  text: TextSpan(
+                      text: rewarddata['cost'].toString(),
+                      style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Poppins',
+                          color: Colors.black),
+                      children: const [
+                    TextSpan(
+                        text: ' PapTokens',
+                        style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
                             fontFamily: 'Poppins',
-                            color: Colors.black),
-                        children: const [
-                      TextSpan(
-                          text: ' PapTokens',
-                          style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              fontFamily: 'Poppins',
-                              color: Colors.black))
-                    ])),
-                const SizedBox(
-                  height: 10,
-                ),
-                Image(
-                  image: NetworkImage(imageUrl),
-                  fit: BoxFit.contain,
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-              ],
-            ),
+                            color: Colors.black))
+                  ])),
+              const SizedBox(
+                height: 10,
+              ),
+              Image(
+                image: NetworkImage(rewarddata['rewardMedia']),
+                fit: BoxFit.contain,
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+            ],
           ),
-          Positioned(
-            bottom: 0,
-            child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.red,
-                  elevation: 5,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20)),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 30),
-                  child: Text(
-                    buttonText,
-                    style: const TextStyle(color: Colors.white, fontSize: 14),
-                  ),
-                )),
-          ),
-        ],
+        ),
       ),
     );
   }

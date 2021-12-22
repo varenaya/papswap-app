@@ -51,7 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
               top: size.height * 0.05,
               bottom: size.height * 0.06),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Hero(

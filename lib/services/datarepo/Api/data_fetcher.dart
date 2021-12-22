@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:papswap/models/post.dart';
 
 class DataFetcher {
   final _firestore = FirebaseFirestore.instance;
@@ -108,8 +107,8 @@ class DataFetcher {
         .orderBy(
           'trans_time',
           descending: true,
-        )
-        .limit(limit);
+        );
+    // .limit(limit);
 
     if (startAfter == null) {
       return refposts.get();
@@ -125,5 +124,37 @@ class DataFetcher {
         .collection('flames')
         .doc(postId);
     return ref.snapshots();
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> mysuperTokens() {
+    final ref = _firestore
+        .collection('users')
+        .doc(currentusedId)
+        .collection('superTokens')
+        .orderBy('earnedOn', descending: true);
+    return ref.snapshots();
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> allsuperTokens() {
+    final ref = _firestore
+        .collection('superTokens')
+        .orderBy('launchedOn', descending: true);
+    return ref.snapshots();
+  }
+
+  Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>> rewardlist() async {
+    final data = await _firestore.collection('rewards').get();
+    return data.docs;
+  }
+
+  Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>> movieslist() async {
+    final data = await _firestore.collection('movies').get();
+    return data.docs;
+  }
+
+  Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>>
+      voucherslist() async {
+    final data = await _firestore.collection('vouchers').get();
+    return data.docs;
   }
 }

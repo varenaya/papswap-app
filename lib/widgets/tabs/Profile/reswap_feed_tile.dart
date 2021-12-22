@@ -3,9 +3,11 @@ import 'package:detectable_text_field/widgets/detectable_text.dart';
 import 'package:duration/duration.dart';
 import 'package:flutter/material.dart';
 import 'package:papswap/models/reswappost.dart';
+import 'package:papswap/services/datarepo/providers/reswappostprovider.dart';
 import 'package:papswap/services/datarepo/providers/userData.dart';
 import 'package:papswap/widgets/tabs/Home/feed_tile.dart';
 import 'package:papswap/widgets/tabs/Home/video_player.dart';
+import 'package:papswap/widgets/tabs/Profile/reswap_action_menu.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -56,11 +58,25 @@ class ReswapFeedTile extends StatelessWidget {
                     ),
                   ),
                   GestureDetector(
-                      onTap: () {
-                        // showModalBottomSheet(
-                        //   context: context,
-                        //   builder: (context) => Container(),
-                        // );
+                      onTap: () async {
+                        var isdeleted = await showModalBottomSheet(
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(15),
+                                topRight: Radius.circular(15)),
+                          ),
+                          context: context,
+                          builder: (context) => ReswapactionMenu(
+                            commentId: reswapPost.commentId,
+                            postId: reswapPost.postId,
+                          ),
+                        );
+                        if (isdeleted != null) {
+                          if (isdeleted) {
+                            Provider.of<ReswapPostData>(context, listen: false)
+                                .removereswap(reswapPost.commentId);
+                          }
+                        }
                       },
                       child: const Icon(
                         Icons.more_horiz,

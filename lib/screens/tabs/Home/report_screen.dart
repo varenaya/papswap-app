@@ -28,12 +28,9 @@ class _ReportScreenState extends State<ReportScreen> {
       appBar: AppBar(
         backgroundColor: AppColors.scaffColor,
         elevation: 0,
-        title: const Text(
+        title: Text(
           'Report an issue',
-          style: TextStyle(
-            fontSize: 18,
-            color: Colors.black,
-          ),
+          style: Theme.of(context).textTheme.headline1,
         ),
         leading: Padding(
           padding: const EdgeInsets.only(left: 10),

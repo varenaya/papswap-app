@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:papswap/models/userdata.dart';
 import 'package:papswap/services/datarepo/Api/data_fetcher.dart';
 import 'package:papswap/services/datarepo/providers/flamespostprovider.dart';
-import 'package:papswap/services/datarepo/providers/postprovider.dart';
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 
@@ -488,6 +487,235 @@ class UploadData {
         ),
       );
       Navigator.of(context).pop();
+    } on FirebaseException catch (e) {
+      var message = 'An error occured in uploading the post! Try again';
+      if (e.message != null) {
+        message = e.message!;
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            message.toString(),
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontFamily: 'Poppins'),
+          ),
+          backgroundColor: Theme.of(context).errorColor,
+        ),
+      );
+    }
+  }
+
+  Future<void> updateuserdata(
+      String username, String gender, String website, String userBio) async {
+    _firestore.collection('users').doc(currentusedId).update({
+      if (username != '') 'userName': username,
+      if (gender != '') 'userGender': gender,
+      if (website != '') 'userWebsite': website,
+      if (userBio != '') 'userBio': userBio,
+    });
+  }
+
+  Future<void> uploaduserPfp(File? media, BuildContext context) async {
+    try {
+      final fileName = basename(media!.path);
+      final destination = 'users/$currentusedId/userImage/$fileName';
+      final ref = FirebaseStorage.instance.ref(destination);
+      final task = ref.putFile(media);
+      final url = await task.snapshot.ref.getDownloadURL();
+      _firestore
+          .collection('users')
+          .doc(currentusedId)
+          .update({'userImage': url});
+    } on FirebaseException catch (e) {
+      var message = 'An error occured in uploading the post! Try again';
+      if (e.message != null) {
+        message = e.message!;
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            message.toString(),
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontFamily: 'Poppins'),
+          ),
+          backgroundColor: Theme.of(context).errorColor,
+        ),
+      );
+    }
+  }
+
+  Future<void> deletereswap(
+      String commentId, String postId, BuildContext context) async {
+    _firestore
+        .collection('Posts')
+        .doc(postId)
+        .collection('comments')
+        .doc(commentId)
+        .delete();
+    _firestore
+        .collection('users')
+        .doc(currentusedId)
+        .collection('reswaps')
+        .where('comment_id', isEqualTo: commentId)
+        .get()
+        .then((value) {
+      _firestore
+          .collection('users')
+          .doc(currentusedId)
+          .collection('reswaps')
+          .doc(value.docs.first.id)
+          .delete();
+    });
+  }
+
+  Future<void> rewardclaim(
+      String rewardId,
+      int cost,
+      String rewardName,
+      String mobilenumber,
+      String selectedoption,
+      UserData userData,
+      BuildContext context) async {
+    try {
+      final rewardRef = _firestore
+          .collection('rewards')
+          .doc(rewardId)
+          .collection('claims')
+          .doc();
+      rewardRef.set({
+        'orderId': rewardRef.id,
+        'mobilenumber': mobilenumber,
+        'selectedoption': selectedoption,
+        'name': userData.userName,
+        'claimedAt': DateTime.now(),
+        'email': userData.userEmail,
+        'claimeruserId': userData.user_id,
+      });
+      final transdocRef = _firestore
+          .collection('users')
+          .doc(currentusedId)
+          .collection('transactions')
+          .doc();
+      _firestore
+          .collection('users')
+          .doc(userData.user_id)
+          .update({'coinVal': FieldValue.increment(-cost)});
+      transdocRef.set({
+        'transactionId': transdocRef.id,
+        'transtext': 'You claimed a $rewardName.',
+        'amount': -cost,
+        'trans_time': DateTime.now(),
+        'details':
+            '$cost PapTokens debited from your wallet for claiming $rewardName reward.'
+      });
+    } on FirebaseException catch (e) {
+      var message = 'An error occured in uploading the post! Try again';
+      if (e.message != null) {
+        message = e.message!;
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            message.toString(),
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontFamily: 'Poppins'),
+          ),
+          backgroundColor: Theme.of(context).errorColor,
+        ),
+      );
+    }
+  }
+
+  Future<void> movieclaim(
+      String movieId,
+      int cost,
+      String movieName,
+      String mobilenumber,
+      String address,
+      UserData userData,
+      BuildContext context) async {
+    try {
+      final rewardRef = _firestore
+          .collection('movies')
+          .doc(movieId)
+          .collection('claims')
+          .doc();
+      rewardRef.set({
+        'orderId': rewardRef.id,
+        'mobilenumber': mobilenumber,
+        'address': address,
+        'name': userData.userName,
+        'claimedAt': DateTime.now(),
+        'email': userData.userEmail,
+        'claimeruserId': userData.user_id,
+      });
+      final transdocRef = _firestore
+          .collection('users')
+          .doc(currentusedId)
+          .collection('transactions')
+          .doc();
+      _firestore
+          .collection('users')
+          .doc(userData.user_id)
+          .update({'coinVal': FieldValue.increment(-cost)});
+      transdocRef.set({
+        'transactionId': transdocRef.id,
+        'transtext': 'You claimed a movie ticket of $movieName.',
+        'amount': -cost,
+        'trans_time': DateTime.now(),
+        'details':
+            '$cost PapTokens debited from your wallet for claiming 1 movie ticket of $movieName.'
+      });
+    } on FirebaseException catch (e) {
+      var message = 'An error occured in uploading the post! Try again';
+      if (e.message != null) {
+        message = e.message!;
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            message.toString(),
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontFamily: 'Poppins'),
+          ),
+          backgroundColor: Theme.of(context).errorColor,
+        ),
+      );
+    }
+  }
+
+  Future<void> voucherclaim(String voucherId, int cost, String voucherName,
+      String vouchertext, UserData userData, BuildContext context) async {
+    try {
+      final rewardRef = _firestore
+          .collection('vouchers')
+          .doc(voucherId)
+          .collection('claims')
+          .doc();
+      rewardRef.set({
+        'orderId': rewardRef.id,
+        'name': userData.userName,
+        'claimedAt': DateTime.now(),
+        'email': userData.userEmail,
+        'claimeruserId': userData.user_id,
+      });
+      final transdocRef = _firestore
+          .collection('users')
+          .doc(currentusedId)
+          .collection('transactions')
+          .doc();
+      _firestore
+          .collection('users')
+          .doc(userData.user_id)
+          .update({'coinVal': FieldValue.increment(-cost)});
+      transdocRef.set({
+        'transactionId': transdocRef.id,
+        'transtext': 'You claimed a discount voucher of $voucherName.',
+        'amount': -cost,
+        'trans_time': DateTime.now(),
+        'details':
+            '$cost PapTokens debited from your wallet for claiming 1 discount voucher of $voucherName to $vouchertext'
+      });
     } on FirebaseException catch (e) {
       var message = 'An error occured in uploading the post! Try again';
       if (e.message != null) {

@@ -35,7 +35,7 @@ class _TransactionTileState extends State<TransactionTile> {
             style: const TextStyle(color: Colors.grey, fontSize: 13),
           ),
           trailing: SizedBox(
-            width: 60,
+            width: 70,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -44,18 +44,18 @@ class _TransactionTileState extends State<TransactionTile> {
                   height: 30,
                 ),
                 const SizedBox(
-                  width: 5,
+                  width: 3,
                 ),
                 Text(
                   widget.transadata!['amount'].toString().contains('-')
-                      ? widget.transadata!['amount']
+                      ? widget.transadata!['amount'].toString()
                       : '+${widget.transadata!['amount']}',
                   style: TextStyle(
                       color:
                           widget.transadata!['amount'].toString().contains('-')
                               ? Colors.red
                               : Colors.teal,
-                      fontSize: 15,
+                      fontSize: 14.5,
                       fontWeight: FontWeight.w600),
                 ),
               ],

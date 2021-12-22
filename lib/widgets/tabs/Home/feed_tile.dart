@@ -79,72 +79,75 @@ class _FeedTileState extends State<FeedTile> {
                   ),
                   widget.type == 'reswapost' || widget.type == 'reswap'
                       ? const SizedBox()
-                      : widget.type == 'swap'
-                          ? InkWell(
-                              onTap: () {
-                                showModalBottomSheet(
-                                  shape: const RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(15),
-                                        topRight: Radius.circular(15)),
-                                  ),
-                                  context: context,
-                                  builder: (context) => Container(),
-                                );
-                              },
-                              child: const Icon(
+                      :
+                      // : widget.type == 'swap'
+                      //     ? InkWell(
+                      //         onTap: () {
+                      //           showModalBottomSheet(
+                      //             shape: const RoundedRectangleBorder(
+                      //               borderRadius: BorderRadius.only(
+                      //                   topLeft: Radius.circular(15),
+                      //                   topRight: Radius.circular(15)),
+                      //             ),
+                      //             context: context,
+                      //             builder: (context) => Container(),
+                      //           );
+                      //         },
+                      //         child: const Icon(
+                      //           Icons.more_horiz,
+                      //           color: Colors.grey,
+                      //         ))
+                      //     :
+                      DropdownButtonHideUnderline(
+                          child: ButtonTheme(
+                            alignedDropdown: true,
+                            child: DropdownButton(
+                              icon: const Icon(
                                 Icons.more_horiz,
-                                color: Colors.grey,
-                              ))
-                          : DropdownButtonHideUnderline(
-                              child: ButtonTheme(
-                                alignedDropdown: true,
-                                child: DropdownButton(
-                                  icon: const Icon(
-                                    Icons.more_horiz,
-                                    color: Colors.black,
-                                  ),
-                                  elevation: 5,
-                                  menuMaxHeight: 38,
-                                  isExpanded: false,
-                                  items: [
-                                    DropdownMenuItem(
-                                      alignment: Alignment.centerRight,
-                                      child: SizedBox(
-                                        width: 110,
-                                        child: Row(
-                                          children: const [
-                                            Icon(
-                                              Icons.report_outlined,
-                                              color: Colors.red,
-                                            ),
-                                            SizedBox(
-                                              width: 2,
-                                            ),
-                                            Text(
-                                              'Report post',
-                                              style: TextStyle(fontSize: 14),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      value: 'report',
-                                    ),
-                                  ],
-                                  onChanged: (itemIdentifier) {
-                                    if (itemIdentifier == 'report') {
-                                      Navigator.of(context).push(
-                                        PageTransition(
-                                            child: ReportScreen(
-                                              post: widget.postdata,
-                                            ),
-                                            type: PageTransitionType.fade),
-                                      );
-                                    }
-                                  },
-                                ),
+                                color: Colors.black,
                               ),
+                              elevation: 5,
+                              menuMaxHeight: 38,
+                              isExpanded: false,
+                              items: [
+                                DropdownMenuItem(
+                                  alignment: Alignment.centerRight,
+                                  child: SizedBox(
+                                    width: 110,
+                                    child: Row(
+                                      children: const [
+                                        Icon(
+                                          Icons.report_outlined,
+                                          color: Colors.red,
+                                        ),
+                                        SizedBox(
+                                          width: 2,
+                                        ),
+                                        Text(
+                                          'Report post',
+                                          style: TextStyle(fontSize: 14),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  value: 'report',
+                                ),
+                              ],
+                              onChanged: (itemIdentifier) {
+                                if (itemIdentifier == 'report') {
+                                  Navigator.of(context).push(
+                                    PageTransition(
+                                        child: ReportScreen(
+                                          post: widget.postdata,
+                                        ),
+                                        type: PageTransitionType
+                                            .leftToRightWithFade),
+                                  );
+                                }
+                              },
                             ),
+                          ),
+                        ),
                 ],
               ),
               subtitle: Text(

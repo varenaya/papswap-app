@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:papswap/widgets/tabs/Wallet/movie_menu.dart';
 
 class MovieTile extends StatelessWidget {
-  final String title;
-  final String imageUrl;
   final Size size;
-  final String cost;
+  final Map moviedata;
   const MovieTile({
     Key? key,
-    required this.title,
-    required this.imageUrl,
     required this.size,
-    required this.cost,
+    required this.moviedata,
   }) : super(key: key);
 
   @override
@@ -20,8 +17,13 @@ class MovieTile extends StatelessWidget {
       child: GestureDetector(
         onTap: () {
           showModalBottomSheet(
+            isScrollControlled: true,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(15), topRight: Radius.circular(15)),
+            ),
             context: context,
-            builder: (context) => Container(),
+            builder: (context) => MovieMenu(moviedata: moviedata),
           );
         },
         child: Container(
@@ -36,7 +38,7 @@ class MovieTile extends StatelessWidget {
             children: [
               Center(
                 child: Image(
-                  image: NetworkImage(imageUrl),
+                  image: NetworkImage(moviedata['movieImage']),
                   fit: BoxFit.fitHeight,
                   height: size.height * 0.45,
                 ),
@@ -45,14 +47,14 @@ class MovieTile extends StatelessWidget {
                 height: 10,
               ),
               Text(
-                title,
+                moviedata['movieName'],
                 style: const TextStyle(
                   fontSize: 15,
                 ),
               ),
               RichText(
                   text: TextSpan(
-                      text: cost,
+                      text: moviedata['cost'].toString(),
                       style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,

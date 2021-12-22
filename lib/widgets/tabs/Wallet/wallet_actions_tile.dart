@@ -3,10 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:papswap/models/app/color_const.dart';
-import 'package:papswap/screens/tabs/Wallet/super_token_screen.dart';
+import 'package:papswap/screens/tabs/Wallet/superToken/super_token_screen.dart';
 import 'package:papswap/screens/tabs/Wallet/token_earning_screen.dart';
-import 'package:papswap/screens/tabs/Wallet/wallet_screen.dart';
-import 'package:papswap/screens/tabs/tabs_screen.dart';
 
 class WalletActionsTile extends StatelessWidget {
   final Size size;
@@ -68,7 +66,58 @@ class WalletActionsTile extends StatelessWidget {
                           topRight: Radius.circular(15)),
                     ),
                     context: context,
-                    builder: (context) => Container(),
+                    builder: (context) => Wrap(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.only(top: 8),
+                          child: Center(
+                            child: Container(
+                              height: 6,
+                              width: 40,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: Colors.grey[350],
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 15,
+                            vertical: 10,
+                          ),
+                          child: title == 'SuperTokens'
+                              ? RichText(
+                                  textAlign: TextAlign.center,
+                                  text: TextSpan(
+                                      text: 'SuperTokens',
+                                      style: TextStyle(
+                                        fontSize: 15.5,
+                                        color: Colors.indigo.shade900,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: 'Poppins',
+                                      ),
+                                      children: const [
+                                        TextSpan(
+                                          text:
+                                              ' are the exclusive tokens , that are dedicated to some inspiring and famous celebrities of nation . These tokens can be earned by the user by veryfying their data with the company , which will give user Rs 500 , which can be donated for nation building .',
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w400,
+                                              fontFamily: 'Poppins'),
+                                        )
+                                      ]))
+                              : const Text(
+                                  'As Papswap is rewarding in nature , the user earns Paptokens for the time and data they spend on the app. Paptokens can be redeemed for various gifts and movie tickets by the users .',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                  ),
+                                ),
+                        ),
+                      ],
+                    ),
                   );
                 },
                 child: const Icon(
@@ -118,7 +167,7 @@ class WalletActionsTile extends StatelessWidget {
                       ? earnNowfn
                       : () {
                           Navigator.of(context).push(PageTransition(
-                            child: SuperTokenScreen(),
+                            child: const SuperTokenScreen(),
                             type: PageTransitionType.leftToRightWithFade,
                           ));
                         },
