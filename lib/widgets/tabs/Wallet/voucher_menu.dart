@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:papswap/services/datarepo/Api/uplaod_data.dart';
 import 'package:papswap/services/datarepo/providers/userData.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class VoucherMenu extends StatelessWidget {
   final Map voucherdata;
@@ -37,6 +38,38 @@ class VoucherMenu extends StatelessWidget {
             textAlign: TextAlign.center,
             style: const TextStyle(
               fontSize: 15,
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 15,
+            vertical: 10,
+          ),
+          child: TextButton(
+            onPressed: () async {
+              final _url = voucherdata['voucherWebsite'];
+              if (!await launch(_url)) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      'Could not launch $_url',
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(fontFamily: 'Poppins'),
+                    ),
+                    backgroundColor: Theme.of(context).errorColor,
+                  ),
+                );
+                Navigator.of(context).pop();
+              }
+            },
+            child: const Text(
+              'Check Store',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 15,
+                color: Colors.blue,
+              ),
             ),
           ),
         ),

@@ -303,7 +303,7 @@ class _WalletScreenState extends State<WalletScreen> {
                                   }
                                   final voucherdata = snapshot.data;
                                   return SizedBox(
-                                    height: size.height * 0.36,
+                                    height: size.height * 0.42,
                                     child: ListView.builder(
                                       scrollDirection: Axis.horizontal,
                                       itemCount: voucherdata!.length,
