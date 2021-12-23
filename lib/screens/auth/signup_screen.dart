@@ -1,5 +1,6 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:papswap/models/app/color_const.dart';
 import 'package:papswap/services/authservice/authservice.dart';
 import 'package:papswap/widgets/global/custom_progress_indicator.dart';
 
@@ -39,31 +40,32 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: AppColors.scaffColor,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: const Icon(
+            Icons.arrow_back_ios_new,
+            color: Colors.black,
+          ),
+        ),
+      ),
       body: SingleChildScrollView(
         child: Container(
           width: size.width,
           height: size.height,
           padding: EdgeInsets.only(
-              left: 20,
-              right: 20,
-              top: size.height * 0.01,
-              bottom: size.height * 0.06),
+              left: 20, right: 20, top: 0, bottom: size.height * 0.06),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              IconButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                icon: const Icon(
-                  Icons.arrow_back_ios_new,
-                ),
-              ),
               Hero(
                 tag: 'welcome-image',
                 child: Image(
-                  width: size.width * 0.5,
+                  width: size.width * 0.6,
                   image: const AssetImage('assets/images/welcome_papswap.png'),
                 ),
               ),

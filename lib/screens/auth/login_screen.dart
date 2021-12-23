@@ -57,7 +57,7 @@ class _LoginScreenState extends State<LoginScreen> {
               Hero(
                 tag: 'welcome-image',
                 child: Image(
-                  width: size.width * 0.5,
+                  width: size.width * 0.6,
                   image: const AssetImage('assets/images/welcome_papswap.png'),
                 ),
               ),

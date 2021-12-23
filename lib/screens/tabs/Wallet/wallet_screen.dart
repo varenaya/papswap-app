@@ -183,7 +183,7 @@ class _WalletScreenState extends State<WalletScreen> {
                               title: 'Earn PapTokens',
                               subtitle:
                                   'Earn PapTokens daily with bonus and through swaps.',
-                              footerText: 'upto 20 PapTokens every week',
+                              footerText: 'upto 45 PapTokens every week',
                               buttonText: 'Earn Now',
                               imagepath: 'assets/images/paptoken.png',
                             ),
@@ -215,16 +215,15 @@ class _WalletScreenState extends State<WalletScreen> {
                 ),
               ];
             },
-            body: FutureBuilder<
-                    List<QueryDocumentSnapshot<Map<String, dynamic>>>>(
-                future: dataFetcher.rewardlist(),
+            body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                stream: dataFetcher.rewardlist(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(
                       child: CustomProgressIndicator(),
                     );
                   }
-                  final rewardata = snapshot.data;
+                  final rewardata = snapshot.data!.docs;
 
                   return CustomScrollView(
                     slivers: [
@@ -232,10 +231,10 @@ class _WalletScreenState extends State<WalletScreen> {
                           delegate: SliverChildBuilderDelegate(
                         (context, index) {
                           return RewardTile(
-                            rewarddata: rewardata![index].data(),
+                            rewarddata: rewardata[index].data(),
                           );
                         },
-                        childCount: rewardata!.length,
+                        childCount: rewardata.length,
                       )),
                       SliverToBoxAdapter(
                         child: Column(
@@ -252,11 +251,8 @@ class _WalletScreenState extends State<WalletScreen> {
                                 ),
                               ),
                             ),
-                            FutureBuilder<
-                                    List<
-                                        QueryDocumentSnapshot<
-                                            Map<String, dynamic>>>>(
-                                future: dataFetcher.movieslist(),
+                            StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                                stream: dataFetcher.movieslist(),
                                 builder: (context, snapshot) {
                                   if (snapshot.connectionState ==
                                       ConnectionState.waiting) {
@@ -264,12 +260,12 @@ class _WalletScreenState extends State<WalletScreen> {
                                       child: CustomProgressIndicator(),
                                     );
                                   }
-                                  final moviedata = snapshot.data;
+                                  final moviedata = snapshot.data!.docs;
                                   return SizedBox(
                                     height: size.height * 0.56,
                                     child: ListView.builder(
                                       scrollDirection: Axis.horizontal,
-                                      itemCount: moviedata!.length,
+                                      itemCount: moviedata.length,
                                       itemBuilder: (context, index) {
                                         return MovieTile(
                                           size: size,
@@ -289,11 +285,8 @@ class _WalletScreenState extends State<WalletScreen> {
                                 ),
                               ),
                             ),
-                            FutureBuilder<
-                                    List<
-                                        QueryDocumentSnapshot<
-                                            Map<String, dynamic>>>>(
-                                future: dataFetcher.voucherslist(),
+                            StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                                stream: dataFetcher.voucherslist(),
                                 builder: (context, snapshot) {
                                   if (snapshot.connectionState ==
                                       ConnectionState.waiting) {
@@ -301,12 +294,12 @@ class _WalletScreenState extends State<WalletScreen> {
                                       child: CustomProgressIndicator(),
                                     );
                                   }
-                                  final voucherdata = snapshot.data;
+                                  final voucherdata = snapshot.data!.docs;
                                   return SizedBox(
                                     height: size.height * 0.42,
                                     child: ListView.builder(
                                       scrollDirection: Axis.horizontal,
-                                      itemCount: voucherdata!.length,
+                                      itemCount: voucherdata.length,
                                       itemBuilder: (context, index) {
                                         return VoucherTile(
                                             voucherdata:

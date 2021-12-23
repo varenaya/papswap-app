@@ -14,8 +14,8 @@ class UploadData {
   final _firestore = FirebaseFirestore.instance;
   final currentusedId = FirebaseAuth.instance.currentUser!.uid;
 
-  Future<String?> postData(
-      String feedtext, UserData userData, BuildContext context) async {
+  Future<String?> postData(String feedtext, UserData userData,
+      BuildContext context, String selectedcategory) async {
     try {
       final DocumentReference docRef = _firestore.collection('Posts').doc();
       await docRef.set({
@@ -29,6 +29,7 @@ class UploadData {
         'swaps': 0,
         'reports': 0,
         'medialink': '',
+        'category': selectedcategory,
       });
       _firestore
           .collection('users')
@@ -422,9 +423,12 @@ class UploadData {
   Future<String?> updateweeklybonus(Timestamp weeklyrewardTimestamp) async {
     try {
       final weekday = DateTime.now().weekday;
-      if ((DateTime.now()).difference(weeklyrewardTimestamp.toDate()).inDays >=
-              1 &&
-          weekday == 7) {
+      if (((DateTime.now()).difference(weeklyrewardTimestamp.toDate()).inDays >=
+                  1 &&
+              weekday == 7) ||
+          ((DateTime.now()).difference(weeklyrewardTimestamp.toDate()).inDays >=
+                  1 &&
+              weekday == 3)) {
         final transdocRef = _firestore
             .collection('users')
             .doc(currentusedId)
@@ -436,15 +440,18 @@ class UploadData {
         });
         transdocRef.set({
           'transactionId': transdocRef.id,
-          'transtext': 'You earned 5 PapTokens from weekly bonus.',
-          'amount': 5,
+          'transtext': weekday == 3
+              ? 'You earned 10 PapTokens from weekly bonus.'
+              : 'You earned 15 PapTokens from weekly bonus.',
+          'amount': weekday == 3 ? 10 : 15,
           'trans_time': DateTime.now(),
-          'details':
-              '5 PapTokens credited to your wallet for claiming  weekly bonus on Sunday.'
+          'details': weekday == 3
+              ? '10 PapTokens credited to your wallet for claiming  weekly bonus on Wednesday.'
+              : '15 PapTokens credited to your wallet for claiming  weekly bonus on Sunday.'
         });
         return 'You claimed a weekly bonus!';
       } else {
-        return 'You can only claim once every sunday.';
+        return 'You can only claim once every sunday or wednesday.';
       }
     } on FirebaseException catch (e) {
       var message = 'An error occured in uploading the post! Try again';
@@ -517,7 +524,7 @@ class UploadData {
 
   Future<void> uploaduserPfp(File? media, BuildContext context) async {
     try {
-      final fileName = basename(media!.path);
+      final fileName = '$currentusedId ${basename(media!.path)}';
       final destination = 'users/$currentusedId/userImage/$fileName';
       final ref = FirebaseStorage.instance.ref(destination);
       final task = ref.putFile(media);

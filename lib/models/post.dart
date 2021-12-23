@@ -11,6 +11,7 @@ class Post {
   final int flames;
   final int swaps;
   final int reports;
+  final String category;
 
   const Post(
       {required this.feedtext,
@@ -22,7 +23,8 @@ class Post {
       required this.flames,
       required this.createrimg,
       required this.creatername,
-      required this.swaps});
+      required this.swaps,
+      required this.category});
 
   factory Post.fromDoc(DocumentSnapshot<dynamic> doc) {
     return Post(
@@ -35,6 +37,7 @@ class Post {
         creatername: doc.data()!['creater_name'],
         reports: doc.data()!['reports'],
         flames: doc.data()!['flames'],
-        swaps: doc.data()!['swaps']);
+        swaps: doc.data()!['swaps'],
+        category: doc.data()!['category']);
   }
 }

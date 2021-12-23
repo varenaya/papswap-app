@@ -19,7 +19,7 @@ class SuperTokenTile extends StatelessWidget {
         ),
         padding: const EdgeInsets.all(10),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Image(
               image: NetworkImage(tokendata['tokenImg']),

@@ -74,8 +74,9 @@ class TokenEarningScreen extends StatelessWidget {
           },
           title: 'Weekly Bonus',
           size: size,
-          subtitle1: 'Earn upto 5 PapTokens weekly,',
-          subtitle2: ' claim 5 PapTokens on sundays',
+          subtitle1: 'Earn upto 25 PapTokens weekly,',
+          subtitle2:
+              ' claim 15 PapTokens on sundays and 10 PapTokens on wednesdays',
           buttontext: 'Claim',
           imagepath: 'assets/images/weekly bonus.png',
         ),

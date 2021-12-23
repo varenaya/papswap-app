@@ -11,6 +11,7 @@ import 'package:papswap/screens/tabs/Home/report_screen.dart';
 import 'package:papswap/services/datarepo/Api/data_fetcher.dart';
 import 'package:papswap/services/datarepo/Api/uplaod_data.dart';
 import 'package:papswap/services/datarepo/providers/userData.dart';
+import 'package:papswap/widgets/tabs/Home/feed_tile_actions.dart';
 
 import 'package:papswap/widgets/tabs/Home/swap_menu.dart';
 import 'package:papswap/widgets/tabs/Home/video_player.dart';
@@ -79,75 +80,74 @@ class _FeedTileState extends State<FeedTile> {
                   ),
                   widget.type == 'reswapost' || widget.type == 'reswap'
                       ? const SizedBox()
-                      :
-                      // : widget.type == 'swap'
-                      //     ? InkWell(
-                      //         onTap: () {
-                      //           showModalBottomSheet(
-                      //             shape: const RoundedRectangleBorder(
-                      //               borderRadius: BorderRadius.only(
-                      //                   topLeft: Radius.circular(15),
-                      //                   topRight: Radius.circular(15)),
-                      //             ),
-                      //             context: context,
-                      //             builder: (context) => Container(),
-                      //           );
-                      //         },
-                      //         child: const Icon(
-                      //           Icons.more_horiz,
-                      //           color: Colors.grey,
-                      //         ))
-                      //     :
-                      DropdownButtonHideUnderline(
-                          child: ButtonTheme(
-                            alignedDropdown: true,
-                            child: DropdownButton(
-                              icon: const Icon(
-                                Icons.more_horiz,
-                                color: Colors.black,
-                              ),
-                              elevation: 5,
-                              menuMaxHeight: 38,
-                              isExpanded: false,
-                              items: [
-                                DropdownMenuItem(
-                                  alignment: Alignment.centerRight,
-                                  child: SizedBox(
-                                    width: 110,
-                                    child: Row(
-                                      children: const [
-                                        Icon(
-                                          Icons.report_outlined,
-                                          color: Colors.red,
-                                        ),
-                                        SizedBox(
-                                          width: 2,
-                                        ),
-                                        Text(
-                                          'Report post',
-                                          style: TextStyle(fontSize: 14),
-                                        ),
-                                      ],
-                                    ),
+                      : widget.type == 'swap'
+                          ? const SizedBox()
+                          : InkWell(
+                              onTap: () {
+                                showModalBottomSheet(
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(15),
+                                        topRight: Radius.circular(15)),
                                   ),
-                                  value: 'report',
-                                ),
-                              ],
-                              onChanged: (itemIdentifier) {
-                                if (itemIdentifier == 'report') {
-                                  Navigator.of(context).push(
-                                    PageTransition(
-                                        child: ReportScreen(
-                                          post: widget.postdata,
-                                        ),
-                                        type: PageTransitionType
-                                            .leftToRightWithFade),
-                                  );
-                                }
+                                  context: context,
+                                  builder: (context) =>
+                                      FeedTileAction(postdata: widget.postdata),
+                                );
                               },
-                            ),
-                          ),
-                        ),
+                              child: const Icon(
+                                Icons.more_horiz,
+                                color: Colors.grey,
+                              ))
+
+                  // Flexible(
+                  //     child: DropdownButton(
+                  //       icon: const Icon(
+                  //         Icons.more_horiz,
+                  //         color: Colors.black,
+                  //       ),
+                  //       underline: SizedBox(),
+                  //       elevation: 5,
+                  //       menuMaxHeight: 38,
+                  //       isExpanded: false,
+                  //       items: [
+                  //         DropdownMenuItem(
+                  //           alignment: Alignment.centerRight,
+                  //           child: SizedBox(
+                  //             width: 110,
+                  //             child: Row(
+                  //               children: const [
+                  // Icon(
+                  //   Icons.report_outlined,
+                  //   color: Colors.red,
+                  // ),
+                  //                 SizedBox(
+                  //                   width: 2,
+                  //                 ),
+                  //                 Text(
+                  //                   'Report post',
+                  //                   style: TextStyle(fontSize: 14),
+                  //                 ),
+                  //               ],
+                  //             ),
+                  //           ),
+                  //           value: 'report',
+                  //         ),
+                  //       ],
+                  //       onChanged: (itemIdentifier) {
+                  //         if (itemIdentifier == 'report') {
+                  // Navigator.of(context).push(
+                  //   PageTransition(
+                  //       child: ReportScreen(
+                  //         post: widget.postdata,
+                  //       ),
+                  //       type: PageTransitionType
+                  //           .leftToRightWithFade),
+                  // );
+                  //         }
+                  //       },
+                  //     ),
+                  //   ),
                 ],
               ),
               subtitle: Text(

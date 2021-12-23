@@ -142,19 +142,18 @@ class DataFetcher {
     return ref.snapshots();
   }
 
-  Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>> rewardlist() async {
-    final data = await _firestore.collection('rewards').get();
-    return data.docs;
+  Stream<QuerySnapshot<Map<String, dynamic>>> rewardlist() {
+    final data = _firestore.collection('rewards');
+    return data.snapshots();
   }
 
-  Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>> movieslist() async {
-    final data = await _firestore.collection('movies').get();
-    return data.docs;
+  Stream<QuerySnapshot<Map<String, dynamic>>> movieslist() {
+    final data = _firestore.collection('movies');
+    return data.snapshots();
   }
 
-  Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>>
-      voucherslist() async {
-    final data = await _firestore.collection('vouchers').get();
-    return data.docs;
+  Stream<QuerySnapshot<Map<String, dynamic>>> voucherslist() {
+    final data = _firestore.collection('vouchers');
+    return data.snapshots();
   }
 }

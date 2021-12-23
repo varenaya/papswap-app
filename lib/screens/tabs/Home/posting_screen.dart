@@ -37,6 +37,8 @@ class _PostingScreenState extends State<PostingScreen> {
   String feedtext = '';
   UploadTask? task;
   late bool _validate = false;
+  List<String> categories = ['MSME', 'MHA', 'MeitY', 'MoRTH', 'MOF', 'MoHFW'];
+  String selectedcategory = 'MSME';
 
   @override
   void dispose() {
@@ -148,6 +150,7 @@ class _PostingScreenState extends State<PostingScreen> {
             padding: const EdgeInsets.all(8.0),
             child: ElevatedButton(
                 onPressed: () async {
+                  FocusScope.of(context).unfocus();
                   if (_textcontroller.text.length < 10) {
                     setState(() {
                       _validate = true;
@@ -156,7 +159,7 @@ class _PostingScreenState extends State<PostingScreen> {
                     _validate = false;
                     if (widget.type == 'Post') {
                       final docId = await uploadData.postData(
-                          feedtext, userdata, context);
+                          feedtext, userdata, context, selectedcategory);
                       if (media == null) {
                         Provider.of<PostData>(context, listen: false)
                             .fetchpostedpost(docId!);
@@ -279,6 +282,25 @@ class _PostingScreenState extends State<PostingScreen> {
             children: [
               DetectableTextField(
                 decoration: InputDecoration(
+                    prefix: widget.type == 'Post'
+                        ? Padding(
+                            padding: const EdgeInsets.only(right: 10),
+                            child: DropdownButton(
+                              underline: const SizedBox(),
+                              value: selectedcategory,
+                              icon: const Icon(Icons.keyboard_arrow_down),
+                              items: categories.map((String items) {
+                                return DropdownMenuItem(
+                                    value: items, child: Text(items));
+                              }).toList(),
+                              onChanged: (newValue) {
+                                setState(() {
+                                  selectedcategory = newValue.toString();
+                                });
+                              },
+                            ),
+                          )
+                        : null,
                     hintText: "What's new?",
                     errorText: _validate ? 'Enter atleast 10 characters' : null,
                     border: InputBorder.none,
