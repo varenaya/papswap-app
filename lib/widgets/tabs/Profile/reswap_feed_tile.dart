@@ -50,11 +50,18 @@ class ReswapFeedTile extends StatelessWidget {
               title: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'reswapped as ${userdata.userName}',
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
+                  Flexible(
+                    child: Padding(
+                      padding: const EdgeInsets.all(1),
+                      child: Text(
+                        'reswapped as ${userdata.userName}',
+                        style: const TextStyle(
+                          fontSize: 14.5,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                      ),
                     ),
                   ),
                   GestureDetector(
@@ -112,7 +119,7 @@ class ReswapFeedTile extends StatelessWidget {
                 ),
                 onTap: (text) async {
                   if (Uri.parse(text).isAbsolute) {
-                    if (!await launch(text)) {
+                    if (!await canLaunch(text)) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
@@ -123,6 +130,8 @@ class ReswapFeedTile extends StatelessWidget {
                           backgroundColor: Theme.of(context).errorColor,
                         ),
                       );
+                    } else {
+                      launch(text);
                     }
                   }
                 },

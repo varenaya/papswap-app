@@ -81,6 +81,16 @@ class WalletActionsTile extends StatelessWidget {
                             ),
                           ),
                         ),
+                        if (title == 'Earn PapTokens')
+                          const Align(
+                              alignment: Alignment.center,
+                              child: Padding(
+                                padding: EdgeInsets.only(top: 10),
+                                child: Image(
+                                  image: AssetImage('assets/images/coin.png'),
+                                  height: 90,
+                                ),
+                              )),
                         Padding(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 15,

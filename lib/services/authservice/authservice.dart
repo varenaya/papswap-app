@@ -208,6 +208,13 @@ class AuthService {
     }
   }
 
+  Future<void> changepassword() async {
+    final userdata = FirebaseAuth.instance.currentUser;
+    if (userdata!.providerData[0].providerId == 'password') {
+      FirebaseAuth.instance.sendPasswordResetEmail(email: userdata.email!);
+    }
+  }
+
   void logout(BuildContext context) async {
     if (FirebaseAuth.instance.currentUser!.providerData[0].providerId ==
         'google.com') {

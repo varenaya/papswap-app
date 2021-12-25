@@ -129,7 +129,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   IconButton(
                       onPressed: () async {
                         const _url = 'https://papswap.in/';
-                        if (!await launch(_url)) {
+                        if (!await canLaunch(_url)) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: const Text(
@@ -140,6 +140,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               backgroundColor: Theme.of(context).errorColor,
                             ),
                           );
+                        } else {
+                          launch(_url);
                         }
                       },
                       icon: const Icon(

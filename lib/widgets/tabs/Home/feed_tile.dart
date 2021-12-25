@@ -178,7 +178,7 @@ class _FeedTileState extends State<FeedTile> {
                 ),
                 onTap: (text) async {
                   if (Uri.parse(text).isAbsolute) {
-                    if (!await launch(text)) {
+                    if (!await canLaunch(text)) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
@@ -189,6 +189,8 @@ class _FeedTileState extends State<FeedTile> {
                           backgroundColor: Theme.of(context).errorColor,
                         ),
                       );
+                    } else {
+                      launch(text);
                     }
                   }
                 },

@@ -139,7 +139,7 @@ class ProfileHeader extends StatelessWidget {
                         InkWell(
                           onTap: () async {
                             final _url = 'https://${userData.userWebsite}';
-                            if (!await launch(_url)) {
+                            if (!await canLaunch(_url)) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text(
@@ -151,6 +151,9 @@ class ProfileHeader extends StatelessWidget {
                                   backgroundColor: Theme.of(context).errorColor,
                                 ),
                               );
+                            }
+                            {
+                              launch(_url);
                             }
                           },
                           child: Text(

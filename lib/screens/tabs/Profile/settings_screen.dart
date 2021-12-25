@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:papswap/models/app/color_const.dart';
 import 'package:papswap/services/authservice/authservice.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({Key? key}) : super(key: key);
@@ -45,7 +46,57 @@ class _SettingScreenState extends State<SettingScreen> {
           Column(
             children: [
               ListTile(
-                  onTap: () {},
+                  onTap: () {
+                    showDialog(
+                        context: context,
+                        builder: (ctx) {
+                          return AlertDialog(
+                            contentPadding: const EdgeInsets.fromLTRB(
+                                24.0, 12.0, 12.0, 0.0),
+                            title: const Text(
+                              'Reset Password',
+                              textAlign: TextAlign.start,
+                            ),
+                            content: const Text(
+                              'Password reset email will be sent to your registered email address.',
+                              textAlign: TextAlign.start,
+                            ),
+                            actions: <Widget>[
+                              TextButton(
+                                child: const Text(
+                                  'CANCEL',
+                                  style: TextStyle(color: Colors.grey),
+                                ),
+                                onPressed: () {
+                                  Navigator.of(ctx).pop();
+                                },
+                              ),
+                              TextButton(
+                                child: const Text(
+                                  'SEND',
+                                  style: TextStyle(color: Colors.blue),
+                                ),
+                                onPressed: () async {
+                                  AuthService().changepassword().then((value) {
+                                    Navigator.of(context).pop();
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                          'Password reset link sent!',
+                                          textAlign: TextAlign.center,
+                                          style:
+                                              TextStyle(fontFamily: 'Poppins'),
+                                        ),
+                                        backgroundColor: Colors.blue,
+                                      ),
+                                    );
+                                  });
+                                },
+                              )
+                            ],
+                          );
+                        });
+                  },
                   contentPadding: const EdgeInsets.symmetric(horizontal: 24.0),
                   minLeadingWidth: 30,
                   title: const Text(
@@ -56,7 +107,23 @@ class _SettingScreenState extends State<SettingScreen> {
                   ),
                   leading: const Icon(Icons.password)),
               ListTile(
-                  onTap: () {},
+                  onTap: () async {
+                    const _url = 'https://papswap.in/faq';
+                    if (!await canLaunch(_url)) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: const Text(
+                            'Could not launch $_url',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontFamily: 'Poppins'),
+                          ),
+                          backgroundColor: Theme.of(context).errorColor,
+                        ),
+                      );
+                    } else {
+                      launch(_url);
+                    }
+                  },
                   contentPadding: const EdgeInsets.symmetric(horizontal: 24.0),
                   minLeadingWidth: 30,
                   title: const Text(
@@ -67,7 +134,23 @@ class _SettingScreenState extends State<SettingScreen> {
                   ),
                   leading: const Icon(Icons.question_answer)),
               ListTile(
-                  onTap: () {},
+                  onTap: () async {
+                    const email = 'hello@papswap.in';
+                    final url =
+                        'mailto:$email?subject=${Uri.encodeFull('Have a query and want to connect.')}&body=${Uri.encodeFull(' ')}';
+                    if (!await launch(url)) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: const Text(
+                            'Could not launch Email to $email',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontFamily: 'Poppins'),
+                          ),
+                          backgroundColor: Theme.of(context).errorColor,
+                        ),
+                      );
+                    }
+                  },
                   contentPadding: const EdgeInsets.symmetric(horizontal: 24.0),
                   minLeadingWidth: 30,
                   title: const Text(

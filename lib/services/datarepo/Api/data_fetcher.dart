@@ -96,11 +96,8 @@ class DataFetcher {
     return ref.get();
   }
 
-  Future<QuerySnapshot<Map<String, dynamic>>> gettransactiondata(
-    int limit, {
-    DocumentSnapshot? startAfter,
-  }) async {
-    final refposts = _firestore
+  Query<Map<String, dynamic>> gettransactiondata() {
+    return _firestore
         .collection('users')
         .doc(currentusedId)
         .collection('transactions')
@@ -108,13 +105,6 @@ class DataFetcher {
           'trans_time',
           descending: true,
         );
-    // .limit(limit);
-
-    if (startAfter == null) {
-      return refposts.get();
-    } else {
-      return refposts.startAfterDocument(startAfter).get();
-    }
   }
 
   Stream<DocumentSnapshot> myPostflameStream(String postId) {
@@ -135,25 +125,24 @@ class DataFetcher {
     return ref.snapshots();
   }
 
-  Stream<QuerySnapshot<Map<String, dynamic>>> allsuperTokens() {
-    final ref = _firestore
+  Query<Map<String, dynamic>> allsuperTokens() {
+    return _firestore
         .collection('superTokens')
         .orderBy('launchedOn', descending: true);
-    return ref.snapshots();
   }
 
-  Stream<QuerySnapshot<Map<String, dynamic>>> rewardlist() {
+  Future<QuerySnapshot<Map<String, dynamic>>> rewardlist() {
     final data = _firestore.collection('rewards');
-    return data.snapshots();
+    return data.get();
   }
 
-  Stream<QuerySnapshot<Map<String, dynamic>>> movieslist() {
+  Future<QuerySnapshot<Map<String, dynamic>>> movieslist() {
     final data = _firestore.collection('movies');
-    return data.snapshots();
+    return data.get();
   }
 
-  Stream<QuerySnapshot<Map<String, dynamic>>> voucherslist() {
+  Future<QuerySnapshot<Map<String, dynamic>>> voucherslist() {
     final data = _firestore.collection('vouchers');
-    return data.snapshots();
+    return data.get();
   }
 }

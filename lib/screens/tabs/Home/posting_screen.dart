@@ -75,6 +75,7 @@ class _PostingScreenState extends State<PostingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     final userdata =
         Provider.of<UserDataProvider>(context, listen: false).userdata;
     return Scaffold(
@@ -102,24 +103,29 @@ class _PostingScreenState extends State<PostingScreen> {
                       const SizedBox(
                         width: 15,
                       ),
-                      RichText(
-                        text: TextSpan(
-                          text: widget.type == 'Post'
-                              ? 'posting as  '
-                              : 'Reswaping as  ',
-                          style: const TextStyle(
-                              fontSize: 13,
-                              fontFamily: 'Poppins',
-                              color: Colors.black87),
-                          children: [
-                            TextSpan(
-                                text: userdata.userName,
-                                style: const TextStyle(
-                                    fontSize: 16.6,
-                                    fontWeight: FontWeight.w500,
-                                    fontFamily: 'Poppins',
-                                    color: Colors.black))
-                          ],
+                      SizedBox(
+                        width: size.width * 0.65,
+                        child: FittedBox(
+                          child: RichText(
+                            text: TextSpan(
+                              text: widget.type == 'Post'
+                                  ? 'posting as  '
+                                  : 'Reswaping as  ',
+                              style: const TextStyle(
+                                  fontSize: 13,
+                                  fontFamily: 'Poppins',
+                                  color: Colors.black87),
+                              children: [
+                                TextSpan(
+                                    text: userdata.userName,
+                                    style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                        fontFamily: 'Poppins',
+                                        color: Colors.black))
+                              ],
+                            ),
+                          ),
                         ),
                       ),
                     ],

@@ -6,6 +6,7 @@ import 'package:papswap/screens/tabs/Wallet/wallet_screen.dart';
 import 'package:papswap/services/datarepo/providers/flamespostprovider.dart';
 import 'package:papswap/services/datarepo/providers/postprovider.dart';
 import 'package:papswap/services/datarepo/providers/reswappostprovider.dart';
+import 'package:papswap/services/datarepo/providers/rewardsprovider.dart';
 import 'package:papswap/services/datarepo/providers/swappostprovider.dart';
 
 import 'package:papswap/services/datarepo/providers/userData.dart';
@@ -123,7 +124,12 @@ class _TabsScreenState extends State<TabsScreen> {
             ),
 
             // SearchScreen(),
-            const WalletScreen(),
+            Consumer<RewardData>(
+              builder: (context, rewarddata, _) => WalletScreen(
+                rewardData: rewarddata,
+              ),
+            ),
+
             const ProfileScreen(),
           ],
           controller: pageController,

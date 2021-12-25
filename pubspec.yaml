@@ -27,7 +27,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  cloud_firestore: ^2.5.4
+  cloud_firestore: ^3.1.5
   cupertino_icons: ^1.0.2
   detectable_text_field: ^2.0.3
   duration: ^3.0.8
@@ -45,6 +45,7 @@ dependencies:
   intl: ^0.17.0
   mime: ^1.0.1
   page_transition: ^2.0.4
+  paginate_firestore: ^1.0.3
   path: ^1.8.0
   provider: ^6.0.1
   url_launcher: ^6.0.17
@@ -63,7 +64,6 @@ flutter_icons:
 flutter_native_splash:
   color: "#F7F6FB"
   image: "assets/images/splashicon.png"
-
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

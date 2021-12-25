@@ -8,6 +8,7 @@ import 'package:papswap/screens/tabs/Wallet/transactions_screen.dart';
 import 'package:papswap/services/adservice/ad_helper.dart';
 import 'package:papswap/services/datarepo/Api/data_fetcher.dart';
 import 'package:papswap/services/datarepo/Api/uplaod_data.dart';
+import 'package:papswap/services/datarepo/providers/rewardsprovider.dart';
 import 'package:papswap/widgets/global/custom_progress_indicator.dart';
 import 'package:papswap/widgets/tabs/Wallet/movie_tile.dart';
 import 'package:papswap/widgets/tabs/Wallet/reward_tile.dart';
@@ -17,19 +18,22 @@ import 'package:papswap/widgets/tabs/Wallet/wallet_card.dart';
 import 'package:provider/provider.dart';
 
 class WalletScreen extends StatefulWidget {
-  const WalletScreen({Key? key}) : super(key: key);
+  final RewardData rewardData;
+  const WalletScreen({Key? key, required this.rewardData}) : super(key: key);
 
   @override
   _WalletScreenState createState() => _WalletScreenState();
 }
 
 class _WalletScreenState extends State<WalletScreen> {
-  final DataFetcher dataFetcher = DataFetcher();
   RewardedAd? _rewardedAd;
 
   @override
   void initState() {
     super.initState();
+    widget.rewardData.loadrewards();
+    widget.rewardData.loadmovies();
+    widget.rewardData.loadvouchers();
     _loadRewardedAd();
   }
 
@@ -215,106 +219,75 @@ class _WalletScreenState extends State<WalletScreen> {
                 ),
               ];
             },
-            body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                stream: dataFetcher.rewardlist(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(
-                      child: CustomProgressIndicator(),
+            body: CustomScrollView(
+              slivers: [
+                SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    return RewardTile(
+                      rewarddata: widget.rewardData.rewarddata[index].data(),
                     );
-                  }
-                  final rewardata = snapshot.data!.docs;
-
-                  return CustomScrollView(
-                    slivers: [
-                      SliverList(
-                          delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                          return RewardTile(
-                            rewarddata: rewardata[index].data(),
-                          );
-                        },
-                        childCount: rewardata.length,
-                      )),
-                      SliverToBoxAdapter(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Padding(
-                              padding: EdgeInsets.fromLTRB(15, 0, 15, 5),
-                              child: Text(
-                                'Movies',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.blue,
-                                ),
-                              ),
-                            ),
-                            StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                                stream: dataFetcher.movieslist(),
-                                builder: (context, snapshot) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return const Center(
-                                      child: CustomProgressIndicator(),
-                                    );
-                                  }
-                                  final moviedata = snapshot.data!.docs;
-                                  return SizedBox(
-                                    height: size.height * 0.56,
-                                    child: ListView.builder(
-                                      scrollDirection: Axis.horizontal,
-                                      itemCount: moviedata.length,
-                                      itemBuilder: (context, index) {
-                                        return MovieTile(
-                                          size: size,
-                                          moviedata: moviedata[index].data(),
-                                        );
-                                      },
-                                    ),
-                                  );
-                                }),
-                            const Padding(
-                              padding: EdgeInsets.fromLTRB(15, 0, 15, 5),
-                              child: Text(
-                                'Vouchers',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.blue,
-                                ),
-                              ),
-                            ),
-                            StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                                stream: dataFetcher.voucherslist(),
-                                builder: (context, snapshot) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return const Center(
-                                      child: CustomProgressIndicator(),
-                                    );
-                                  }
-                                  final voucherdata = snapshot.data!.docs;
-                                  return SizedBox(
-                                    height: size.height * 0.42,
-                                    child: ListView.builder(
-                                      scrollDirection: Axis.horizontal,
-                                      itemCount: voucherdata.length,
-                                      itemBuilder: (context, index) {
-                                        return VoucherTile(
-                                            voucherdata:
-                                                voucherdata[index].data(),
-                                            size: size);
-                                      },
-                                    ),
-                                  );
-                                }),
-                          ],
+                  },
+                  childCount: widget.rewardData.rewarddata.length,
+                )),
+                SliverToBoxAdapter(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.fromLTRB(15, 0, 15, 5),
+                        child: Text(
+                          'Movies',
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.blue,
+                          ),
                         ),
-                      )
+                      ),
+                      SizedBox(
+                        height: size.height * 0.56,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: widget.rewardData.moviesdata.length,
+                          itemBuilder: (context, index) {
+                            return MovieTile(
+                              size: size,
+                              moviedata:
+                                  widget.rewardData.moviesdata[index].data(),
+                            );
+                          },
+                        ),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.fromLTRB(15, 0, 15, 5),
+                        child: Text(
+                          'Vouchers',
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.blue,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: size.height * 0.42,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: widget.rewardData.vouchersdata.length,
+                          itemBuilder: (context, index) {
+                            return VoucherTile(
+                                voucherdata: widget
+                                    .rewardData.vouchersdata[index]
+                                    .data(),
+                                size: size);
+                          },
+                        ),
+                      ),
                     ],
-                  );
-                }),
+                  ),
+                )
+              ],
+            ),
           ),
         ));
   }

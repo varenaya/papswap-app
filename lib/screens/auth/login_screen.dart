@@ -19,6 +19,7 @@ class _LoginScreenState extends State<LoginScreen> {
   String _userEmail = '';
   String _userpassword = '';
   var _isLoading = false;
+  bool _isObscure = true;
 
   void _trySubmit() async {
     final isValid = _formKey.currentState!.validate();
@@ -111,9 +112,22 @@ class _LoginScreenState extends State<LoginScreen> {
                           }
                           return null;
                         },
-                        obscureText: true,
-                        decoration: const InputDecoration(
-                            border: InputBorder.none, hintText: "Password"),
+                        obscureText: _isObscure,
+                        decoration: InputDecoration(
+                            suffix: InkWell(
+                              child: Icon(
+                                _isObscure
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                              ),
+                              onTap: () {
+                                setState(() {
+                                  _isObscure = !_isObscure;
+                                });
+                              },
+                            ),
+                            border: InputBorder.none,
+                            hintText: "Password"),
                         onSaved: (newValue) {
                           _userpassword = newValue!;
                         },

@@ -49,7 +49,7 @@ class VoucherMenu extends StatelessWidget {
           child: TextButton(
             onPressed: () async {
               final _url = voucherdata['voucherWebsite'];
-              if (!await launch(_url)) {
+              if (!await canLaunch(_url)) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(
@@ -61,6 +61,8 @@ class VoucherMenu extends StatelessWidget {
                   ),
                 );
                 Navigator.of(context).pop();
+              } else {
+                launch(_url);
               }
             },
             child: const Text(
