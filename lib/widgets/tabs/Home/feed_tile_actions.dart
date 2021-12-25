@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:papswap/models/post.dart';
 import 'package:papswap/screens/tabs/Home/report_screen.dart';
 
 class FeedTileAction extends StatelessWidget {
-  final postdata;
+  final Post postdata;
   const FeedTileAction({Key? key, required this.postdata}) : super(key: key);
 
   @override

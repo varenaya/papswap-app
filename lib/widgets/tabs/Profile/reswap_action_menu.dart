@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:papswap/services/datarepo/Api/uplaod_data.dart';
-import 'package:papswap/services/datarepo/providers/reswappostprovider.dart';
-import 'package:provider/provider.dart';
 
 class ReswapactionMenu extends StatelessWidget {
   final String commentId;

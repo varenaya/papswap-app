@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:page_transition/page_transition.dart';
@@ -6,10 +5,8 @@ import 'package:papswap/models/app/color_const.dart';
 import 'package:papswap/models/userdata.dart';
 import 'package:papswap/screens/tabs/Wallet/transactions_screen.dart';
 import 'package:papswap/services/adservice/ad_helper.dart';
-import 'package:papswap/services/datarepo/Api/data_fetcher.dart';
 import 'package:papswap/services/datarepo/Api/uplaod_data.dart';
 import 'package:papswap/services/datarepo/providers/rewardsprovider.dart';
-import 'package:papswap/widgets/global/custom_progress_indicator.dart';
 import 'package:papswap/widgets/tabs/Wallet/movie_tile.dart';
 import 'package:papswap/widgets/tabs/Wallet/reward_tile.dart';
 import 'package:papswap/widgets/tabs/Wallet/voucher_tile.dart';

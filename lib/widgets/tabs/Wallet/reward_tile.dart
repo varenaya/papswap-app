@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:papswap/models/userdata.dart';
 import 'package:papswap/widgets/tabs/Wallet/rewards_menu.dart';
 
 class RewardTile extends StatelessWidget {

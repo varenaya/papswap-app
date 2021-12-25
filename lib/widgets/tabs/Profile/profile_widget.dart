@@ -6,7 +6,7 @@ class ProfileWidget extends StatelessWidget {
   final String imagePath;
 
   final VoidCallback onClicked;
-  final media;
+  final File? media;
 
   const ProfileWidget({
     Key? key,
@@ -36,7 +36,7 @@ class ProfileWidget extends StatelessWidget {
   Widget buildImage() {
     final image = media == null
         ? NetworkImage(imagePath)
-        : FileImage(media) as ImageProvider;
+        : FileImage(media!) as ImageProvider;
 
     return ClipOval(
       child: Material(
