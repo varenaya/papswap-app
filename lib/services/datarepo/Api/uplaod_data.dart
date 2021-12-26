@@ -435,7 +435,7 @@ class UploadData {
             .collection('transactions')
             .doc();
         _firestore.collection('users').doc(currentusedId).update({
-          'coinVal': FieldValue.increment(5),
+          'coinVal': FieldValue.increment(weekday == 3 ? 10 : 15),
           'weeklyrewardTimestamp': DateTime.now(),
         });
         transdocRef.set({
