@@ -161,7 +161,23 @@ class _SettingScreenState extends State<SettingScreen> {
                   ),
                   leading: const Icon(Icons.help)),
               ListTile(
-                  onTap: () {},
+                  onTap: () async {
+                    const _url = 'https://papswap.in/terms-n-conditions';
+                    if (!await canLaunch(_url)) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: const Text(
+                            'Could not launch $_url',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontFamily: 'Poppins'),
+                          ),
+                          backgroundColor: Theme.of(context).errorColor,
+                        ),
+                      );
+                    } else {
+                      launch(_url);
+                    }
+                  },
                   contentPadding: const EdgeInsets.symmetric(horizontal: 24.0),
                   minLeadingWidth: 30,
                   title: const Text(

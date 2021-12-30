@@ -48,6 +48,7 @@ dependencies:
   paginate_firestore: ^1.0.3
   path: ^1.8.0
   provider: ^6.0.1
+  rename: ^2.0.1
   url_launcher: ^6.0.17
   video_player: ^2.2.7
 

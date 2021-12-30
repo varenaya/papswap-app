@@ -7,12 +7,20 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:635195213693:android:fe4f6dd07d2dd0aefdee14",
+        "mobilesdk_app_id": "1:635195213693:android:4e5cf132148eba19fdee14",
         "android_client_info": {
-          "package_name": "com.example.papswap"
+          "package_name": "in.papswap.android.app"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "635195213693-nmg1gcfmufqciip40ickmlvonsd0b446.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "in.papswap.android.app",
+            "certificate_hash": "fec40f9b6d1952c261b68b6fff6fdf72ccf8af6c"
+          }
+        },
         {
           "client_id": "635195213693-stl95j01use4kn5mbb2cbn8hu7pmnhhk.apps.googleusercontent.com",
           "client_type": 3
