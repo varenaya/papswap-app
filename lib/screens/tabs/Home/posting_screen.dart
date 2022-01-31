@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:mime/mime.dart';
 import 'package:papswap/models/app/color_const.dart';
+import 'package:papswap/services/datarepo/Api/data_fetcher.dart';
 import 'package:papswap/services/datarepo/Api/uplaod_data.dart';
 import 'package:papswap/services/datarepo/providers/postprovider.dart';
 import 'package:papswap/services/datarepo/providers/userData.dart';
@@ -34,11 +35,25 @@ class _PostingScreenState extends State<PostingScreen> {
   File? media;
   final TextEditingController _textcontroller = TextEditingController();
   final UploadData uploadData = UploadData();
+
   String feedtext = '';
   UploadTask? task;
   late bool _validate = false;
-  List<String> categories = ['MSME', 'MHA', 'MeitY', 'MoRTH', 'MOF', 'MoHFW'];
-  String selectedcategory = 'MSME';
+
+  List categories = [];
+  String selectedcategory = ' ';
+
+  @override
+  void initState() {
+    getcategories();
+    super.initState();
+  }
+
+  getcategories() async {
+    final data = await DataFetcher().categories();
+    categories = data.data()!['categories'];
+    selectedcategory = categories[0];
+  }
 
   @override
   void dispose() {
@@ -295,7 +310,7 @@ class _PostingScreenState extends State<PostingScreen> {
                               underline: const SizedBox(),
                               value: selectedcategory,
                               icon: const Icon(Icons.keyboard_arrow_down),
-                              items: categories.map((String items) {
+                              items: categories.map((items) {
                                 return DropdownMenuItem(
                                     value: items, child: Text(items));
                               }).toList(),

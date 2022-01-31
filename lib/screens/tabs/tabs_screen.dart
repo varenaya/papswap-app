@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:papswap/models/userdata.dart';
 import 'package:papswap/screens/tabs/Home/home_screen.dart';
 import 'package:papswap/screens/tabs/Profile/profile_screen.dart';
+import 'package:papswap/screens/tabs/Search/search_screen.dart';
 import 'package:papswap/screens/tabs/Wallet/wallet_screen.dart';
 import 'package:papswap/services/datarepo/providers/flamespostprovider.dart';
 import 'package:papswap/services/datarepo/providers/postprovider.dart';
@@ -36,9 +37,12 @@ class _TabsScreenState extends State<TabsScreen> {
   }
 
   void _onItemTapped(int index) {
-    pageController.jumpToPage(index);
-    // animateToPage(index,
-    //     duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+    if (index == _selectedIndex + 1 || index == _selectedIndex - 1) {
+      pageController.animateToPage(index,
+          duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+    } else {
+      pageController.jumpToPage(index);
+    }
   }
 
   onPageChanged(int index) {
@@ -68,17 +72,17 @@ class _TabsScreenState extends State<TabsScreen> {
               color: Colors.black,
             ),
           ),
-          // BottomNavigationBarItem(
-          //   icon: Icon(
-          //     Icons.search_outlined,
-          //     color: Colors.black,
-          //   ),
-          //   activeIcon: Icon(
-          //     Icons.search,
-          //     color: Colors.black,
-          //   ),
-          //   label: 'Search',
-          // ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.search_outlined,
+              color: Colors.black,
+            ),
+            activeIcon: Icon(
+              Icons.search,
+              color: Colors.black,
+            ),
+            label: 'Search',
+          ),
           BottomNavigationBarItem(
             icon: Icon(
               Icons.account_balance_wallet_outlined,
@@ -122,14 +126,12 @@ class _TabsScreenState extends State<TabsScreen> {
                 postData: postdata,
               ),
             ),
-
-            // SearchScreen(),
+            const SearchScreen(),
             Consumer<RewardData>(
               builder: (context, rewarddata, _) => WalletScreen(
                 rewardData: rewarddata,
               ),
             ),
-
             const ProfileScreen(),
           ],
           controller: pageController,

@@ -29,7 +29,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
 
   void _loadRewardedAd() {
     RewardedAd.load(
-        adUnitId: RewardedAd.testAdUnitId,
+        adUnitId: AdHelper.rewardedAdunitId,
         request: AdHelper.adrequest,
         rewardedAdLoadCallback: RewardedAdLoadCallback(
           onAdLoaded: (RewardedAd ad) {

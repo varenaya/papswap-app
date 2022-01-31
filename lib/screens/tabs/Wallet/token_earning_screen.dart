@@ -87,7 +87,7 @@ class TokenEarningScreen extends StatelessWidget {
             title: 'Video Bonus',
             size: size,
             subtitle1: 'Watch video ads to earn, ',
-            subtitle2: 'upto 10 PapTokens',
+            subtitle2: 'upto 5 PapToken daily',
             buttontext: 'Watch Now',
             imagepath: 'assets/images/video bonus.png',
           ),

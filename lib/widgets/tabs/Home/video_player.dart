@@ -60,7 +60,13 @@ class VideoWidgetState extends State<VideoWidget> {
   Widget build(BuildContext context) => _controller.value.isInitialized
       ? AspectRatio(
           aspectRatio: _controller.value.aspectRatio, child: videoPlayer())
-      : const SizedBox();
+      : Container(
+          height: 180,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+            color: Colors.grey.shade200,
+          ),
+        );
 
   Widget videoPlayer() => Stack(
         children: <Widget>[

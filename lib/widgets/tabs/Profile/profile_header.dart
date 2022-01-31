@@ -87,6 +87,7 @@ class ProfileHeader extends StatelessWidget {
           userData.userBio == ''
               ? const SizedBox()
               : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(userData.userBio,
                         style: const TextStyle(

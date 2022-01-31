@@ -145,4 +145,26 @@ class DataFetcher {
     final data = _firestore.collection('vouchers');
     return data.get();
   }
+
+  Future<DocumentSnapshot<Map<String, dynamic>>> categories() {
+    final data = _firestore.collection('ministries').doc('ministries');
+    return data.get();
+  }
+
+  Future<DocumentSnapshot<Map<String, dynamic>>> getquerycomment(
+      String recieptno) async {
+    final posttag = recieptno.split('.')[0];
+    final commentid = recieptno.split('.')[1];
+    final postref = await _firestore
+        .collection('Posts')
+        .where('posttag', isEqualTo: posttag)
+        .get();
+    final postid = postref.docs.first.id;
+    final ref = _firestore
+        .collection('Posts')
+        .doc(postid)
+        .collection('comments')
+        .doc(commentid);
+    return ref.get();
+  }
 }

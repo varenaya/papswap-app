@@ -36,7 +36,7 @@ class _WalletScreenState extends State<WalletScreen> {
 
   void _loadRewardedAd() {
     RewardedAd.load(
-        adUnitId: RewardedAd.testAdUnitId,
+        adUnitId: AdHelper.rewardedAdunitId,
         request: AdHelper.adrequest,
         rewardedAdLoadCallback: RewardedAdLoadCallback(
           onAdLoaded: (RewardedAd ad) {

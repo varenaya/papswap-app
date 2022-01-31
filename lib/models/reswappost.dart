@@ -36,4 +36,28 @@ class ReswapPost {
         superToken: doc.data()!['supertoken'],
         post: post);
   }
+
+  factory ReswapPost.empty() {
+    return ReswapPost(
+        comment: '',
+        commentId: '',
+        createdAt: Timestamp.now(),
+        post: Post(
+            feedtext: '',
+            medialink: '',
+            postId: '',
+            createdAt: Timestamp.now(),
+            createrId: '',
+            reports: 0,
+            flames: 0,
+            createrimg: '',
+            creatername: '',
+            swaps: 0,
+            category: ''),
+        postId: '',
+        medialink: '',
+        isverified: false,
+        superToken: [],
+        commenterId: '');
+  }
 }
