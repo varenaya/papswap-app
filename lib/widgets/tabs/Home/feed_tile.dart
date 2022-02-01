@@ -174,7 +174,7 @@ class _FeedTileState extends State<FeedTile> {
                             cacheManager: customCacheManger,
                             imageUrl: widget.postdata.medialink,
                             placeholder: (context, url) => Container(
-                              height: 320,
+                              height: MediaQuery.of(context).size.width - 60,
                               color: Colors.black12,
                             ),
                             errorWidget: (context, url, error) => const Icon(

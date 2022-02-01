@@ -1,7 +1,16 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:intl/intl.dart';
 
 class SuperTokenTile extends StatelessWidget {
+  static final customCacheManger = CacheManager(Config(
+    'customCaheKey',
+    stalePeriod: const Duration(
+      days: 30,
+    ),
+    maxNrOfCacheObjects: 100,
+  ));
   final Map tokendata;
   const SuperTokenTile({Key? key, required this.tokendata}) : super(key: key);
 
@@ -21,8 +30,18 @@ class SuperTokenTile extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Image(
-              image: NetworkImage(tokendata['tokenImg']),
+            CachedNetworkImage(
+              key: UniqueKey(),
+              cacheManager: customCacheManger,
+              imageUrl: tokendata['tokenImg'],
+              placeholder: (context, url) => Container(
+                color: Colors.black12,
+              ),
+              errorWidget: (context, url, error) => const Icon(
+                Icons.error,
+                color: Colors.red,
+              ),
+              fit: BoxFit.fitHeight,
               height: 130,
             ),
             const SizedBox(
