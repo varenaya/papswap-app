@@ -1,10 +1,12 @@
 // ignore_for_file: prefer_typing_uninitialized_variables
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:detectable_text_field/detectable_text_field.dart';
 import 'package:detectable_text_field/detector/sample_regular_expressions.dart';
 import 'package:duration/duration.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:papswap/models/post.dart';
 import 'package:papswap/services/datarepo/Api/data_fetcher.dart';
 import 'package:papswap/services/datarepo/Api/uplaod_data.dart';
@@ -31,6 +33,13 @@ class FeedTile extends StatefulWidget {
 }
 
 class _FeedTileState extends State<FeedTile> {
+  static final customCacheManger = CacheManager(Config(
+    'customCaheKey',
+    stalePeriod: const Duration(
+      days: 15,
+    ),
+    maxNrOfCacheObjects: 50,
+  ));
   int flames = 0;
 
   String timeDuration() {
@@ -97,55 +106,6 @@ class _FeedTileState extends State<FeedTile> {
                                 Icons.more_horiz,
                                 color: Colors.grey,
                               ))
-
-                  // Flexible(
-                  //     child: DropdownButton(
-                  //       icon: const Icon(
-                  //         Icons.more_horiz,
-                  //         color: Colors.black,
-                  //       ),
-                  //       underline: SizedBox(),
-                  //       elevation: 5,
-                  //       menuMaxHeight: 38,
-                  //       isExpanded: false,
-                  //       items: [
-                  //         DropdownMenuItem(
-                  //           alignment: Alignment.centerRight,
-                  //           child: SizedBox(
-                  //             width: 110,
-                  //             child: Row(
-                  //               children: const [
-                  // Icon(
-                  //   Icons.report_outlined,
-                  //   color: Colors.red,
-                  // ),
-                  //                 SizedBox(
-                  //                   width: 2,
-                  //                 ),
-                  //                 Text(
-                  //                   'Report post',
-                  //                   style: TextStyle(fontSize: 14),
-                  //                 ),
-                  //               ],
-                  //             ),
-                  //           ),
-                  //           value: 'report',
-                  //         ),
-                  //       ],
-                  //       onChanged: (itemIdentifier) {
-                  //         if (itemIdentifier == 'report') {
-                  // Navigator.of(context).push(
-                  //   PageTransition(
-                  //       child: ReportScreen(
-                  //         post: widget.postdata,
-                  //       ),
-                  //       type: PageTransitionType
-                  //           .leftToRightWithFade),
-                  // );
-                  //         }
-                  //       },
-                  //     ),
-                  //   ),
                 ],
               ),
               subtitle: Text(
@@ -157,7 +117,7 @@ class _FeedTileState extends State<FeedTile> {
                 backgroundImage: widget.postdata.createrimg == ''
                     ? const AssetImage('assets/images/Person.png')
                         as ImageProvider
-                    : NetworkImage(widget.postdata.createrimg),
+                    : CachedNetworkImageProvider(widget.postdata.createrimg),
               ),
             ),
             Padding(
@@ -209,8 +169,19 @@ class _FeedTileState extends State<FeedTile> {
                         ),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(15),
-                          child: Image(
-                              image: NetworkImage(widget.postdata.medialink)),
+                          child: CachedNetworkImage(
+                            key: UniqueKey(),
+                            cacheManager: customCacheManger,
+                            imageUrl: widget.postdata.medialink,
+                            placeholder: (context, url) => Container(
+                              height: 320,
+                              color: Colors.black12,
+                            ),
+                            errorWidget: (context, url, error) => const Icon(
+                              Icons.error,
+                              color: Colors.red,
+                            ),
+                          ),
                         ),
                       )
                     : Padding(

@@ -126,6 +126,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 actions: [
+                  const SizedBox(width: 10),
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(
+                      Icons.filter_list,
+                      color: Colors.black,
+                      size: 30,
+                    ),
+                  ),
                   IconButton(
                       onPressed: () async {
                         const _url = 'https://papswap.in/';

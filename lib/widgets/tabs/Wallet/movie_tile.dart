@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:papswap/widgets/tabs/Wallet/movie_menu.dart';
 
@@ -37,8 +38,16 @@ class MovieTile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Center(
-                child: Image(
-                  image: NetworkImage(moviedata['movieImage']),
+                child: CachedNetworkImage(
+                  key: UniqueKey(),
+                  imageUrl: moviedata['movieImage'],
+                  placeholder: (context, url) => Container(
+                    color: Colors.black12,
+                  ),
+                  errorWidget: (context, url, error) => const Icon(
+                    Icons.error,
+                    color: Colors.red,
+                  ),
                   fit: BoxFit.fitHeight,
                   height: size.height * 0.45,
                 ),

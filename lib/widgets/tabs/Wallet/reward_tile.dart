@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:papswap/widgets/tabs/Wallet/rewards_menu.dart';
 
@@ -63,9 +64,17 @@ class RewardTile extends StatelessWidget {
               const SizedBox(
                 height: 10,
               ),
-              Image(
-                image: NetworkImage(rewarddata['rewardMedia']),
-                fit: BoxFit.contain,
+              CachedNetworkImage(
+                key: UniqueKey(),
+                imageUrl: rewarddata['rewardMedia'],
+                placeholder: (context, url) => Container(
+                  height: 180,
+                  color: Colors.black12,
+                ),
+                errorWidget: (context, url, error) => const Icon(
+                  Icons.error,
+                  color: Colors.red,
+                ),
               ),
               const SizedBox(
                 height: 10,
