@@ -10,7 +10,6 @@ import 'package:flutter/services.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:mime/mime.dart';
 import 'package:papswap/models/app/color_const.dart';
-import 'package:papswap/services/datarepo/Api/data_fetcher.dart';
 import 'package:papswap/services/datarepo/Api/uplaod_data.dart';
 import 'package:papswap/services/datarepo/providers/postprovider.dart';
 import 'package:papswap/services/datarepo/providers/userData.dart';
@@ -21,10 +20,13 @@ import 'package:provider/provider.dart';
 class PostingScreen extends StatefulWidget {
   final String type;
   final reswappostdata;
+  final List? categories;
+
   const PostingScreen({
     Key? key,
     required this.type,
     this.reswappostdata,
+    this.categories,
   }) : super(key: key);
 
   @override
@@ -38,21 +40,13 @@ class _PostingScreenState extends State<PostingScreen> {
 
   String feedtext = '';
   UploadTask? task;
+  String selectedcategory = '';
   late bool _validate = false;
-
-  List categories = [];
-  String selectedcategory = ' ';
 
   @override
   void initState() {
-    getcategories();
+    selectedcategory = widget.categories == null ? '' : widget.categories![0];
     super.initState();
-  }
-
-  getcategories() async {
-    final data = await DataFetcher().categories();
-    categories = data.data()!['categories'];
-    selectedcategory = categories[0];
   }
 
   @override
@@ -310,7 +304,7 @@ class _PostingScreenState extends State<PostingScreen> {
                               underline: const SizedBox(),
                               value: selectedcategory,
                               icon: const Icon(Icons.keyboard_arrow_down),
-                              items: categories.map((items) {
+                              items: widget.categories?.map((items) {
                                 return DropdownMenuItem(
                                     value: items, child: Text(items));
                               }).toList(),

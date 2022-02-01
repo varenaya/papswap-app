@@ -9,6 +9,7 @@ import 'package:papswap/services/datarepo/providers/postprovider.dart';
 import 'package:papswap/widgets/global/custom_progress_indicator.dart';
 
 import 'package:papswap/widgets/tabs/Home/feed_tile.dart';
+import 'package:papswap/widgets/tabs/Home/filter_menu.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -23,12 +24,19 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final DataFetcher dataFetcher = DataFetcher();
   final scrollController = ScrollController();
+  List categories = [];
 
   @override
   initState() {
+    getcategories();
     scrollController.addListener(scrollListener);
     widget.postData.fetchNextposts(false);
     super.initState();
+  }
+
+  getcategories() async {
+    final data = await DataFetcher().categories();
+    categories = data.data()!['categories'];
   }
 
   @override
@@ -62,8 +70,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 backgroundColor: Colors.red,
                 onPressed: () {
                   Navigator.of(context).push(PageTransition(
-                      child: const PostingScreen(
+                      child: PostingScreen(
                         type: 'Post',
+                        categories: categories,
                       ),
                       type: PageTransitionType.bottomToTop));
                 },
@@ -128,7 +137,22 @@ class _HomeScreenState extends State<HomeScreen> {
                 actions: [
                   const SizedBox(width: 10),
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      showModalBottomSheet(
+                        isScrollControlled: true,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(15),
+                              topRight: Radius.circular(15)),
+                        ),
+                        context: context,
+                        builder: (context) {
+                          return FilterMenu(
+                            categories: categories,
+                          );
+                        },
+                      );
+                    },
                     icon: const Icon(
                       Icons.filter_list,
                       color: Colors.black,

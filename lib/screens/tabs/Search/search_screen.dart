@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:papswap/models/app/color_const.dart';
 import 'package:papswap/models/post.dart';
