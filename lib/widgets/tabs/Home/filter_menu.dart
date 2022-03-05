@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:papswap/widgets/tabs/Home/filter_tile.dart';
 
 class FilterMenu extends StatefulWidget {
   final List categories;
-  const FilterMenu({Key? key, required this.categories}) : super(key: key);
+  final String selectedcategory;
+  const FilterMenu(
+      {Key? key, required this.categories, required this.selectedcategory})
+      : super(key: key);
 
   @override
   State<FilterMenu> createState() => _FilterMenuState();
@@ -39,41 +43,12 @@ class _FilterMenuState extends State<FilterMenu> {
               ),
             ),
           ),
-          ...widget.categories
-              .map(
-                (e) => ListTile(
-                    onTap: () async {},
-                    contentPadding:
-                        const EdgeInsets.symmetric(horizontal: 24.0),
-                    minLeadingWidth: 30,
-                    title: Text(
-                      e,
-                      style: const TextStyle(
-                        fontSize: 15,
-                      ),
-                    ),
-                    leading: const Icon(Icons.arrow_right_alt_rounded)),
-              )
-              .toList(),
-          const SizedBox(
-            height: 20,
-          ),
-          Center(
-            child: ElevatedButton(
-              onPressed: () async {},
-              style: ElevatedButton.styleFrom(
-                primary: Colors.red,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20)),
-              ),
-              child: const Text(
-                'Confirm',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ),
+          ...widget.categories.map((e) {
+            return FilterTile(
+              ministry: e,
+              isselcted: e == widget.selectedcategory,
+            );
+          }).toList(),
         ],
       ),
     );

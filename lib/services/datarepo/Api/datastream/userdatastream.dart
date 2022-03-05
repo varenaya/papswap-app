@@ -23,6 +23,7 @@ class Userdatastream {
               userType: event.data()!['userType'],
               dailyrewardTimestamp: event.data()!['dailyrewardTimestamp'],
               weeklyrewardTimestamp: event.data()!['weeklyrewardTimestamp'],
+              adrewards: event.data()!['adrewards'],
             ));
   }
 
@@ -40,6 +41,7 @@ class Userdatastream {
       userType: '',
       dailyrewardTimestamp: Timestamp.now(),
       weeklyrewardTimestamp: Timestamp.now(),
+      adrewards: 0,
     );
   }
 }

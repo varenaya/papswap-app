@@ -131,6 +131,13 @@ class DataFetcher {
         .orderBy('launchedOn', descending: true);
   }
 
+  Query<Map<String, dynamic>> filtercategories(String selectedcategory) {
+    return _firestore
+        .collection('Posts')
+        .orderBy('createdAt', descending: true)
+        .where('category', isEqualTo: selectedcategory);
+  }
+
   Future<QuerySnapshot<Map<String, dynamic>>> rewardlist() {
     final data = _firestore.collection('rewards');
     return data.get();

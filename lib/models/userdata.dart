@@ -15,6 +15,7 @@ class UserData {
   late String userType;
   late Timestamp dailyrewardTimestamp;
   late Timestamp weeklyrewardTimestamp;
+  late int adrewards;
 
   UserData({
     required this.userEmail,
@@ -29,5 +30,6 @@ class UserData {
     required this.userType,
     required this.weeklyrewardTimestamp,
     required this.dailyrewardTimestamp,
+    required this.adrewards,
   });
 }

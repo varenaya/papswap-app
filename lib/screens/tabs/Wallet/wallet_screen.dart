@@ -221,9 +221,12 @@ class _WalletScreenState extends State<WalletScreen> {
                 SliverList(
                     delegate: SliverChildBuilderDelegate(
                   (context, index) {
-                    return RewardTile(
-                      rewarddata: widget.rewardData.rewarddata[index].data(),
-                    );
+                    return widget.rewardData.rewarddata[index].data()['show']
+                        ? RewardTile(
+                            rewarddata:
+                                widget.rewardData.rewarddata[index].data(),
+                          )
+                        : const SizedBox();
                   },
                   childCount: widget.rewardData.rewarddata.length,
                 )),
@@ -248,11 +251,15 @@ class _WalletScreenState extends State<WalletScreen> {
                           scrollDirection: Axis.horizontal,
                           itemCount: widget.rewardData.moviesdata.length,
                           itemBuilder: (context, index) {
-                            return MovieTile(
-                              size: size,
-                              moviedata:
-                                  widget.rewardData.moviesdata[index].data(),
-                            );
+                            return widget.rewardData.moviesdata[index]
+                                    .data()['show']
+                                ? MovieTile(
+                                    size: size,
+                                    moviedata: widget
+                                        .rewardData.moviesdata[index]
+                                        .data(),
+                                  )
+                                : const SizedBox();
                           },
                         ),
                       ),
@@ -272,11 +279,14 @@ class _WalletScreenState extends State<WalletScreen> {
                           scrollDirection: Axis.horizontal,
                           itemCount: widget.rewardData.vouchersdata.length,
                           itemBuilder: (context, index) {
-                            return VoucherTile(
-                                voucherdata: widget
-                                    .rewardData.vouchersdata[index]
-                                    .data(),
-                                size: size);
+                            return widget.rewardData.vouchersdata[index]
+                                    .data()['show']
+                                ? VoucherTile(
+                                    voucherdata: widget
+                                        .rewardData.vouchersdata[index]
+                                        .data(),
+                                    size: size)
+                                : const SizedBox();
                           },
                         ),
                       ),

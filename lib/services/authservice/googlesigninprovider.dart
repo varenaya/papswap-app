@@ -23,7 +23,7 @@ class GoogleSignInProvider extends ChangeNotifier {
 
       await FirebaseAuth.instance.signInWithCredential(credential);
     } on FirebaseAuthException catch (e) {
-      var message = 'An error occured in uploading the post! Try again';
+      var message = 'An error in signing in! Try again later';
       if (e.message != null) {
         message = e.message!;
       }
